@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import AdminLogout from "@/components/AdminLogout";
 
 export default function AdminLayout({
   children,
@@ -28,6 +29,8 @@ export default function AdminLayout({
           <a href="/admin/dashboard/appointments">Appointments</a>
           <a href="/admin/dashboard/messages">Messages</a>
         </nav>
+
+        <AdminLogout />
       </aside>
 
       <main className="flex-1 p-8 bg-gray-50">
