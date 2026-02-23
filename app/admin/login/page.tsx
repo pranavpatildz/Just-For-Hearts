@@ -29,7 +29,6 @@ export default function AdminLogin() {
       return;
     }
 
-    localStorage.setItem("admin_token", data.token);
     router.push("/admin/dashboard");
   }
 

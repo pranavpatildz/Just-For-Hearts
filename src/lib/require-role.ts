@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdmin } from "./verify-admin";
 
-export function requireRole(
+export async function requireRole(
   request: NextRequest,
   allowedRoles: string[]
 ) {
-  const user = verifyAdmin(request);
+  const user = await verifyAdmin();
 
   if (!user) {
     return {

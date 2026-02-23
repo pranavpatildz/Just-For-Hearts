@@ -1,28 +1,23 @@
 import jwt from "jsonwebtoken";
-import { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 
 export interface AuthPayload {
   id: string;
   role: string;
 }
 
-export function verifyAdmin(request: NextRequest): AuthPayload | null {
+export async function verifyAdmin(): Promise<AuthPayload | null> {
   try {
-    const authHeader = request.headers.get("authorization");
+    const cookieStore = await cookies();
+    const token = cookieStore.get("admin_token")?.value;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return null;
-    }
+    if (!token) return null;
 
-    const token = authHeader.split(" ")[1];
-
-    const decoded = jwt.verify(
+    return jwt.verify(
       token,
-      process.env.JWT_SECRET as string
+      process.env.JWT_SECRET!
     ) as AuthPayload;
-
-    return decoded;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

@@ -11,13 +11,6 @@ export default function AdminLayout({
 }) {
   const router = useRouter();
 
-  useEffect(() => {
-    const token = localStorage.getItem("admin_token");
-    if (!token) {
-      router.push("/admin/login");
-    }
-  }, [router]);
-
   return (
     <div className="flex min-h-screen">
       <aside className="w-64 bg-black text-white p-6">

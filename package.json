@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@prisma/client": "^6.19.2",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.36.2",
     "bcrypt": "^6.0.0",
     "framer-motion": "^12.34.3",
     "jsonwebtoken": "^9.0.3",

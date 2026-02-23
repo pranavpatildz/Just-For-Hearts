@@ -3,7 +3,7 @@ import { prisma } from "@/src/lib/prisma";
 import { requireRole } from "@/src/lib/require-role";
 
 export async function GET(req: NextRequest) {
-  const { error } = requireRole(req, ["ADMIN", "SUPER_ADMIN"]);
+  const { error } = await requireRole(req, ["ADMIN", "SUPER_ADMIN"]);
   if (error) return error;
 
   const programs = await prisma.program.findMany({
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { error } = requireRole(req, ["ADMIN", "SUPER_ADMIN"]);
+  const { error } = await requireRole(req, ["ADMIN", "SUPER_ADMIN"]);
   if (error) return error;
 
   const data = await req.json();

@@ -4,7 +4,7 @@ import { requireRole } from "@/src/lib/require-role";
 import { success } from "@/src/lib/api-response";
 
 export async function GET(req: NextRequest) {
-  const { error } = requireRole(req, ["ADMIN", "SUPER_ADMIN"]);
+  const { error } = await requireRole(req, ["ADMIN", "SUPER_ADMIN"]);
   if (error) return error;
 
   const { searchParams } = new URL(req.url);
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { error } = requireRole(req, ["ADMIN", "SUPER_ADMIN"]);
+  const { error } = await requireRole(req, ["ADMIN", "SUPER_ADMIN"]);
   if (error) return error;
 
   const data = await req.json();
