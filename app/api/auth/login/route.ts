@@ -1,56 +1,41 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/src/lib/prisma"
 import { comparePassword, generateToken } from "@/src/lib/auth"
+import { loginSchema } from "@/src/lib/validators";
+import { success, errorResponse } from "@/src/lib/api-response";
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json()
+    const body = await req.json();
+    const parsed = loginSchema.safeParse(body);
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: "Email and password required" },
-        { status: 400 }
-      )
+    if (!parsed.success) {
+      return errorResponse("Invalid input", 400);
     }
+
+    const { email, password } = parsed.data;
 
     const admin = await prisma.adminUser.findUnique({
       where: { email },
-    })
+    });
 
     if (!admin) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 }
-      )
+      return errorResponse("Invalid credentials", 401);
     }
 
-    const isValid = await comparePassword(password, admin.password)
+    const isValid = await comparePassword(password, admin.password);
 
     if (!isValid) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 }
-      )
+      return errorResponse("Invalid credentials", 401);
     }
 
     const token = generateToken({
       id: admin.id,
       role: admin.role,
-    })
+    });
 
-    return NextResponse.json({
-      token,
-      admin: {
-        id: admin.id,
-        name: admin.name,
-        email: admin.email,
-        role: admin.role,
-      },
-    })
+    return success({ token }, "Login successful");
   } catch (error) {
-    return NextResponse.json(
-      { error: "Login failed" },
-      { status: 500 }
-    )
+    return errorResponse("Login failed", 500);
   }
 }
