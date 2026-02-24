@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div className="bg-gray-50">
       <Navbar />
-      <main className="max-w-7xl mx-auto px-6 md:px-10">
+      <main className="w-full max-w-[1400px] xl:max-w-[1500px] 2xl:max-w-[1600px] mx-auto px-4 lg:px-6">
         <Hero />
         <ComparisonSection />
         <Benefits />

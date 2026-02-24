@@ -130,7 +130,7 @@ export default function Benefits() {
 
   return (
     <section className="py-16 md:py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 md:px-10 text-center">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-12">
           Benefits of Choosing Just For Hearts
         </h2>

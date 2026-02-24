@@ -21,7 +21,7 @@ export default function ComparisonSection() {
 
   return (
     <section className="relative py-20 bg-gradient-to-r from-red-50 via-white to-green-50 overflow-hidden">
-      <div className="w-full px-8 xl:px-16 2xl:px-24">
+      <div className="w-full px-4 lg:px-6">
 
         {/* Heading */}
         <div className="text-center mb-12">
@@ -36,7 +36,7 @@ export default function ComparisonSection() {
         </div>
 
         {/* Table */}
-        <div className="flex overflow-x-auto gap-8 pb-6 md:grid md:grid-cols-3 gap-10 xl:gap-14">
+        <div className="flex overflow-x-auto gap-8 pb-6 md:grid md:grid-cols-3 gap-8 xl:gap-10">
 
           {/* Features Column */}
           <div className="w-full min-w-[300px] md:min-w-0 bg-white rounded-2xl shadow-lg">
@@ -45,9 +45,9 @@ export default function ComparisonSection() {
                 Features
               </h2>
             </div>
-            <div className="p-6 flex flex-col space-y-4">
+            <div className="p-6 flex flex-col space-y-3 lg:space-y-2">
               {features.map((feature, index) => (
-                <div key={index} className="h-12 flex items-center gap-3">
+                <div key={index} className="h-10 flex items-center gap-3">
                   <feature.icon className="w-6 h-6 text-red-500" />
                   <span className="text-gray-800 font-medium">
                     {feature.name}
@@ -72,9 +72,9 @@ export default function ComparisonSection() {
                 Chronic Care
               </h2>
             </div>
-            <div className="p-6 flex flex-col space-y-4 items-center">
+            <div className="p-6 flex flex-col space-y-3 lg:space-y-2 items-center">
               {features.map((feature, index) => (
-                <div key={index} className="h-12 flex items-center justify-center">
+                <div key={index} className="h-10 flex items-center justify-center">
                   {feature.chronic ? (
                     <Check className="w-6 h-6 text-green-600" />
                   ) : (
@@ -99,9 +99,9 @@ export default function ComparisonSection() {
               </h2>
             </div>
             {/* Content Area */}
-            <div className="p-6 flex flex-col space-y-4 items-center">
+            <div className="p-6 flex flex-col space-y-3 lg:space-y-2 items-center">
               {features.map((feature, index) => (
-                <div key={index} className="h-12 flex items-center justify-center">
+                <div key={index} className="h-10 flex items-center justify-center">
                   <Check className="w-6 h-6 text-green-600" />
                 </div>
               ))}
@@ -117,6 +117,14 @@ export default function ComparisonSection() {
             </div>
           </div>
 
+        </div>
+        <div className="mt-8 text-center max-w-4xl mx-auto">
+          <p className="text-lg font-semibold text-gray-700 leading-relaxed">
+            Join Chronic care today and secure your health journey.
+          </p>
+          <p className="text-lg font-semibold text-gray-700 leading-relaxed mt-2">
+            When you upgrade to a Personalized Care, everything you’ve already paid gets adjusted – making your upgrade effectively free!
+          </p>
         </div>
       </div>
     </section>
