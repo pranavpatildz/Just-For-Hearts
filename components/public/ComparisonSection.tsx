@@ -20,8 +20,8 @@ export default function ComparisonSection() {
   ];
 
   return (
-    <section className="relative py-16 bg-gradient-to-br from-red-50 via-blue-50 to-green-50">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="relative py-20 bg-gradient-to-r from-red-50 via-white to-green-50 overflow-hidden">
+      <div className="w-full px-8 xl:px-16 2xl:px-24">
 
         {/* Heading */}
         <div className="text-center mb-12">
@@ -36,10 +36,10 @@ export default function ComparisonSection() {
         </div>
 
         {/* Table */}
-        <div className="flex overflow-x-auto gap-5 pb-6 md:grid md:grid-cols-3">
+        <div className="flex overflow-x-auto gap-8 pb-6 md:grid md:grid-cols-3 gap-10 xl:gap-14">
 
           {/* Features Column */}
-          <div className="min-w-[300px] md:min-w-0 bg-white rounded-2xl shadow-lg">
+          <div className="w-full min-w-[300px] md:min-w-0 bg-white rounded-2xl shadow-lg">
             <div className="bg-red-600 text-white text-center py-4 rounded-t-2xl">
               <h2 className="text-lg font-bold tracking-wide">
                 Features
@@ -55,7 +55,10 @@ export default function ComparisonSection() {
                 </div>
               ))}
               <div className="mt-6 text-center">
-                <div className="bg-red-100 text-red-600 font-semibold py-3 rounded-xl">
+                <div className="inline-block px-8 py-3 rounded-xl 
+                                bg-gradient-to-r from-red-500 to-red-400 
+                                text-white font-semibold tracking-wide 
+                                shadow-md">
                   Fee
                 </div>
               </div>
@@ -63,7 +66,7 @@ export default function ComparisonSection() {
           </div>
 
           {/* Chronic Care Column */}
-          <div className="min-w-[300px] md:min-w-0 bg-white rounded-2xl shadow-lg">
+          <div className="w-full min-w-[300px] md:min-w-0 bg-white rounded-2xl shadow-lg">
             <div className="bg-blue-600 text-white text-center py-4 rounded-t-2xl">
               <h2 className="text-lg font-bold tracking-wide">
                 Chronic Care
@@ -88,7 +91,7 @@ export default function ComparisonSection() {
           </div>
 
           {/* Personalised Care Column */}
-          <div className="min-w-[300px] md:min-w-0 bg-white rounded-2xl shadow-lg">
+          <div className="w-full min-w-[300px] md:min-w-0 bg-white rounded-2xl shadow-lg">
             {/* Heading */}
             <div className="bg-green-600 text-white text-center py-4 rounded-t-2xl">
               <h2 className="text-lg font-bold tracking-wide">
