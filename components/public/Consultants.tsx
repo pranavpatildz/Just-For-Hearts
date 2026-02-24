@@ -1,0 +1,1 @@
+export default function Consultants() { return <div>Consultants</div>; }
