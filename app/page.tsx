@@ -3,6 +3,7 @@ import Hero from "@/components/public/Hero";
 import Benefits from "@/components/public/Benefits";
 import ComparisonSection from "@/components/public/ComparisonSection";
 import Programs from "@/components/public/Programs";
+
 import ComparisonTable from "@/components/public/ComparisonTable";
 import Experts from "@/components/public/Experts";
 import Consultants from "@/components/public/Consultants";
@@ -17,9 +18,10 @@ export default function Home() {
       <main className="w-full max-w-[1400px] xl:max-w-[1500px] 2xl:max-w-[1600px] mx-auto px-4 lg:px-6">
         <Hero />
         <ComparisonSection />
-        <Benefits />
         <Programs />
+
         <ComparisonTable />
+        <Benefits />
         <Experts />
         <Consultants />
         <Testimonials />

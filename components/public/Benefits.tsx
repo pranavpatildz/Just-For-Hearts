@@ -4,7 +4,7 @@ export default function Benefits() {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12 text-red-600 mb-4"
+          className="h-12 w-12 text-red-600 mb-3"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -25,7 +25,7 @@ export default function Benefits() {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12 text-blue-600 mb-4"
+          className="h-12 w-12 text-blue-600 mb-3"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -46,7 +46,7 @@ export default function Benefits() {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12 text-green-600 mb-4"
+          className="h-12 w-12 text-green-600 mb-3"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -67,7 +67,7 @@ export default function Benefits() {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12 text-yellow-600 mb-4"
+          className="h-12 w-12 text-yellow-600 mb-3"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -88,7 +88,7 @@ export default function Benefits() {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12 text-purple-600 mb-4"
+          className="h-12 w-12 text-purple-600 mb-3"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -109,7 +109,7 @@ export default function Benefits() {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12 text-teal-600 mb-4"
+          className="h-12 w-12 text-teal-600 mb-3"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -129,22 +129,22 @@ export default function Benefits() {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-gray-50">
+    <section className="py-24 bg-gradient-to-br from-blue-50 to-green-50 max-w-[1280px] mx-auto px-6 lg:px-8">
       <div className="max-w-7xl mx-auto px-4 lg:px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-12">
           Benefits of Choosing Just For Hearts
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-10">
           {benefitsData.map((benefit, index) => (
             <div
               key={index}
-              className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 flex flex-col items-center text-center"
+              className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center space-y-4"
             >
               {benefit.icon}
               <h3 className="text-xl font-semibold text-gray-800 mb-3">
                 {benefit.title}
               </h3>
-              <p className="text-gray-600">{benefit.description}</p>
+              <p className="text-gray-700 leading-relaxed text-sm md:text-base">{benefit.description}</p>
             </div>
           ))}
         </div>
