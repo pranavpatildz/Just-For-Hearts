@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  overflow-x: hidden;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -34,8 +38,30 @@ button:hover {
   opacity: 0.85;
 }
 
+.scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: #2563eb #e5e7eb;
+  scroll-behavior: smooth;
+}
+
+.scroll-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: #e5e7eb;
+  border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: #2563eb;
+  border-radius: 10px;
+}
+
  @media (max-width: 768px) {
   aside {
     width: 100%;
   }
 }
+
+
