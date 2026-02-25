@@ -127,7 +127,7 @@ export default function Hero() {
 
   return (
   <section className="w-full bg-zinc-50">
-    <div className="min-h-screen px-4 sm:flex sm:items-center sm:justify-center sm:py-16 py-4">
+    <div className="min-h-screen px-4 sm:flex sm:items-center sm:justify-center py-12 md:py-16">
               <div className="w-full max-w-[1200px]">
                 <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-8 bg-white rounded-3xl shadow-lg p-6 max-w-md md:max-w-6xl md:p-10 min-h-[500px] md:min-h-[420px] transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] transform ${isAnimating ? "opacity-0 translate-x-10 scale-[0.98]" : "opacity-100 translate-x-0 scale-100"}`}>
                   {/* Left Section: Headline, Subtext, Bullets, CTA */}

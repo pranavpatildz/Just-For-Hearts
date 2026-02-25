@@ -129,9 +129,9 @@ export default function Benefits() {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-blue-50 to-green-50 max-w-[1280px] mx-auto px-6 lg:px-8">
+    <section className="py-12 md:py-16 bg-gradient-to-br from-blue-50 to-green-50 max-w-[1280px] mx-auto px-6 lg:px-8">
       <div className="max-w-7xl mx-auto px-4 lg:px-6 text-center">
-        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-12">
+        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 md:mb-8">
           Benefits of Choosing Just For Hearts
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-10">

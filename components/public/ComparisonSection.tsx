@@ -20,11 +20,11 @@ export default function ComparisonSection() {
   ];
 
   return (
-    <section className="relative py-20 bg-gradient-to-r from-red-50 via-white to-green-50 overflow-hidden">
+    <section className="relative py-12 md:py-16 bg-gradient-to-r from-red-50 via-white to-green-50 overflow-hidden">
       <div className="w-full px-4 lg:px-6">
 
         {/* Heading */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-6 md:mb-8">
           <h2 className="text-3xl md:text-4xl font-bold">
             <span className="text-red-600">Chronic Care</span>
             <span className="text-gray-900 mx-2">VS</span>

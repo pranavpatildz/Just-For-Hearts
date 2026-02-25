@@ -30,7 +30,7 @@ export default function Consultants() {
   return (
     <section className="py-12 bg-gray-50"> {/* Reduced vertical padding */}
       <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
-        <div className="text-center mb-12">
+        <div className="text-center mb-6 md:mb-8">
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">Our Consultants</h2>
           <p className="mt-4 text-lg text-gray-600">Connect with our team of dedicated health professionals.</p>
         </div>

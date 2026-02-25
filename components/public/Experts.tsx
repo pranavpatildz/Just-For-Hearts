@@ -18,8 +18,8 @@ export default function Experts() {
   };
 
   return (
-    <section className="py-24 max-w-[1280px] mx-auto px-6 lg:px-8">
-      <div className="text-center mb-12">
+    <section className="py-12 md:py-16 max-w-[1280px] mx-auto px-6 lg:px-8">
+      <div className="text-center mb-6 md:mb-8">
         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">Meet Our Experts</h2>
         <p className="mt-4 text-lg text-gray-600">Guidance from the best in cardiac care.</p>
       </div>
