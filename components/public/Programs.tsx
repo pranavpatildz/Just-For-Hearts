@@ -103,75 +103,150 @@ export default function Programs() {
     }
   };
 
-  return (
-    <section className="max-w-[1280px] mx-auto px-6 lg:px-8 py-20">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-extrabold tracking-wide text-gray-900">
-          <span className="text-red-600">JFH</span> Programs
-        </h2>
+    return (
 
-      </div>
+      <section className="max-w-[1280px] mx-auto px-6 lg:px-8 pt-28 pb-12 overflow-visible">
 
-      {/* Main container for the three columns */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {programsData.map((column, colIndex) => (
-          <div key={colIndex} className="flex flex-col items-center">
+        <div className="text-center mb-12">
 
-            {/* Top Card */}
-            <div className="w-full max-w-sm rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 bg-white/95 backdrop-blur-sm overflow-hidden">
-              {/* Header Color Strip */}
-              <div className={`${column.top.headerColor} py-8 text-center rounded-t-3xl`}>
-                <h3 className="text-xl font-semibold tracking-wide text-white">{column.top.title}</h3>
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-wide text-gray-900">
+
+            <span className="text-red-600">JFH</span> Programs
+
+          </h2>
+
+          <p className="mt-4 text-lg text-gray-600">Discover the right path to a healthier heart and life.</p>
+
+        </div>
+
+  
+
+        {/* Main container for the three columns */}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+          {programsData.map((column, colIndex) => (
+
+            <div key={colIndex} className="flex flex-col items-center">
+
+  
+
+              {/* Top Card */}
+
+              <div className="w-full max-w-sm rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 bg-white/95 backdrop-blur-sm overflow-hidden z-10">
+
+                {/* Header Color Strip */}
+
+                <div className={`${column.top.headerColor} py-8 text-center rounded-t-3xl`}>
+
+                  <h3 className="text-xl font-semibold tracking-wide text-white">{column.top.title}</h3>
+
+                </div>
+
+                <div className="px-8 py-8 space-y-4">
+
+                  {column.top.text && <p className="leading-relaxed text-gray-700">{column.top.text}</p>}
+
+                  <ul className="list-none space-y-3 text-left text-gray-700 leading-relaxed">
+
+                    {column.top.bullets.map((bullet, bIndex) => (
+
+                      <li key={bIndex} className="flex items-center gap-2">
+
+                        <Check className={`w-4 h-4 ${getColorClass(column.top.cardColor, 'text')} flex-shrink-0`} />
+
+                        {bullet}
+
+                      </li>
+
+                    ))}
+
+                  </ul>
+
+                  {column.top.hasButton && (
+
+                    <div className="mt-6 text-center">
+
+                      <Link href={column.top.buttonLink} className="inline-block bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full px-6 py-3 font-semibold shadow-lg hover:scale-105 transition-all duration-300">
+
+                        {column.top.buttonText}
+
+                      </Link>
+
+                    </div>
+
+                  )}
+
+                </div>
+
               </div>
-              <div className="px-8 py-8 space-y-4">
-                {column.top.text && <p className="leading-relaxed text-gray-700">{column.top.text}</p>}
-                <ul className="list-none space-y-3 text-left text-gray-700 leading-relaxed">
-                  {column.top.bullets.map((bullet, bIndex) => (
+
+  
+
+              {/* Vertical Connector */}
+
+              <div className="relative flex flex-col items-center py-4 z-10 hidden md:flex"> {/* Hide on mobile */}
+
+                {/* Top Triangle Pointer */}
+
+                <div className={`w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-current ${getColorClass(column.top.cardColor, 'text')}`}></div>
+
+                {/* Vertical line */}
+
+                <div className={`w-0.5 h-12 ${getColorClass(column.top.cardColor, 'bg')} mx-auto`}></div>
+
+                {/* Bottom Triangle Pointer */}
+
+                <div className={`w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-current ${getColorClass(column.top.cardColor, 'text')}`}></div>
+
+              </div>
+
+  
+
+              {/* Bottom Card */}
+
+              <div className="w-full max-w-sm flex flex-col justify-start rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 bg-white/95 backdrop-blur-sm overflow-hidden border-t-4" style={{ borderColor: getColorClass(column.bottom.cardColor, 'border').replace('border-', '#') }}>
+
+                <h3 className={`text-xl font-bold mb-3 px-6 pt-6 ${getColorClass(column.bottom.cardColor, 'text')} underline decoration-2 decoration-current`}>
+
+                  {column.bottom.title}
+
+                </h3>
+
+                {column.bottom.text && <p className="leading-relaxed text-gray-700 mb-3 px-6">{column.bottom.text}</p>}
+
+                <ul className="list-none space-y-1 text-left text-gray-700 leading-relaxed px-6 pb-6">
+
+                  {column.bottom.bullets.map((bullet, bIndex) => (
+
                     <li key={bIndex} className="flex items-center gap-2">
-                      <Check className={`w-4 h-4 ${getColorClass(column.top.cardColor, 'text')} flex-shrink-0`} />
+
+                      <Check className={`w-4 h-4 ${getColorClass(column.bottom.cardColor, 'text')} flex-shrink-0`} />
+
                       {bullet}
+
                     </li>
+
+                    
+
                   ))}
+
                 </ul>
-                {column.top.hasButton && (
-                  <div className="mt-6 text-center">
-                    <Link href={column.top.buttonLink} className="inline-block bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full px-6 py-3 font-semibold shadow-lg hover:scale-105 transition-all duration-300">
-                      {column.top.buttonText}
-                    </Link>
-                  </div>
-                )}
+
               </div>
+
+  
+
             </div>
 
-            {/* Vertical Connector */}
-            <div className="flex flex-col items-center py-4">
-              {/* Top Triangle Pointer */}
-              <div className={`w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-current ${getColorClass(column.top.cardColor, 'text')}`}></div>
-              {/* Vertical line */}
-              <div className={`w-0.5 h-12 ${getColorClass(column.top.cardColor, 'bg')} mx-auto`}></div>
-              {/* Bottom Triangle Pointer */}
-              <div className={`w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-current ${getColorClass(column.top.cardColor, 'text')}`}></div>
-            </div>
+          ))}
 
-            {/* Bottom Card */}
-            <div className="w-full max-w-sm min-h-[250px] rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 bg-white/95 backdrop-blur-sm overflow-hidden border-t-4" style={{ borderColor: getColorClass(column.bottom.cardColor, 'border').replace('border-', '#') }}>
-              <h3 className={`text-xl font-bold mb-4 px-8 pt-8 ${getColorClass(column.bottom.cardColor, 'text')} underline decoration-2 decoration-current`}>
-                {column.bottom.title}
-              </h3>
-              {column.bottom.text && <p className="leading-relaxed text-gray-700 mb-4 px-8">{column.bottom.text}</p>}
-              <ul className="list-none space-y-3 text-left text-gray-700 leading-relaxed px-8 pb-8">
-                {column.bottom.bullets.map((bullet, bIndex) => (
-                  <li key={bIndex} className="flex items-center gap-2">
-                    <Check className={`w-4 h-4 ${getColorClass(column.bottom.cardColor, 'text')} flex-shrink-0`} />
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
-            </div>
+        </div>
 
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+      </section>
+
+    );
+
+  }
+
+  
