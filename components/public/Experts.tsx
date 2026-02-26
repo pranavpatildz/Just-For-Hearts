@@ -21,7 +21,7 @@ export default function Experts() {
     <section className="py-12 md:py-16 max-w-[1280px] mx-auto px-6 lg:px-8">
       <div className="text-center mb-6 md:mb-8">
         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">Meet Our Experts</h2>
-        <p className="mt-4 text-lg text-gray-600">Guidance from the best in cardiac care.</p>
+        <p className="mt-4 text-gray-600 text-lg md:text-xl leading-relaxed">Guidance from the best in cardiac care.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center bg-white rounded-2xl shadow-lg p-8">
         {/* Left Section: Image */}
@@ -42,7 +42,7 @@ export default function Experts() {
           <p className="text-gray-700 leading-relaxed">{expertData.description}</p>
           <div className="space-y-2">
             <h4 className="text-lg font-bold text-gray-800">Areas of Expertise:</h4>
-            <ul className="list-disc list-inside text-gray-700 space-y-2">
+            <ul className="list-disc list-inside space-y-3 text-gray-600 text-sm md:text-lg leading-relaxed">
               {expertData.expertise.map((item, index) => (
                 <li key={index}>{item}</li>
               ))}

@@ -6,6 +6,7 @@ import {
   HeartPulse,
   CheckCircle
 } from "lucide-react";
+import Reveal from "@/components/ui/Reveal";
 
 export default function JFHProBenefits() {
   const benefitsData = [
@@ -51,33 +52,38 @@ export default function JFHProBenefits() {
     <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] py-10 md:py-16 bg-gradient-to-r from-blue-100 via-blue-200 to-green-200">
       <div className="max-w-6xl mx-auto px-4">
         {/* Section Heading */}
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">
-          <span className="text-red-500">JFH Pro</span>{' '}
-          <span className="text-gray-900">Benefits</span>
-        </h2>
+        <Reveal delay={0.2}>
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">
+            <span className="text-red-500">JFH Pro</span>{' '}
+            <span className="text-gray-900">Benefits</span>
+          </h2>
+        </Reveal>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-          {benefitsData.map((benefit, index) => {
-            const IconComponent = benefit.icon;
-            return (
-              <div
-                key={index}
-                className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-md p-4 md:p-8 min-h-[150px] md:min-h-[220px] flex flex-col justify-center items-center text-center hover:shadow-lg transition-all duration-300 border border-gray-200 gap-1"
-              >
-                <div className="text-2xl">
-                  <IconComponent className={`w-6 h-6 ${benefit.color}`} />
-                </div>
-                <h3 className="font-semibold text-sm md:text-lg text-gray-800">
-                  {benefit.heading}
-                </h3>
-                <p className="text-gray-600 text-xs md:text-base leading-relaxed">
-                  {benefit.description}
-                </p>
-              </div>
-            );
-          })}
-        </div>
+        <Reveal delay={0.3}>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+            {benefitsData.map((benefit, index) => {
+              const IconComponent = benefit.icon;
+              return (
+                <Reveal key={index} delay={index * 0.1}>
+                  <div
+                    className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-md p-4 md:p-8 min-h-[150px] md:min-h-[220px] flex flex-col justify-center items-center text-center hover:shadow-lg transition-all duration-300 border border-gray-200 gap-1"
+                  >
+                    <div className="text-2xl">
+                      <IconComponent className={`w-6 h-6 ${benefit.color}`} />
+                    </div>
+                    <h3 className="font-semibold text-sm md:text-lg text-gray-800">
+                      {benefit.heading}
+                    </h3>
+                    <p className="text-gray-600 text-xs md:text-base leading-relaxed">
+                      {benefit.description}
+                    </p>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </Reveal>
       </div>
     </section>
   );
