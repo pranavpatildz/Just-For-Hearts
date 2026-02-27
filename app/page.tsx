@@ -6,10 +6,8 @@ import ComparisonSection from "@/components/public/ComparisonSection";
 import Programs from "@/components/public/Programs";
 import JFHProBenefits from "@/components/public/JFHProBenefits";
 import MeetExperts from "@/components/public/MeetExperts";
-
+import ConsultantsCarousel from "@/components/public/ConsultantsCarousel";
 import ComparisonTable from "@/components/public/ComparisonTable";
-import Experts from "@/components/public/Experts";
-import Consultants from "@/components/public/Consultants";
 import Testimonials from "@/components/public/Testimonials";
 import FAQ from "@/components/public/FAQ";
 import Footer from "@/components/public/Footer";
@@ -28,11 +26,9 @@ export default function Home() {
         </Reveal>
         <JFHProBenefits />
         <MeetExperts />
-
+        <ConsultantsCarousel />
         <ComparisonTable />
         <Benefits />
-        <Experts />
-        <Consultants />
         <Testimonials />
         <FAQ />
       </main>

@@ -64,4 +64,17 @@ button:hover {
   }
 }
 
+@layer utilities {
+  @keyframes infinite-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-100% / 3)); }
+  }
+  .animate-infinite-scroll {
+    animation: infinite-scroll 90s linear infinite;
+  }
+  .group-hover\\:paused:hover .animate-infinite-scroll {
+    animation-play-state: paused;
+  }
+}
+
 
