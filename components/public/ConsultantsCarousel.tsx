@@ -111,14 +111,21 @@ const doctors = [
   }
 ]
 
-const visibleDesktop = 3
+
 
 export default function ConsultantsCarousel() {
   const [current, setCurrent] = useState(0)
+  const [visibleCards, setVisibleCards] = useState(1)
   const autoRef = useRef<NodeJS.Timeout | null>(null)
   const pauseRef = useRef<NodeJS.Timeout | null>(null)
 
-  const extendedDoctors = [...doctors, ...doctors.slice(0, visibleDesktop)]
+    const extendedDoctors = [
+
+      ...doctors,
+
+      ...doctors.slice(0, visibleCards)
+
+    ]
 
   const startAuto = () => {
     if (autoRef.current) clearInterval(autoRef.current)
@@ -181,7 +188,7 @@ export default function ConsultantsCarousel() {
             <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{
-                transform: `translateX(-${current * (100 / (window.innerWidth >= 1024 ? visibleDesktop : 1))}%)`
+                transform: `translateX(-${current * (100 / visibleCards)}%)`
               }}
             >
               {extendedDoctors.map((doc, index) => (
@@ -189,7 +196,7 @@ export default function ConsultantsCarousel() {
                   key={index}
                   className="w-full md:w-1/3 shrink-0 px-4"
                   style={{
-                    width: `${100 / (window.innerWidth >= 1024 ? visibleDesktop : 1)}%`
+                    width: `${100 / visibleCards}%`
                   }}
                 >
                   <div className="bg-white rounded-3xl shadow-xl p-6 mx-auto max-w-sm flex flex-col h-[520px]">

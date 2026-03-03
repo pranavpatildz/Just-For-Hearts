@@ -10,19 +10,22 @@ const poppins = Poppins({
   weight: ["400", "500"],
 });
 
-const getColorClass = (color: string, type: "text" | "bg") => {
-  const colorMap: Record<string, { text: string; bg: string }> = {
+const getColorClass = (color: string, type: "text" | "bg" | "border") => {
+  const colorMap: Record<string, { text: string; bg: string; border: string }> = {
     red: {
       text: "text-red-500",
       bg: "bg-red-500",
+      border: "border-red-500",
     },
     blue: {
       text: "text-blue-500",
       bg: "bg-blue-500",
+      border: "border-blue-500",
     },
     green: {
       text: "text-green-500",
       bg: "bg-green-500",
+      border: "border-green-500",
     },
   };
 

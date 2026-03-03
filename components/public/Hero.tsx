@@ -26,6 +26,7 @@ interface SlideContent {
   bullets: string[];
   cta: string;
   ctaLink: string; // Link for the CTA button
+  price?: string;
   image: string;
 }
 
