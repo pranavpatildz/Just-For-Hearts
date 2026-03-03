@@ -116,22 +116,34 @@ const doctors = [
 export default function ConsultantsCarousel() {
   const [current, setCurrent] = useState(0)
   const [visibleCards, setVisibleCards] = useState(1)
+  const [isTransitionEnabled, setIsTransitionEnabled] = useState(true)
   const autoRef = useRef<NodeJS.Timeout | null>(null)
   const pauseRef = useRef<NodeJS.Timeout | null>(null)
 
-    const extendedDoctors = [
+  const extendedDoctors = [
+    ...doctors,
+    ...doctors.slice(0, visibleCards)
+  ]
 
-      ...doctors,
+  useEffect(() => {
+    const updateVisibleCards = () => {
+      setVisibleCards(window.innerWidth >= 1024 ? 3 : 1)
+    }
 
-      ...doctors.slice(0, visibleCards)
+    updateVisibleCards()
+    window.addEventListener("resize", updateVisibleCards)
+    return () => window.removeEventListener("resize", updateVisibleCards)
+  }, [])
 
-    ]
+  useEffect(() => {
+    setCurrent(0)
+  }, [visibleCards])
 
   const startAuto = () => {
     if (autoRef.current) clearInterval(autoRef.current)
     autoRef.current = setInterval(() => {
       setCurrent(prev => prev + 1)
-    }, 4000)
+    }, 3000)
   }
 
   const pauseAuto = () => {
@@ -150,28 +162,31 @@ export default function ConsultantsCarousel() {
 
   const prev = () => {
     pauseAuto()
-    setCurrent(prev => prev - 1)
+    setCurrent(prev => prev + 1)
   }
 
   useEffect(() => {
     startAuto()
     return () => {
       if (autoRef.current) clearInterval(autoRef.current)
+      if (pauseRef.current) clearTimeout(pauseRef.current)
     }
   }, [])
 
+  const handleTransitionEnd = () => {
+    if (current >= doctors.length) {
+      setIsTransitionEnabled(false)
+      setCurrent(0)
+    }
+  }
+
   useEffect(() => {
-    if (current === doctors.length) {
-      setTimeout(() => {
-        setCurrent(0)
-      }, 500)
+    if (!isTransitionEnabled) {
+      requestAnimationFrame(() => {
+        setIsTransitionEnabled(true)
+      })
     }
-    if (current < 0) {
-      setTimeout(() => {
-        setCurrent(doctors.length - 1)
-      }, 500)
-    }
-  }, [current, doctors.length]) // Add doctors.length to dependency array
+  }, [isTransitionEnabled])
 
   return (
     <section className="py-16 bg-slate-50 overflow-hidden">
@@ -186,7 +201,8 @@ export default function ConsultantsCarousel() {
         <div className="relative">
           <div className="overflow-hidden">
             <div
-              className="flex transition-transform duration-500 ease-in-out"
+              className={`flex duration-500 ease-in-out ${isTransitionEnabled ? "transition-transform" : ""}`}
+              onTransitionEnd={handleTransitionEnd}
               style={{
                 transform: `translateX(-${current * (100 / visibleCards)}%)`
               }}
@@ -194,12 +210,9 @@ export default function ConsultantsCarousel() {
               {extendedDoctors.map((doc, index) => (
                 <div
                   key={index}
-                  className="w-full md:w-1/3 shrink-0 px-4"
-                  style={{
-                    width: `${100 / visibleCards}%`
-                  }}
+                  className="w-full lg:w-1/3 flex-shrink-0 px-4"
                 >
-                  <div className="bg-white rounded-3xl shadow-xl p-6 mx-auto max-w-sm flex flex-col h-[520px]">
+                  <div className="bg-white rounded-3xl shadow-xl p-6 mx-auto max-w-sm lg:mx-0 lg:max-w-none flex flex-col h-[520px]">
 
                     {/* IMAGE */}
                     <div className="relative w-full h-72 rounded-2xl overflow-hidden">
