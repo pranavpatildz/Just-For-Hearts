@@ -1,14 +1,12 @@
 import Navbar from "@/components/public/Navbar";
 import Hero from "@/components/public/Hero";
 import Reveal from "@/components/ui/Reveal";
-import Benefits from "@/components/public/Benefits";
 import ComparisonSection from "@/components/public/ComparisonSection";
 import Programs from "@/components/public/Programs";
 import JFHProBenefits from "@/components/public/JFHProBenefits";
 import MeetExperts from "@/components/public/MeetExperts";
 import ConsultantsCarousel from "@/components/public/ConsultantsCarousel";
-import ComparisonTable from "@/components/public/ComparisonTable";
-import Testimonials from "@/components/public/Testimonials";
+import PatientFeedbackSection from "@/components/public/PatientFeedbackSection";
 import FAQ from "@/components/public/FAQ";
 import Footer from "@/components/public/Footer";
 
@@ -27,9 +25,7 @@ export default function Home() {
         <JFHProBenefits />
         <MeetExperts />
         <ConsultantsCarousel />
-        <ComparisonTable />
-        <Benefits />
-        <Testimonials />
+        <PatientFeedbackSection />
         <FAQ />
       </main>
       <Footer />
