@@ -7,7 +7,7 @@ import JFHProBenefits from "@/components/public/JFHProBenefits";
 import MeetExperts from "@/components/public/MeetExperts";
 import ConsultantsCarousel from "@/components/public/ConsultantsCarousel";
 import PatientFeedbackSection from "@/components/public/PatientFeedbackSection";
-import FAQ from "@/components/public/FAQ";
+import FAQSection from "@/components/public/FAQSection";
 import Footer from "@/components/public/Footer";
 
 export default function Home() {
@@ -26,7 +26,7 @@ export default function Home() {
         <MeetExperts />
         <ConsultantsCarousel />
         <PatientFeedbackSection />
-        <FAQ />
+        <FAQSection />
       </main>
       <Footer />
     </div>
