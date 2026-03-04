@@ -5,11 +5,12 @@ import "./globals.css"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["600", "700"]
+  variable: "--font-playfair"
 })
 
 const inter = Inter({
-  subsets: ["latin"]
+  subsets: ["latin"],
+  variable: "--font-inter"
 })
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${playfair.variable}`}>
         {children}
         <ScrollToTop />
       </body>

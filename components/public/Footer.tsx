@@ -38,13 +38,13 @@ export default function Footer() {
           <div className="text-center md:text-left">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Legal</h3>
             <div className="space-y-2 text-gray-600">
-              <a href="#" className="block hover:text-black transition-colors">
+              <a href="/terms-conditions" className="block hover:text-black transition-colors">
                 Terms & Conditions
               </a>
-              <a href="#" className="block hover:text-black transition-colors">
+              <a href="/privacy-policy" className="block hover:text-black transition-colors">
                 Privacy Policy
               </a>
-              <a href="#" className="block hover:text-black transition-colors">
+              <a href="/refund-policy" className="block hover:text-black transition-colors">
                 Refund Policy
               </a>
             </div>
@@ -125,3 +125,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+
