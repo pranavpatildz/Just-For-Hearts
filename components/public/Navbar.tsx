@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,8 +11,15 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-6 md:px-10 py-4 flex items-center justify-between">
         {/* Left: Logo */}
-        <Link href="/" className="text-lg font-semibold text-gray-800">
-          Just For Hearts
+        <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-gray-800">
+          <Image
+            src="/images/logo.png"
+            alt="Just For Hearts"
+            width={44}
+            height={44}
+            className="h-10 md:h-11 w-auto object-contain"
+          />
+          <span>Just For Hearts</span>
         </Link>
 
         {/* Right: Desktop Menu */}
@@ -21,7 +29,7 @@ export default function Navbar() {
           <NavLink href="/get-started">Get Started</NavLink>
           <Link
             href="/admin/login"
-            className="bg-red-600 hover:bg-red-700 text-white font-medium px-5 py-2 rounded-full transition-colors duration-300 inline-block"
+            className="bg-red-600 hover:bg-red-700 text-white text-lg font-medium px-5 py-2 rounded-full transition-colors duration-300 inline-block"
           >
             Login
           </Link>
@@ -83,7 +91,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <Link
       href={href}
-      className="relative text-gray-700 hover:text-gray-900 font-medium group transition-colors duration-300"
+      className="relative text-gray-700 hover:text-gray-900 text-lg font-medium group transition-colors duration-300"
     >
       {children}
       <span className="absolute left-0 bottom-0 w-full h-[2px] bg-red-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
