@@ -9,6 +9,7 @@ import {
   TrendingUp,
   Activity,
   MessageCircle,
+  ClipboardCheck,
 } from "lucide-react";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
@@ -18,49 +19,61 @@ const benefits = [
     title: "25+ Years of Clinical Excellence",
     description:
       "Backed by senior doctors, cardiologists, diabetes educators & rehab experts with 10+ years of experience each",
-    accent: "bg-red-200",
+    cardBg: "bg-gradient-to-b from-red-50 to-white",
+    iconBg: "bg-red-100",
+    iconColor: "text-red-500",
+    strip: "bg-red-300",
     icon: Stethoscope,
-    color: "text-red-500",
   },
   {
     title: "A whole Team Behind Every Patient",
     description:
       "Not just one coach - a coordinated team of experts guides your journey across diet, exercise, stress, and medications",
-    accent: "bg-green-200",
+    cardBg: "bg-gradient-to-b from-green-50 to-white",
+    iconBg: "bg-green-100",
+    iconColor: "text-green-600",
+    strip: "bg-green-300",
     icon: Users,
-    color: "text-green-500",
   },
   {
     title: "Remote Monitoring That Works",
     description:
       "Real-time tracking of vitals, daily habits & red flags - no hospital queues, just smart follow-ups",
-    accent: "bg-blue-200",
+    cardBg: "bg-gradient-to-b from-blue-50 to-white",
+    iconBg: "bg-blue-100",
+    iconColor: "text-blue-600",
+    strip: "bg-blue-300",
     icon: HeartPulse,
-    color: "text-blue-500",
   },
   {
     title: "Proven, Trusted, and Growing",
     description:
       "50,000+ patients empowered | 10,000+ health events delivered | Lakhs of consultations and counting",
-    accent: "bg-red-200",
+    cardBg: "bg-gradient-to-b from-red-50 to-white",
+    iconBg: "bg-red-100",
+    iconColor: "text-red-500",
+    strip: "bg-red-300",
     icon: TrendingUp,
-    color: "text-red-500",
   },
   {
-    title: "Remote Monitoring That Works",
+    title: "Personalized Heart Health Plans",
     description:
-      "Real-time tracking of vitals, daily habits & red flags - no hospital queues, just smart follow-ups",
-    accent: "bg-green-200",
-    icon: Activity,
-    color: "text-green-500",
+      "Customized care plans tailored to your heart condition, lifestyle, and medical history. Our experts continuously monitor and adjust your plan for better outcomes.",
+    cardBg: "bg-gradient-to-b from-green-50 to-white",
+    iconBg: "bg-green-100",
+    iconColor: "text-green-600",
+    strip: "bg-green-300",
+    icon: ClipboardCheck,
   },
   {
     title: "Continuous 1-on-1 Human Support",
     description:
       "Coaches reach out with weekly check-ins, personalized feedback & real conversations - no bots, no templates",
-    accent: "bg-blue-200",
+    cardBg: "bg-gradient-to-b from-blue-50 to-white",
+    iconBg: "bg-blue-100",
+    iconColor: "text-blue-600",
+    strip: "bg-blue-300",
     icon: MessageCircle,
-    color: "text-blue-500",
   },
 ];
 
@@ -104,21 +117,22 @@ export default function WhyJFHPage() {
             return (
               <motion.div
                 key={`${benefit.title}-${index}`}
-                className="bg-white relative rounded-2xl border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col h-full"
+                className={`relative rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300 p-8 text-center flex flex-col items-center min-h-[250px] h-full justify-between overflow-hidden ${benefit.cardBg}`}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gray-100 rounded-full blur-3xl opacity-30" />
-                <div className="relative z-10 flex flex-col flex-grow items-center text-center px-6 py-8">
-                  <div className="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center shadow-sm mb-4">
-                    <Icon className={`w-6 h-6 ${benefit.color}`} />
+                <div className="relative z-10 flex flex-col flex-grow items-center text-center">
+                  <div
+                    className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 ${benefit.iconBg}`}
+                  >
+                    <Icon className={`w-6 h-6 ${benefit.iconColor}`} />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{benefit.title}</h3>
-                  <p className="mt-3 text-gray-600">{benefit.description}</p>
+                  <p className="text-gray-600 text-sm leading-relaxed">{benefit.description}</p>
                 </div>
-                <div className={`${benefit.accent} h-12 w-full mt-auto`} />
+                <div className={`absolute bottom-0 left-0 w-full h-2 rounded-b-2xl ${benefit.strip}`} />
               </motion.div>
             );
           })}
