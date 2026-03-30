@@ -15,7 +15,7 @@ const steps = [
 export default function StepIndicator({ currentStep }: StepIndicatorProps) {
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:p-5">
         {steps.map((step, index) => {
           const isCompleted = currentStep > step.id;
           const isActive = currentStep === step.id;
@@ -28,17 +28,17 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
                   className={[
                     "w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300",
                     isCompleted
-                      ? "bg-green-500 text-white"
+                      ? "bg-teal-600 text-white"
                       : isActive
-                        ? "bg-red-500 text-white"
-                        : "bg-gray-200 text-gray-600",
+                        ? "bg-teal-700 text-white"
+                        : "border border-slate-200 bg-white text-slate-500",
                   ].join(" ")}
                 >
                   {isCompleted ? <Check className="w-4 h-4" /> : step.id}
                 </div>
-                <span className="text-sm md:text-base font-medium text-gray-700">{step.label}</span>
+                <span className="text-sm md:text-base font-medium text-slate-700">{step.label}</span>
               </div>
-              {!isLast && <div className="h-[2px] flex-1 mx-3 bg-gray-200" aria-hidden="true" />}
+              {!isLast && <div className="mx-3 h-[2px] flex-1 bg-slate-200" aria-hidden="true" />}
             </div>
           );
         })}

@@ -85,37 +85,37 @@ const cards = [
 
 const accents = [
   {
-    cardBg: "bg-gradient-to-b from-red-50 to-white",
-    iconBg: "bg-red-100",
-    iconColor: "text-red-500",
-    strip: "bg-red-300",
+    cardBg: "bg-white",
+    iconBg: "bg-slate-100",
+    iconColor: "text-teal-600",
+    strip: "bg-teal-600",
   },
   {
-    cardBg: "bg-gradient-to-b from-green-50 to-white",
-    iconBg: "bg-green-100",
-    iconColor: "text-green-600",
-    strip: "bg-green-300",
+    cardBg: "bg-white",
+    iconBg: "bg-teal-50",
+    iconColor: "text-teal-500",
+    strip: "bg-teal-500",
   },
   {
-    cardBg: "bg-gradient-to-b from-blue-50 to-white",
-    iconBg: "bg-blue-100",
-    iconColor: "text-blue-600",
-    strip: "bg-blue-300",
+    cardBg: "bg-white",
+    iconBg: "bg-slate-100",
+    iconColor: "text-teal-500",
+    strip: "bg-teal-500",
   },
 ] as const;
 
 export default function WhyYearRoundPage() {
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen bg-slate-50">
       <Navbar />
 
-      <section className="bg-gradient-to-r from-green-50 via-white to-green-50">
-        <div className="max-w-6xl mx-auto px-6 py-20 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800">
-            Why <span className="text-red-500">Year-Round</span>, not just one{" "}
-            <span className="text-red-500">consult</span>?
+      <section className="bg-[#F8FAFC]">
+        <div className="mx-auto max-w-6xl px-4 py-16 text-center md:px-8 md:py-20 lg:px-16">
+          <h1 className="text-3xl md:text-5xl font-semibold text-slate-800">
+            Why <span className="text-teal-600">Year-Round</span>, not just one{" "}
+            <span className="text-teal-600">consult</span>?
           </h1>
-          <p className="max-w-3xl mx-auto text-gray-600 text-lg leading-relaxed mt-6">
+          <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-slate-600 md:text-lg">
             Because Health Is a Journey - Not a Prescription. Diabetics avoid sugar spikes and
             complications, Heart patients reduced re-hospitalizations, Obesity is managed
             sustainably, not temporarily. And it all happens not in one visit, but in small steps
@@ -123,7 +123,7 @@ export default function WhyYearRoundPage() {
           </p>
           <Link
             href="/get-started"
-            className="inline-flex mt-8 bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-full shadow-md transition"
+            className="primary-btn mt-8"
           >
             Contact Us
           </Link>
@@ -131,8 +131,8 @@ export default function WhyYearRoundPage() {
       </section>
 
       <section>
-        <div className="max-w-7xl mx-auto px-6 py-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="mx-auto max-w-7xl px-4 py-12 md:px-8 md:py-16 lg:px-16">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
             {cards.map((card, index) => {
               const Icon = card.icon;
               const accent = accents[index % accents.length];
@@ -140,15 +140,15 @@ export default function WhyYearRoundPage() {
               return (
                 <article
                   key={card.title}
-                  className={`relative rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300 p-8 text-center flex flex-col items-center min-h-[250px] h-full justify-between overflow-hidden ${accent.cardBg}`}
+                  className={`relative flex min-h-[250px] h-full flex-col items-center justify-between overflow-hidden rounded-2xl p-5 text-center shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-xl md:p-6 ${accent.cardBg}`}
                 >
                   <div
                     className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 ${accent.iconBg}`}
                   >
                     <Icon className={`w-7 h-7 ${accent.iconColor}`} />
                   </div>
-                  <h3 className="font-semibold text-lg text-gray-800 mb-2">{card.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{card.description}</p>
+                  <h3 className="mb-2 text-xl font-medium text-slate-800">{card.title}</h3>
+                  <p className="text-sm leading-relaxed text-slate-600 md:text-base">{card.description}</p>
                   <div
                     className={`absolute bottom-0 left-0 w-full h-2 rounded-b-2xl ${accent.strip}`}
                     aria-hidden="true"

@@ -12,9 +12,9 @@ import Footer from "@/components/public/Footer";
 
 export default function Home() {
   return (
-    <div className="bg-gray-50">
+    <div className="bg-slate-50">
       <Navbar />
-      <main className="w-full max-w-[1400px] xl:max-w-[1500px] 2xl:max-w-[1600px] mx-auto px-4 lg:px-6">
+      <main className="mx-auto w-full max-w-[1440px] space-y-2 px-4 md:px-8 lg:px-16">
         <Reveal>
           <Hero />
         </Reveal>

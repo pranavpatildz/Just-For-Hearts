@@ -192,7 +192,7 @@ export default function ServiceSelection({
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <label htmlFor="service-dropdown-button" className="text-sm font-semibold text-gray-700">
+        <label htmlFor="service-dropdown-button" className="text-sm font-semibold text-slate-700">
           Select Service
         </label>
         <div ref={dropdownRef} className="relative mb-3 w-full overflow-visible">
@@ -202,13 +202,13 @@ export default function ServiceSelection({
             aria-haspopup="listbox"
             aria-expanded={open}
             onClick={() => setOpen((prev) => !prev)}
-            className="flex min-h-12 w-full items-center justify-between rounded-xl border border-[#ff4d4f] bg-white px-4 py-3 text-left text-[15px] font-medium text-gray-900 shadow-[0_10px_30px_rgba(15,23,42,0.06)] outline-none transition-all duration-300 hover:border-red-400 focus:border-[#ff4d4f] focus:shadow-[0_0_0_4px_rgba(255,77,79,0.16)] sm:px-5 sm:py-4"
+            className="flex min-h-12 w-full items-center justify-between rounded-xl border border-slate-300 bg-white px-4 py-3 text-left text-[15px] font-medium text-slate-900 shadow-sm outline-none transition-all duration-300 hover:border-teal-600 focus:border-teal-700 focus:shadow-[0_0_0_4px_rgba(13,148,136,0.14)] sm:px-5 sm:py-4"
           >
-            <span className={selectedService ? "text-gray-900" : "text-gray-500"}>
+            <span className={selectedService ? "text-slate-900" : "text-slate-500"}>
               {selectedService || "Select a service..."}
             </span>
             <ChevronDown
-              className={`ml-3 h-5 w-5 shrink-0 text-[#ff4d4f] transition-transform duration-300 ${
+              className={`ml-3 h-5 w-5 shrink-0 text-teal-600 transition-transform duration-300 ${
                 open ? "rotate-180" : ""
               }`}
               aria-hidden="true"
@@ -216,7 +216,7 @@ export default function ServiceSelection({
           </button>
 
           <div
-            className={`absolute left-0 right-0 top-full z-30 mt-2 origin-top overflow-hidden rounded-xl border border-red-100 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.14)] transition-all duration-200 ${
+            className={`absolute left-0 right-0 top-full z-30 mt-2 origin-top overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.14)] transition-all duration-200 ${
               open
                 ? "pointer-events-auto translate-y-0 opacity-100"
                 : "pointer-events-none -translate-y-1 opacity-0"
@@ -233,8 +233,8 @@ export default function ServiceSelection({
                     }}
                     className={`w-full px-4 py-3 text-left text-[15px] transition-colors duration-200 sm:px-5 ${
                       selectedService === service
-                        ? "bg-red-50 text-red-600"
-                        : "text-gray-800 hover:bg-red-50 hover:text-red-600"
+                        ? "bg-teal-50 text-teal-600"
+                        : "text-slate-800 hover:bg-teal-50 hover:text-teal-600"
                     }`}
                   >
                     {service}
@@ -247,17 +247,17 @@ export default function ServiceSelection({
       </div>
 
       {selectedServiceDetails && (
-        <div className="space-y-4 rounded-2xl border border-[#ffd6d6] bg-[#fff5f5] p-5 shadow-[0_16px_36px_rgba(255,77,79,0.08)] sm:p-6">
+        <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-md sm:p-6">
           {("title" in selectedServiceDetails || "doctorName" in selectedServiceDetails) && (
             <div className="space-y-1">
               {"title" in selectedServiceDetails && selectedServiceDetails.title && (
-                <h3 className="text-xl font-bold text-gray-900">{selectedServiceDetails.title}</h3>
+                <h3 className="text-xl font-medium text-slate-900">{selectedServiceDetails.title}</h3>
               )}
               {"doctorName" in selectedServiceDetails && selectedServiceDetails.doctorName && (
-                <h3 className="text-xl font-bold text-gray-900">{selectedServiceDetails.doctorName}</h3>
+                <h3 className="text-xl font-medium text-slate-900">{selectedServiceDetails.doctorName}</h3>
               )}
               {"designation" in selectedServiceDetails && selectedServiceDetails.designation && (
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#ff4d4f]">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-600">
                   {selectedServiceDetails.designation}
                 </p>
               )}
@@ -265,19 +265,19 @@ export default function ServiceSelection({
           )}
 
           <div className="space-y-3">
-            <p className="text-base leading-7 text-gray-800">{selectedServiceDetails.marathiText}</p>
-            <p className="text-base leading-7 text-gray-700">{selectedServiceDetails.englishText}</p>
+            <p className="text-base leading-7 text-slate-800">{selectedServiceDetails.marathiText}</p>
+            <p className="text-base leading-7 text-slate-600">{selectedServiceDetails.englishText}</p>
           </div>
 
           {"price" in selectedServiceDetails && selectedServiceDetails.price && (
-            <div className="inline-flex rounded-full border border-[#ffb3b4] bg-white px-4 py-2 text-sm font-semibold text-[#d9363e] shadow-sm">
+            <div className="inline-flex rounded-full border border-teal-100 bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-600 shadow-sm">
               {selectedServiceDetails.price}
             </div>
           )}
 
           {"sectionTitle" in selectedServiceDetails && selectedServiceDetails.sectionTitle && (
-            <div className="space-y-3 rounded-xl border border-[#ffd6d6] bg-white/80 p-4">
-              <h4 className="text-sm font-semibold text-[#b42318]">
+            <div className="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
+              <h4 className="text-sm font-semibold text-teal-600">
                 {selectedServiceDetails.sectionTitle}
               </h4>
               {"options" in selectedServiceDetails && selectedServiceDetails.options && (
@@ -320,8 +320,8 @@ export default function ServiceSelection({
                         className={`w-full rounded-xl border px-4 py-3 text-left text-sm font-medium transition-all duration-200 ${
                           (isMultiSelectService && getSelectedOptions().includes(option)) ||
                           (isSingleSelectService && getSelectedValue() === option)
-                            ? "border-[#ff4d4f] bg-red-50 text-[#b42318] shadow-[0_8px_20px_rgba(255,77,79,0.12)]"
-                            : "border-[#ffe3e3] bg-[#fffafa] text-gray-800 hover:border-[#ffb3b4] hover:bg-red-50"
+                            ? "border-teal-600 bg-teal-50 text-teal-600 shadow-[0_8px_20px_rgba(13,148,136,0.12)]"
+                            : "border-slate-200 bg-white text-slate-800 hover:border-teal-100 hover:bg-teal-50"
                         }`}
                       >
                         {option}
@@ -334,10 +334,10 @@ export default function ServiceSelection({
           )}
 
           {selectedService === "Healthy Life (online consultation)" && healthyLifeSelection && (
-              <div className="space-y-2 rounded-xl border border-[#ffd6d6] bg-white/80 p-4">
+              <div className="space-y-2 rounded-xl border border-slate-200 bg-white p-4">
                 <label
                   htmlFor="healthy-life-expert"
-                  className="text-sm font-semibold text-[#b42318]"
+                  className="text-sm font-semibold text-teal-600"
                 >
                   Select Expert
                 </label>
@@ -345,7 +345,7 @@ export default function ServiceSelection({
                   id="healthy-life-expert"
                   value={healthyLifeExpertSelection}
                   onChange={(e) => onHealthyLifeExpertSelectionChange(e.target.value)}
-                  className="w-full rounded-xl border border-[#ffd6d6] bg-white px-4 py-3 text-sm font-medium text-gray-900 outline-none transition-all duration-200 focus:border-[#ff4d4f] focus:ring-2 focus:ring-red-200"
+                  className="field-base rounded-xl py-3 text-sm font-medium"
                 >
                   <option value="">Select Expert</option>
                   {healthyLifeExperts.map((expert) => (
@@ -358,13 +358,13 @@ export default function ServiceSelection({
             )}
 
           {"footerNote" in selectedServiceDetails && selectedServiceDetails.footerNote && (
-            <div className="whitespace-pre-line rounded-xl border border-[#ffd6d6] bg-white px-4 py-3 text-sm leading-6 text-gray-700">
+            <div className="whitespace-pre-line rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm leading-6 text-slate-600">
               {selectedServiceDetails.footerNote}
             </div>
           )}
 
           {"footer" in selectedServiceDetails && selectedServiceDetails.footer && (
-            <div className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d9363e]">
+            <div className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-600">
               {selectedServiceDetails.footer}
             </div>
           )}
@@ -374,7 +374,7 @@ export default function ServiceSelection({
               className={`rounded-xl border bg-white px-4 py-3 text-sm font-medium text-gray-800 transition-colors duration-200 ${
                 serviceConsentError
                   ? "border-[#ff4d4f] shadow-[0_0_0_3px_rgba(255,77,79,0.12)]"
-                  : "border-[#ffd6d6] hover:border-[#ffb3b4]"
+                  : "border-slate-200 hover:border-teal-100"
               }`}
             >
               <label className="flex cursor-pointer items-center gap-3">
@@ -382,7 +382,7 @@ export default function ServiceSelection({
                   type="checkbox"
                   checked={isConsentGiven}
                   onChange={(e) => onConsentChange(e.target.checked)}
-                  className="h-5 w-5 rounded border-[#ffb3b4] text-[#ff4d4f] focus:ring-[#ffb3b4]"
+                  className="h-5 w-5 rounded border-slate-300 text-teal-600 focus:ring-teal-100"
                 />
                 <span>{selectedServiceDetails.consent}</span>
               </label>
@@ -398,12 +398,12 @@ export default function ServiceSelection({
         placeholder="Describe Requirements"
         value={requirements}
         onChange={(e) => onRequirementsChange(e.target.value)}
-        className="w-full min-h-[120px] rounded-xl border border-[#ffd6d6] bg-white px-4 py-3 text-gray-900 font-medium placeholder-gray-500 shadow-[0_10px_30px_rgba(255,77,79,0.06)] focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-500 sm:px-5 sm:py-4"
+        className="w-full min-h-[120px] rounded-xl border border-slate-300 bg-white px-4 py-3 font-medium text-slate-900 placeholder-slate-400 shadow-sm focus:border-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-100 sm:px-5 sm:py-4"
       />
 
       {serviceActionError && <p className="text-sm font-medium text-red-600">{serviceActionError}</p>}
       {serviceSuccessMessage && (
-        <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+        <div className="rounded-xl border border-teal-100 bg-teal-50 px-4 py-3 text-sm font-medium text-teal-600">
           {serviceSuccessMessage}
         </div>
       )}
@@ -412,7 +412,7 @@ export default function ServiceSelection({
         <button
           type="button"
           onClick={onBack}
-          className="w-full rounded-lg border border-red-500 px-6 py-3 text-red-500 transition-all duration-300 hover:-translate-y-0.5 sm:w-auto"
+          className="secondary-btn w-full px-6 py-3 sm:w-auto"
         >
           Back
         </button>
@@ -421,7 +421,7 @@ export default function ServiceSelection({
           onClick={onNext}
           aria-disabled={!selectedService || (requiresConsent && !isConsentGiven)}
           className={`w-full rounded-lg px-6 py-3 text-white transition-all duration-300 sm:w-auto ${
-            !selectedService ? "cursor-not-allowed bg-red-300" : "bg-red-500 hover:bg-red-600 hover:-translate-y-0.5"
+            !selectedService ? "cursor-not-allowed bg-slate-300" : "bg-teal-700 hover:bg-teal-800 hover:-translate-y-0.5"
           }`}
         >
           {primaryButtonLabel}

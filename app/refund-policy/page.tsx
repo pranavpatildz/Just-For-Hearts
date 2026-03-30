@@ -27,15 +27,15 @@ const itemVariants = {
 
 export default function RefundPolicyPage() {
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen bg-slate-50">
       <Navbar />
 
-      <section className="bg-gradient-to-r from-green-100 via-emerald-100 to-green-50 py-14 md:py-20 text-center">
+      <section className="bg-[#F8FAFC] px-4 py-14 text-center md:px-8 md:py-20 lg:px-16">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-3xl md:text-5xl font-semibold text-gray-800 font-[var(--font-playfair)]"
+          className="text-3xl font-semibold tracking-tight text-slate-900 md:text-5xl"
         >
           Refund Policy
         </motion.h1>
@@ -43,7 +43,7 @@ export default function RefundPolicyPage() {
       </section>
 
       <motion.section
-        className="max-w-4xl mx-auto px-6 py-14 text-gray-700 leading-relaxed space-y-8 font-[var(--font-inter)] text-sm md:text-base"
+        className="mx-auto max-w-4xl space-y-8 rounded-[2rem] bg-white px-6 py-10 text-sm leading-relaxed text-slate-700 shadow-md md:px-8 md:py-12 md:text-base"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -58,7 +58,7 @@ export default function RefundPolicyPage() {
         </p>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-teal-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             1. Acceptance of Terms
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -69,7 +69,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-teal-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             2. Description of Service
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -83,7 +83,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-teal-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             3. User Accounts and Registration
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -112,7 +112,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             4. Consultations and Advice
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -152,7 +152,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             5. Payment Terms
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -230,7 +230,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             6. Intellectual Property Rights
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -255,7 +255,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             7. User Responsibilities
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">You agree to:</p>
@@ -268,7 +268,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             8. Disclaimer of Warranties
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -283,7 +283,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             9. Limitation of Liability
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -302,7 +302,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             10. Indemnification
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -315,7 +315,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             11. Governing Law and Jurisdiction
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -327,7 +327,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             12. Termination
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -340,7 +340,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             13. Entire Agreement
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -352,7 +352,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             14. Amendments
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -364,7 +364,7 @@ export default function RefundPolicyPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             15. Contact Us
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">

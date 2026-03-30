@@ -27,36 +27,36 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="mt-12 md:mt-20 mb-10">
-      <div className="max-w-[720px] mx-auto px-4 md:px-6">
-        <div className="text-center mb-10">
-          <h2 className="text-[26px] md:text-[36px] font-bold text-slate-900">
-            Your <span className="text-red-600">Questions</span>, Answered
+    <section className="section-shell">
+      <div className="mx-auto max-w-[720px] px-4 md:px-8">
+        <div className="mb-10 text-center md:mb-12">
+          <h2 className="text-[26px] font-semibold tracking-tight text-slate-900 md:text-[36px]">
+            Your <span className="text-teal-600">Questions</span>, Answered
           </h2>
-          <p className="mt-2.5 text-base text-gray-600">
+          <p className="mt-3 text-base leading-relaxed text-slate-600">
             Find quick answers to the most common healthcare queries.
           </p>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4 md:space-y-6">
           {faqItems.map((item, index) => {
             const isOpen = openIndex === index;
             return (
               <div
                 key={item.question}
-                className="bg-white rounded-xl p-4 md:p-5 shadow-md transition-all"
+                className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md md:p-6"
               >
                 <button
                   type="button"
                   onClick={() => toggleAccordion(index)}
-                  className="w-full flex items-center justify-between gap-3 text-left cursor-pointer"
+                  className="flex w-full cursor-pointer items-center justify-between gap-3 text-left transition-all duration-300 ease-in-out"
                   aria-expanded={isOpen}
                 >
-                  <span className="text-[15px] md:text-lg font-semibold text-slate-900">
+                    <span className="text-[15px] font-medium text-slate-900 md:text-lg">
                     {item.question}
                   </span>
                   <svg
-                    className={`w-5 h-5 text-slate-600 transition-transform duration-300 ${
+                    className={`w-5 h-5 text-teal-600 transition-transform duration-300 ${
                       isOpen ? "rotate-180" : ""
                     }`}
                     fill="none"
@@ -69,12 +69,12 @@ export default function FAQSection() {
                 </button>
 
                 <div
-                  className={`grid transition-all duration-300 ease-in-out ${
-                    isOpen ? "grid-rows-[1fr] opacity-100 mt-2.5" : "grid-rows-[0fr] opacity-0 mt-0"
+                    className={`grid transition-all duration-300 ease-in-out ${
+                    isOpen ? "mt-3 grid-rows-[1fr] opacity-100" : "mt-0 grid-rows-[0fr] opacity-0"
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="text-[14px] md:text-base leading-[1.5] md:leading-relaxed text-slate-700">
+                    <p className="text-[14px] leading-relaxed text-slate-600 md:text-base">
                       {item.answer}
                     </p>
                   </div>
@@ -87,4 +87,3 @@ export default function FAQSection() {
     </section>
   );
 }
-

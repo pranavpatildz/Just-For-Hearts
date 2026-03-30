@@ -454,27 +454,27 @@ export default function GetStartedPage() {
   }, [otpAttempts, otpVerified]);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="min-h-screen bg-slate-50">
       <Navbar />
 
-      <section className="bg-gradient-to-b from-red-50 to-white">
-        <div className="max-w-6xl mx-auto px-6 py-20 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
-            Ready to <span className="text-red-500">Take Charge</span> of your{" "}
-            <span className="text-red-500">Health</span>?
+      <section className="bg-[#F8FAFC]">
+        <div className="mx-auto max-w-6xl px-4 py-16 text-center md:px-8 md:py-20 lg:px-16">
+          <h1 className="text-3xl md:text-5xl font-semibold text-slate-800 leading-tight">
+            Ready to <span className="text-teal-600">Take Charge</span> of your{" "}
+            <span className="text-teal-600">Health</span>?
           </h1>
-          <p className="text-gray-600 text-lg max-w-3xl mx-auto text-center mt-6">
+          <p className="mx-auto mt-6 max-w-3xl text-base md:text-lg text-slate-600 text-center">
             Join 40,000+ people already using Just For Hearts for diabetes, heart, and obesity care
             — all from the comfort of home.
           </p>
         </div>
       </section>
 
-      <section className="px-6 pb-16">
-        <div className="max-w-4xl mx-auto">
+      <section className="px-4 pb-16 md:px-8 lg:px-16">
+        <div className="mx-auto max-w-4xl">
           <StepIndicator currentStep={currentStep} />
 
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10 mt-10 transition-all duration-300 hover:shadow-xl">
+          <div className="mx-auto mt-8 max-w-xl rounded-2xl bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl md:mt-10 md:max-w-4xl md:p-8">
             {currentStep === 1 && (
               <PersonalDetailsForm
                 formData={{
@@ -556,14 +556,14 @@ export default function GetStartedPage() {
             {currentStep === 3 && (
               <div className="space-y-6">
                 {serviceSuccessMessage && (
-                  <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+                  <div className="rounded-xl border border-teal-100 bg-teal-50 px-4 py-3 text-sm font-medium text-teal-600">
                     {serviceSuccessMessage}
                   </div>
                 )}
 
-                <div className="rounded-xl border border-[#ffd6d6] bg-[#fff5f5] p-6">
-                  <h3 className="text-lg font-semibold text-gray-800">Order Summary</h3>
-                  <div className="mt-4 space-y-2 text-gray-700">
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+                  <h3 className="text-xl font-medium text-slate-800">Order Summary</h3>
+                  <div className="mt-4 space-y-2 text-slate-700">
                     <p>
                       <span className="font-medium">Service:</span> {orderSummary.service}
                     </p>
@@ -576,19 +576,19 @@ export default function GetStartedPage() {
                   </div>
                 </div>
 
-                <label className="inline-flex items-center gap-3 rounded-xl border border-[#ffd6d6] bg-white px-4 py-3 text-sm text-gray-700">
+                <label className="inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700">
                   <input
                     type="checkbox"
                     checked={orderContactConsent}
                     onChange={(e) => setOrderContactConsent(e.target.checked)}
-                    className="rounded border-gray-300 text-red-500 focus:ring-red-400"
+                    className="rounded border-slate-300 text-teal-600 focus:ring-teal-100"
                   />
                   Consent to contact by Phone / Text / WhatsApp / Email
                 </label>
 
-                <div className="space-y-4 rounded-xl border border-[#ffd6d6] bg-[#fff5f5] p-5">
-                  <h4 className="text-base font-semibold text-gray-800">Terms and Conditions</h4>
-                  <ul className="space-y-2 text-sm leading-6 text-gray-700">
+                <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
+                  <h4 className="text-base font-semibold text-slate-800">Terms and Conditions</h4>
+                  <ul className="space-y-2 text-sm leading-6 text-slate-700">
                     <li>
                       Our services provide expert guidance for health management and are not for
                       medical emergencies. Success requires following clinical advice. We reserve
@@ -601,12 +601,12 @@ export default function GetStartedPage() {
                       समर्पित करते.
                     </li>
                   </ul>
-                  <label className="inline-flex items-start gap-3 text-sm text-gray-700">
+                  <label className="inline-flex items-start gap-3 text-sm text-slate-700">
                     <input
                       type="checkbox"
                       checked={termsAccepted}
                       onChange={(e) => setTermsAccepted(e.target.checked)}
-                      className="mt-0.5 rounded border-gray-300 text-red-500 focus:ring-red-400"
+                      className="mt-0.5 rounded border-slate-300 text-teal-600 focus:ring-teal-100"
                     />
                     <span>
                       I agree to the terms and will follow the medical advice provided.
@@ -618,22 +618,22 @@ export default function GetStartedPage() {
                 </div>
 
                 {refundPolicy && (
-                  <div className="space-y-4 rounded-xl border border-[#ffd6d6] bg-[#fff5f5] p-5">
-                    <h4 className="text-base font-semibold text-gray-800">Refund Policy</h4>
-                    <ul className="space-y-2 text-sm leading-6 text-gray-700">
+                  <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
+                    <h4 className="text-base font-semibold text-slate-800">Refund Policy</h4>
+                    <ul className="space-y-2 text-sm leading-6 text-slate-700">
                       {refundPolicy.english.map((line) => (
                         <li key={line}>{line}</li>
                       ))}
                     </ul>
-                    <p className="whitespace-pre-line text-sm leading-6 text-gray-700">
+                    <p className="whitespace-pre-line text-sm leading-6 text-slate-700">
                       {refundPolicy.marathi}
                     </p>
-                    <label className="inline-flex items-start gap-3 text-sm text-gray-700">
+                    <label className="inline-flex items-start gap-3 text-sm text-slate-700">
                       <input
                         type="checkbox"
                         checked={refundAccepted}
                         onChange={(e) => setRefundAccepted(e.target.checked)}
-                        className="mt-0.5 rounded border-gray-300 text-red-500 focus:ring-red-400"
+                        className="mt-0.5 rounded border-slate-300 text-teal-600 focus:ring-teal-100"
                       />
                       <span>{refundPolicy.consent}</span>
                     </label>
@@ -644,18 +644,18 @@ export default function GetStartedPage() {
                   <p className="text-sm font-medium text-red-600">{orderSummaryError}</p>
                 )}
 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col-reverse items-stretch justify-between gap-3 sm:flex-row sm:items-center">
                   <button
                     type="button"
                     onClick={() => setCurrentStep(2)}
-                    className="border border-red-500 text-red-500 rounded-lg px-6 py-3 transition-all duration-300 hover:-translate-y-0.5"
+                    className="secondary-btn w-full px-6 py-3 sm:w-auto"
                   >
                     Back
                   </button>
                   <button
                     type="button"
                     onClick={handleFinalizeOrder}
-                    className="bg-red-500 text-white rounded-lg px-6 py-3 hover:bg-red-600 transition-all duration-300 hover:-translate-y-0.5"
+                    className="primary-btn w-full px-6 py-3 sm:w-auto"
                   >
                     {orderSummary.finalButtonLabel}
                   </button>

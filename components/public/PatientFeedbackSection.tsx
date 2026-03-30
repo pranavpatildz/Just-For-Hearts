@@ -128,29 +128,29 @@ export default function PatientFeedbackSection() {
   )
 
   return (
-    <section className="bg-gradient-to-b from-white to-slate-100">
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900">
-            <span className="text-red-600">Real</span>{" "}
+    <section className="bg-[#F8FAFC] py-12 md:py-16">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="mb-10 text-center">
+          <h2 className="text-3xl font-semibold tracking-tight text-slate-900 md:text-5xl">
+            <span className="text-teal-600">Real</span>{" "}
             <span className="text-slate-900">People,</span>{" "}
-            <span className="text-red-600">Real</span>{" "}
+            <span className="text-teal-600">Real</span>{" "}
             <span className="text-slate-900">Recoveries</span>
           </h2>
-          <p className="mt-3 text-slate-700 text-base md:text-lg">
+          <p className="mt-3 text-base leading-relaxed text-slate-600 md:text-lg">
             Hear what our patients have to say about their journey.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
           <div className="order-2 lg:order-1 lg:col-span-1">
-            <div className="rounded-3xl shadow-xl p-6 bg-white">
-              <h3 className="text-xl font-semibold text-slate-900 mb-4">Share Your Feedback</h3>
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-md transition-all duration-300 ease-in-out hover:shadow-xl md:p-6">
+              <h3 className="mb-4 text-xl font-semibold tracking-tight text-slate-900">Share Your Feedback</h3>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="full-name" className="block text-sm font-medium text-slate-800 mb-1.5">
-                    Full Name <span className="text-red-600">*</span>
+                    Full Name <span className="text-teal-600">*</span>
                   </label>
                   <input
                     id="full-name"
@@ -158,13 +158,13 @@ export default function PatientFeedbackSection() {
                     value={fullName}
                     onChange={e => setFullName(e.target.value)}
                     placeholder="Enter your full name"
-                    className="w-full rounded-2xl border border-slate-200 px-4 py-2.5 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="field-base rounded-2xl border-slate-200 placeholder-slate-400"
                   />
                 </div>
 
                 <div>
                   <label htmlFor="program" className="block text-sm font-medium text-slate-800 mb-1.5">
-                    Program <span className="text-red-600">*</span>
+                    Program <span className="text-teal-600">*</span>
                   </label>
                   <input
                     id="program"
@@ -172,20 +172,20 @@ export default function PatientFeedbackSection() {
                     value={program}
                     onChange={e => setProgram(e.target.value)}
                     placeholder="Enter your program"
-                    className="w-full rounded-2xl border border-slate-200 px-4 py-2.5 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="field-base rounded-2xl border-slate-200 placeholder-slate-400"
                   />
                 </div>
 
                 <div>
                   <p className="block text-sm font-medium text-slate-800 mb-1.5">
-                    Rating <span className="text-red-600">*</span>
+                    Rating <span className="text-teal-600">*</span>
                   </p>
                   {renderStars(rating, true)}
                 </div>
 
                 <div>
                   <label htmlFor="feedback-message" className="block text-sm font-medium text-slate-800 mb-1.5">
-                    Feedback Message <span className="text-red-600">*</span>
+                    Feedback Message <span className="text-teal-600">*</span>
                   </label>
                   <textarea
                     id="feedback-message"
@@ -193,17 +193,17 @@ export default function PatientFeedbackSection() {
                     value={feedbackMessage}
                     onChange={e => setFeedbackMessage(e.target.value)}
                     placeholder="Write your feedback"
-                    className="w-full rounded-2xl border border-slate-200 px-4 py-2.5 text-slate-800 placeholder-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="field-base resize-none rounded-2xl border-slate-200 placeholder-slate-400"
                   />
                 </div>
 
                 {error && <p className="text-sm text-red-600">{error}</p>}
-                {success && <p className="text-sm text-emerald-700">{success}</p>}
+                {success && <p className="text-sm text-teal-500">{success}</p>}
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="rounded-full bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-semibold px-5 py-2.5 transition"
+                  className="primary-btn w-full justify-center rounded-xl disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Feedback"}
                 </button>
@@ -212,7 +212,7 @@ export default function PatientFeedbackSection() {
           </div>
 
           <div className="order-1 lg:order-2 lg:col-span-2">
-            <div className="bg-white rounded-3xl shadow-xl p-6 h-[420px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-slate-100">
+            <div className="h-[420px] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-5 shadow-md [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-track]:bg-slate-100 md:p-6">
               {isLoading ? (
                 <p className="text-slate-700">Loading feedback...</p>
               ) : (
@@ -223,15 +223,15 @@ export default function PatientFeedbackSection() {
                     feedbacks.map(item => (
                       <article
                         key={item.id}
-                        className="rounded-2xl shadow-md p-4 bg-slate-50 flex items-start gap-4"
+                        className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm transition-all duration-300 ease-in-out hover:shadow-md"
                       >
-                        <div className="h-11 w-11 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-base font-semibold shrink-0">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-100 text-base font-semibold text-teal-600">
                           {item.name.charAt(0).toUpperCase()}
                         </div>
 
                         <div className="flex-1">
                           <h4 className="text-slate-900 text-base font-semibold">{item.name}</h4>
-                          <p className="text-red-600 text-sm font-medium mt-0.5">{item.program}</p>
+                          <p className="mt-0.5 text-sm font-medium text-teal-500">{item.program}</p>
                           <div className="mt-1.5">{renderStars(item.rating)}</div>
                           <p className="mt-2 text-slate-800 leading-relaxed text-sm md:text-base">{item.message}</p>
                           <p className="mt-2 text-slate-500 text-sm">{formatDate(item.created_at)}</p>

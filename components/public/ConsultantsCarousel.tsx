@@ -3,12 +3,6 @@
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight, Instagram, Linkedin, Stethoscope } from "lucide-react"
-import { Playfair_Display } from "next/font/google"
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["600", "700"]
-})
 
 const doctors = [
   {
@@ -189,12 +183,12 @@ export default function ConsultantsCarousel() {
   }, [isTransitionEnabled])
 
   return (
-    <section className="py-16 bg-slate-50 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold">
-            <span className="text-gray-900">Our </span>
-            <span className="text-red-600">Consultants</span>
+    <section className="overflow-hidden bg-slate-50 py-12 md:py-16">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="mb-10 text-center md:mb-12">
+          <h2 className="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
+            <span className="text-slate-900">Our </span>
+            <span className="text-teal-600">Consultants</span>
           </h2>
         </div>
 
@@ -210,12 +204,10 @@ export default function ConsultantsCarousel() {
               {extendedDoctors.map((doc, index) => (
                 <div
                   key={index}
-                  className="w-full lg:w-1/3 flex-shrink-0 px-4"
+                  className="w-full flex-shrink-0 px-2 sm:px-3 lg:w-1/3"
                 >
-                  <div className="bg-white rounded-3xl shadow-xl p-6 mx-auto max-w-sm lg:mx-0 lg:max-w-none flex flex-col h-[520px]">
-
-                    {/* IMAGE */}
-                    <div className="relative w-full h-72 rounded-2xl overflow-hidden">
+                  <div className="mx-auto flex h-[520px] max-w-sm flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-md transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-xl lg:mx-0 lg:max-w-none md:p-6">
+                    <div className="relative h-72 w-full overflow-hidden rounded-2xl bg-slate-100">
                       <Image
                         src={doc.image}
                         alt={doc.name}
@@ -225,49 +217,47 @@ export default function ConsultantsCarousel() {
                       />
                     </div>
 
-                    {/* CONTENT */}
-                    <div className="flex flex-col flex-1 justify-between text-center mt-4">
-
+                    <div className="mt-4 flex flex-1 flex-col justify-between text-center">
                       <div>
                         <div className="flex items-center justify-center gap-2">
-                          <Stethoscope className="text-red-600 w-5 h-5" />
-                          <h3 className={`${playfair.className} text-xl font-bold text-gray-900`}>
+                          <Stethoscope className="h-5 w-5 text-teal-600" />
+                          <h3 className="text-xl font-semibold tracking-tight text-slate-900">
                             {doc.name}
                           </h3>
                         </div>
 
-                        <p className="text-blue-600 font-semibold text-sm mt-2">
+                        <p className="mt-2 text-sm font-semibold text-teal-500">
                           {doc.title}
                         </p>
 
-                        <p className="text-gray-600 text-sm mt-2 min-h-[48px]">
+                        <p className="mt-2 min-h-[48px] text-sm leading-relaxed text-slate-600">
                           {doc.qualification}
                         </p>
                       </div>
 
                       <div>
-                        <p className="text-red-600 font-semibold mt-3">
+                        <p className="mt-3 font-semibold text-teal-600">
                           {doc.experience}
                         </p>
 
-                        <div className="flex justify-center gap-4 mt-4">
+                        <div className="mt-4 flex justify-center gap-4">
 
                           <a
                             href={doc.instagram}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 p-3 rounded-full shadow-md hover:scale-110 transition"
+                            className="rounded-full bg-gradient-to-tr from-teal-700 via-teal-600 to-teal-500 p-3 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-md"
                           >
-                            <Instagram className="text-white w-5 h-5" />
+                            <Instagram className="h-5 w-5 text-white" />
                           </a>
 
                           <a
                             href={doc.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-[#0A66C2] p-3 rounded-full shadow-md hover:scale-110 transition"
+                            className="rounded-full bg-teal-700 p-3 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:bg-teal-800 hover:shadow-md"
                           >
-                            <Linkedin className="text-white w-5 h-5" />
+                            <Linkedin className="h-5 w-5 text-white" />
                           </a>
 
                         </div>
@@ -282,14 +272,14 @@ export default function ConsultantsCarousel() {
 
           <button
             onClick={prev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow rounded-full p-3"
+            className="absolute left-1 top-1/2 rounded-full border border-slate-200 bg-white p-3 text-teal-600 shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg md:left-0"
           >
             <ChevronLeft />
           </button>
 
           <button
             onClick={next}
-            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow rounded-full p-3"
+            className="absolute right-1 top-1/2 rounded-full border border-slate-200 bg-white p-3 text-teal-600 shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg md:right-0"
           >
             <ChevronRight />
           </button>

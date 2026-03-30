@@ -17,34 +17,26 @@ import Counter from "@/components/ui/Counter"
 
 export default function MeetExperts() {
   return (
-    <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] 
-    py-12 md:py-20 
-    bg-gradient-to-br from-slate-50 via-blue-50 to-green-50">
-
-      <div className="max-w-6xl mx-auto px-4">
-
-        {/* Heading */}
+    <section className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen bg-[#F8FAFC] py-12 md:py-16">
+      <div className="mx-auto max-w-6xl px-4 md:px-8 lg:px-16">
         <Reveal>
-          <div className="text-center mb-10 md:mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold">
-              <span className="text-red-500">Meet</span>{" "}
+          <div className="mb-10 text-center md:mb-16">
+            <h2 className="text-3xl font-semibold md:text-5xl">
+              <span className="text-teal-600">Meet</span>{" "}
               <span className="text-gray-900">the</span>{" "}
-              <span className="text-red-500">Experts</span>
+              <span className="text-teal-600">Experts</span>
             </h2>
 
-            <p className="mt-4 text-gray-600 text-sm md:text-xl leading-relaxed max-w-3xl mx-auto font-medium">
-              When you choose JFH, you don’t just get an expert, you get a team
+            <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-slate-600 md:text-lg">
+              When you choose JFH, you donâ€™t just get an expert, you get a team
               that has helped thousands live better.
             </p>
           </div>
         </Reveal>
 
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
-
-          {/* Image */}
+        <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
           <Reveal>
-            <div className="relative w-full h-[260px] md:h-[380px] rounded-2xl overflow-hidden shadow-lg">
+            <div className="relative h-[260px] w-full overflow-hidden rounded-2xl shadow-md md:h-[380px]">
               <Image
                 src="/images/Experts.jpg"
                 alt="JFH Experts Team"
@@ -55,16 +47,13 @@ export default function MeetExperts() {
             </div>
           </Reveal>
 
-          {/* Text Content */}
           <Reveal delay={0.2}>
             <div className="space-y-8">
-
-              {/* Trusted Legacy */}
               <div>
-                <h3 className="text-lg md:text-3xl font-bold text-gray-900 mb-4">
+                <h3 className="mb-4 text-xl font-medium text-gray-900 md:text-2xl">
                   Trusted Legacy
                 </h3>
-                <div className="w-12 h-1 bg-red-500 rounded-full mb-6"></div>
+                <div className="mb-6 h-1 w-12 rounded-full bg-teal-600"></div>
 
                 <motion.ul
                   initial="hidden"
@@ -78,9 +67,9 @@ export default function MeetExperts() {
                     }
                   }}
                   className="
-                    grid grid-cols-2 gap-y-3 gap-x-4
-                    md:flex md:flex-col md:space-y-3
-                    text-gray-600 text-sm md:text-lg leading-relaxed
+                    grid grid-cols-2 gap-x-4 gap-y-3
+                    text-slate-600 text-sm leading-relaxed
+                    md:flex md:flex-col md:space-y-3 md:text-lg
                   "
                 >
                   <motion.li
@@ -90,7 +79,7 @@ export default function MeetExperts() {
                     }}
                     className="flex items-start gap-2"
                   >
-                    <ShieldCheck className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                    <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-teal-600" />
                     <span>
                       <Counter value={25} suffix="+" />{" "}
                       years of preventive care
@@ -103,7 +92,7 @@ export default function MeetExperts() {
                     }}
                     className="flex items-start gap-2"
                   >
-                    <Calendar className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                    <Calendar className="mt-0.5 h-5 w-5 shrink-0 text-teal-600" />
                     <span>
                       <Counter value={10000} suffix="+" />{" "}
                       wellness events
@@ -116,7 +105,7 @@ export default function MeetExperts() {
                     }}
                     className="flex items-start gap-2"
                   >
-                    <Video className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                    <Video className="mt-0.5 h-5 w-5 shrink-0 text-teal-600" />
                     <span>
                       <Counter value={50000} suffix="+" />{" "}
                       teleconsults
@@ -129,7 +118,7 @@ export default function MeetExperts() {
                     }}
                     className="flex items-start gap-2"
                   >
-                    <Users className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                    <Users className="mt-0.5 h-5 w-5 shrink-0 text-teal-600" />
                     <span>
                       <Counter value={350} suffix="k+" />{" "}
                       Youtube subscribers
@@ -138,12 +127,11 @@ export default function MeetExperts() {
                 </motion.ul>
               </div>
 
-              {/* Multidisciplinary Team */}
               <div>
-                <h3 className="text-lg md:text-3xl font-bold text-gray-900 mb-4">
+                <h3 className="mb-4 text-xl font-medium text-gray-900 md:text-2xl">
                   Multidisciplinary Team
                 </h3>
-                <div className="w-12 h-1 bg-red-500 rounded-full mb-6"></div>
+                <div className="mb-6 h-1 w-12 rounded-full bg-teal-500"></div>
 
                 <motion.ul
                   initial="hidden"
@@ -157,9 +145,9 @@ export default function MeetExperts() {
                     }
                   }}
                   className="
-                    grid grid-cols-2 gap-y-3 gap-x-4
-                    md:flex md:flex-col md:space-y-3
-                    text-gray-600 text-sm md:text-lg leading-relaxed
+                    grid grid-cols-2 gap-x-4 gap-y-3
+                    text-slate-600 text-sm leading-relaxed
+                    md:flex md:flex-col md:space-y-3 md:text-lg
                   "
                 >
                   <motion.li
@@ -169,7 +157,7 @@ export default function MeetExperts() {
                     }}
                     className="flex items-start gap-2"
                   >
-                    <Stethoscope className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                    <Stethoscope className="mt-0.5 h-5 w-5 shrink-0 text-teal-500" />
                     General Physicians
                   </motion.li>
                   <motion.li
@@ -179,7 +167,7 @@ export default function MeetExperts() {
                     }}
                     className="flex items-start gap-2"
                   >
-                    <HeartPulse className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                    <HeartPulse className="mt-0.5 h-5 w-5 shrink-0 text-teal-500" />
                     Cardiac Rehab Experts
                   </motion.li>
                   <motion.li
@@ -189,7 +177,7 @@ export default function MeetExperts() {
                     }}
                     className="flex items-start gap-2"
                   >
-                    <GraduationCap className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                    <GraduationCap className="mt-0.5 h-5 w-5 shrink-0 text-teal-500" />
                     Dietitians, Physios, Educators
                   </motion.li>
                   <motion.li
@@ -199,29 +187,22 @@ export default function MeetExperts() {
                     }}
                     className="flex items-start gap-2"
                   >
-                    <Leaf className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                    <Leaf className="mt-0.5 h-5 w-5 shrink-0 text-teal-500" />
                     Ayurveda, Yoga, Mindfulness
                   </motion.li>
                 </motion.ul>
               </div>
-
             </div>
           </Reveal>
-
         </div>
 
-        {/* CTA Button */}
         <Reveal delay={0.3}>
-          <div className="text-center mt-10 md:mt-16">
-            <button className="bg-red-500 hover:bg-red-600 text-white 
-            px-6 md:px-10 py-3 md:py-4 
-            rounded-full text-sm md:text-lg font-medium 
-            transition-all duration-300 shadow-md hover:shadow-lg">
+          <div className="mt-10 text-center md:mt-16">
+            <button className="primary-btn px-6 py-3 text-sm font-medium md:px-10 md:py-4 md:text-lg">
               Explore JFH Programs
             </button>
           </div>
         </Reveal>
-
       </div>
     </section>
   )

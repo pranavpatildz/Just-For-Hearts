@@ -34,7 +34,7 @@ type PersonalDetailsFormProps = {
 };
 
 const inputClass =
-  "w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-500";
+  "field-base font-medium placeholder-slate-400 shadow-sm";
 
 export default function PersonalDetailsForm({
   formData,
@@ -68,7 +68,7 @@ export default function PersonalDetailsForm({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
         <input
           type="text"
           placeholder="First Name"
@@ -135,7 +135,7 @@ export default function PersonalDetailsForm({
           type="button"
           onClick={onSendOtp}
           disabled={sendingOtp || otpCooldown > 0}
-          className="w-full shrink-0 bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-black transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 disabled:hover:translate-y-0 sm:w-auto"
+          className="primary-btn w-full shrink-0 px-6 py-3 disabled:opacity-60 disabled:hover:translate-y-0 sm:w-auto"
         >
           {sendingOtp
             ? "Sending..."
@@ -151,7 +151,7 @@ export default function PersonalDetailsForm({
       {showOtpField && (
         <div
           ref={otpSectionRef}
-          className="space-y-3 rounded-xl border border-red-100 bg-red-50/40 p-4 sm:p-5"
+          className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5"
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
             <input
@@ -167,7 +167,7 @@ export default function PersonalDetailsForm({
               type="button"
               onClick={onVerifyOtp}
               disabled={!otpSent || verifyingOtp || otp.length !== 6 || otpVerified}
-              className="w-full shrink-0 bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 sm:w-auto"
+              className="primary-btn w-full shrink-0 px-6 py-3 disabled:opacity-50 disabled:hover:translate-y-0 sm:w-auto"
             >
               {otpVerified ? (
                 <span className="inline-flex items-center gap-2">
@@ -182,11 +182,11 @@ export default function PersonalDetailsForm({
             </button>
           </div>
           {showOtpField && !otpSent && !otpVerified && !otpError && (
-            <p className="text-sm text-gray-600">Sending OTP to your mobile number...</p>
+            <p className="text-sm text-slate-600">Sending OTP to your mobile number...</p>
           )}
-          {otpStatusMessage && <p className="text-sm text-green-600">{otpStatusMessage}</p>}
+          {otpStatusMessage && <p className="text-sm text-teal-600">{otpStatusMessage}</p>}
           {otpError && <p className="text-sm text-red-600">{otpError}</p>}
-          {otpVerified && <p className="text-sm text-green-600 font-medium">OTP verified successfully.</p>}
+          {otpVerified && <p className="text-sm font-medium text-teal-600">OTP verified successfully.</p>}
         </div>
       )}
 
@@ -195,7 +195,7 @@ export default function PersonalDetailsForm({
           type="button"
           onClick={onNext}
           disabled={!otpVerified}
-          className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-all duration-300 hover:-translate-y-0.5"
+          className="primary-btn w-full px-6 py-3 sm:w-auto"
         >
           Next Step
         </button>

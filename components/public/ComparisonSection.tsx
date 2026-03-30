@@ -20,43 +20,43 @@ export default function ComparisonSection() {
   ];
 
   return (
-    <section className="relative py-12 md:py-16 bg-gradient-to-r from-red-50 via-white to-green-50 overflow-hidden">
-      <div className="w-full px-4 lg:px-6">
+    <section className="section-shell relative overflow-hidden bg-[#F8FAFC]">
+      <div className="w-full px-4 md:px-8 lg:px-16">
 
         {/* Heading */}
-        <div className="text-center mb-6 md:mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold">
-            <span className="text-red-600">Chronic Care</span>
-            <span className="text-gray-900 mx-2">VS</span>
-            <span className="text-green-600">Personalised Care</span>
+        <div className="mb-8 text-center md:mb-10">
+          <h2 className="text-2xl font-semibold tracking-tight md:text-4xl">
+            <span className="text-teal-600">Chronic Care</span>
+            <span className="mx-2 text-slate-900">VS</span>
+            <span className="text-teal-500">Personalised Care</span>
           </h2>
-          <p className="mt-4 text-gray-600 text-lg">
+          <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">
             Start small or go all in. JFH is with you every step.
           </p>
         </div>
 
         {/* Table */}
-        <div className="flex overflow-x-auto gap-8 pb-6 md:grid md:grid-cols-3 gap-8 xl:gap-10">
+        <div className="flex gap-6 overflow-x-auto pb-6 md:grid md:grid-cols-3 md:gap-8 xl:gap-8">
 
           {/* Features Column */}
-          <div className="w-full min-w-[300px] md:min-w-0 bg-white rounded-2xl shadow-lg">
-            <div className="bg-red-600 text-white text-center py-4 rounded-t-2xl">
+          <div className="w-full min-w-[300px] rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md md:min-w-0">
+            <div className="rounded-t-2xl bg-[#F1F5F9] py-4 text-center text-slate-900">
               <h2 className="text-lg font-bold tracking-wide">
                 Features
               </h2>
             </div>
-            <div className="p-6 flex flex-col space-y-3 lg:space-y-2">
+            <div className="flex flex-col space-y-4 p-6 md:space-y-6 lg:space-y-4">
               {features.map((feature, index) => (
                 <div key={index} className="h-10 flex items-center gap-3">
-                  <feature.icon className="w-6 h-6 text-red-500" />
-                  <span className="text-gray-800 font-medium">
+                  <feature.icon className="w-5 h-5 text-teal-600" />
+                  <span className="font-medium text-slate-800">
                     {feature.name}
                   </span>
                 </div>
               ))}
               <div className="mt-6 text-center">
-                <div className="inline-block px-8 py-3 rounded-xl 
-                                bg-gradient-to-r from-red-500 to-red-400 
+                  <div className="inline-block rounded-xl px-8 py-3 
+                                bg-teal-700 
                                 text-white font-semibold tracking-wide 
                                 shadow-md">
                   Fee
@@ -66,24 +66,24 @@ export default function ComparisonSection() {
           </div>
 
           {/* Chronic Care Column */}
-          <div className="w-full min-w-[300px] md:min-w-0 bg-white rounded-2xl shadow-lg">
-            <div className="bg-blue-600 text-white text-center py-4 rounded-t-2xl">
+          <div className="w-full min-w-[300px] rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md md:min-w-0">
+            <div className="rounded-t-2xl bg-[#F1F5F9] py-4 text-center text-slate-900">
               <h2 className="text-lg font-bold tracking-wide">
                 Chronic Care
               </h2>
             </div>
-            <div className="p-6 flex flex-col space-y-3 lg:space-y-2 items-center">
+            <div className="flex flex-col items-center space-y-4 p-6 md:space-y-6 lg:space-y-4">
               {features.map((feature, index) => (
                 <div key={index} className="h-10 flex items-center justify-center">
                   {feature.chronic ? (
-                    <Check className="w-6 h-6 text-green-600" />
+                    <Check className="w-6 h-6 text-teal-500" />
                   ) : (
-                    <X className="w-6 h-6 text-red-600" />
+                    <X className="w-6 h-6 text-slate-400" />
                   )}
                 </div>
               ))}
               <div className="mt-6 text-center">
-                <div className="inline-block bg-blue-600 text-white px-8 py-3 rounded-xl shadow-lg">
+                <div className="inline-block rounded-xl bg-teal-700 px-8 py-3 text-white shadow-lg">
                   <span className="text-xl font-bold">₹ 2500</span>
                 </div>
               </div>
@@ -91,26 +91,25 @@ export default function ComparisonSection() {
           </div>
 
           {/* Personalised Care Column */}
-          <div className="w-full min-w-[300px] md:min-w-0 bg-white rounded-2xl shadow-lg">
-            {/* Heading */}
-            <div className="bg-green-600 text-white text-center py-4 rounded-t-2xl">
+          <div className="w-full min-w-[300px] rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md md:min-w-0">
+            <div className="rounded-t-2xl bg-[#F1F5F9] py-4 text-center text-slate-900">
               <h2 className="text-lg font-bold tracking-wide">
                 Personalised Care
               </h2>
             </div>
             {/* Content Area */}
-            <div className="p-6 flex flex-col space-y-3 lg:space-y-2 items-center">
+            <div className="flex flex-col items-center space-y-4 p-6 md:space-y-6 lg:space-y-4">
               {features.map((feature, index) => (
                 <div key={index} className="h-10 flex items-center justify-center">
-                  <Check className="w-6 h-6 text-green-600" />
+                    <Check className="w-6 h-6 text-teal-500" />
                 </div>
               ))}
               {/* Fee */}
               <div className="mt-6 text-center">
-                <div className="inline-block bg-green-600 text-white px-8 py-3 rounded-xl shadow-lg">
+                <div className="inline-block rounded-xl bg-teal-600 px-8 py-3 text-white shadow-lg">
                   <span className="text-xl font-bold">₹ 7500</span>
                 </div>
-                <p className="mt-2 text-sm font-semibold text-green-700">
+                <p className="mt-2 text-sm font-semibold text-teal-500">
                   By Invite Only
                 </p>
               </div>
@@ -118,11 +117,11 @@ export default function ComparisonSection() {
           </div>
 
         </div>
-        <div className="mt-8 text-center max-w-4xl mx-auto">
-          <p className="text-lg font-semibold text-gray-700 leading-relaxed">
+        <div className="mx-auto mt-10 max-w-4xl text-center">
+          <p className="text-base font-medium leading-relaxed text-slate-700 md:text-lg">
             Join Chronic care today and secure your health journey.
           </p>
-          <p className="text-lg font-semibold text-gray-700 leading-relaxed mt-2">
+          <p className="mt-3 text-base font-medium leading-relaxed text-slate-700 md:text-lg">
             When you upgrade to a Personalized Care, everything you’ve already paid gets adjusted – making your upgrade effectively free!
           </p>
         </div>

@@ -19,7 +19,6 @@ const CheckCircle = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-
 interface SlideContent {
   headline: React.ReactNode;
   subtext?: string;
@@ -38,9 +37,9 @@ export default function Hero() {
     {
       headline: (
         <>
-          “Chronic <span className="text-red-500">Disease Care,</span>{" "}
-          <span className="text-red-500">Reinvented</span> –{" "}
-          <span className="text-red-500">Remotely.</span>”
+          â€œChronic <span className="text-teal-600">Disease Care,</span>{" "}
+          <span className="text-teal-600">Reinvented</span> â€“{" "}
+          <span className="text-teal-600">Remotely.</span>â€
         </>
       ),
       subtext: "Track. Treat. Transform. - Remotely, Every Day",
@@ -51,14 +50,14 @@ export default function Hero() {
       ],
       cta: "Start Free Tracking",
       ctaLink: "/get-started",
-      price: "Join Pro Program – ₹7500/year",
+      price: "Join Pro Program â€“ â‚¹7500/year",
       image: "/images/Hero1.jpg",
     },
     {
       headline: (
         <>
-          “Angioplasty Done? Now{" "}
-          <span className="text-red-500">Rebuild Your Life.</span>”
+          â€œAngioplasty Done? Now{" "}
+          <span className="text-teal-600">Rebuild Your Life.</span>â€
         </>
       ),
       bullets: [
@@ -73,8 +72,8 @@ export default function Hero() {
     {
       headline: (
         <>
-          “Reverse <span className="text-red-500">Sugar Damage</span> –{" "}
-          <span className="text-red-500">Before It’s Too Late.</span>”
+          â€œReverse <span className="text-teal-600">Sugar Damage</span> â€“{" "}
+          <span className="text-teal-600">Before Itâ€™s Too Late.</span>â€
         </>
       ),
       bullets: [
@@ -89,8 +88,8 @@ export default function Hero() {
     {
       headline: (
         <>
-          “Its Not Just Weight – It’s Your{" "}
-          <span className="text-red-500">Metabolism.</span>”
+          â€œIts Not Just Weight â€“ Itâ€™s Your{" "}
+          <span className="text-teal-600">Metabolism.</span>â€
         </>
       ),
       bullets: [
@@ -104,15 +103,14 @@ export default function Hero() {
     },
   ];
 
-  // Auto-slide functionality
   useEffect(() => {
     const interval = setInterval(() => {
       setIsAnimating(true);
       setTimeout(() => {
         setCurrentSlide((prev) => (prev + 1) % slides.length);
         setIsAnimating(false);
-      }, 700); // Duration of fade-out + slide animation
-    }, 8000); // Change slide every 8 seconds
+      }, 700);
+    }, 8000);
     return () => clearInterval(interval);
   }, [slides.length]);
 
@@ -121,94 +119,94 @@ export default function Hero() {
     setTimeout(() => {
       setCurrentSlide(index);
       setIsAnimating(false);
-    }, 700); // Duration of fade-out + slide animation
+    }, 700);
   };
 
   const currentSlideContent = slides[currentSlide];
 
   return (
-  <section className="w-full bg-zinc-50">
-    <div className="min-h-screen px-4 sm:flex sm:items-center sm:justify-center py-12 md:py-16">
-              <div className="w-full max-w-[1200px]">
-                <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-8 bg-white rounded-3xl shadow-lg p-6 max-w-md md:max-w-6xl md:p-10 min-h-[500px] md:min-h-[420px] transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] transform ${isAnimating ? "opacity-0 translate-x-10 scale-[0.98]" : "opacity-100 translate-x-0 scale-100"}`}>
-                  {/* Left Section: Headline, Subtext, Bullets, CTA */}
-                  <div className="w-full md:w-1/2">
-                    <div className="flex flex-col justify-center text-center sm:text-left gap-3">
-                      <h1 className="text-base sm:text-4xl leading-snug font-extrabold text-gray-800 mb-6">
-                        {currentSlideContent.headline}
-                      </h1>
-                      {currentSlideContent.subtext && (
-                        <p className="text-sm sm:text-base text-gray-700 mb-8 max-w-md">
-                          {currentSlideContent.subtext}
-                        </p>
-                      )}
-                      <div className="flex flex-col gap-3 mt-3">
-                        {currentSlideContent.bullets.map((bullet, index) => {
-                          const words = bullet.split(" ");
-                          // A simple heuristic to make the first 2-3 words bold
-                          const boldWordsCount = bullet.toLowerCase().startsWith("8 out of 10") ? 4 : 2;
-                          const boldPart = words.slice(0, boldWordsCount).join(" ");
-                          const regularPart = words.slice(boldWordsCount).join(" ");
+    <section className="w-full bg-[#F8FAFC]">
+      <div className="min-h-screen px-4 py-16 sm:flex sm:items-center sm:justify-center md:px-8 md:py-24 lg:px-16">
+        <div className="w-full max-w-[1200px]">
+          <div
+            className={`flex min-h-[500px] max-w-md flex-col gap-8 rounded-[2rem] border border-gray-100 bg-white/95 p-6 shadow-md transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] hover:shadow-md md:min-h-[420px] md:max-w-6xl md:flex-row md:items-center md:justify-between md:p-10 ${isAnimating ? "translate-x-10 scale-[0.98] opacity-0" : "translate-x-0 scale-100 opacity-100"}`}
+          >
+            <div className="w-full md:w-1/2">
+              <div className="flex flex-col justify-center gap-4 text-center sm:text-left md:gap-6">
+                <h1 className="mb-2 text-3xl font-semibold leading-tight tracking-tight text-slate-900 md:text-5xl">
+                  {currentSlideContent.headline}
+                </h1>
+                {currentSlideContent.subtext && (
+                  <p className="mb-2 max-w-md text-base leading-relaxed text-slate-600 md:text-lg">
+                    {currentSlideContent.subtext}
+                  </p>
+                )}
+                <div className="mt-2 flex flex-col gap-4">
+                  {currentSlideContent.bullets.map((bullet, index) => {
+                    const words = bullet.split(" ");
+                    const boldWordsCount = bullet.toLowerCase().startsWith("8 out of 10") ? 4 : 2;
+                    const boldPart = words.slice(0, boldWordsCount).join(" ");
+                    const regularPart = words.slice(boldWordsCount).join(" ");
 
-                          return (
-                            <div key={index} className="flex items-start gap-3">
-                              <div className="mt-1 w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center rounded-full bg-red-100 flex-shrink-0">
-                                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
-                              </div>
-                              <p className="text-[14px] font-medium text-gray-700">
-                                <span className="font-semibold text-gray-900">
-                                  {boldPart}
-                                </span>{" "}
-                                {regularPart}
-                              </p>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      {currentSlideContent.price && (
-                        <p className="mt-4 text-lg font-semibold text-gray-800">
-                          {currentSlideContent.price}
+                    return (
+                      <div key={index} className="flex items-start gap-3">
+                        <div className="mt-1 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-slate-100">
+                          <CheckCircle className="h-4 w-4 text-teal-600" />
+                        </div>
+                        <p className="text-sm text-slate-600 md:text-base">
+                          <span className="font-semibold text-slate-900">
+                            {boldPart}
+                          </span>{" "}
+                          {regularPart}
                         </p>
-                      )}
-                      <div className="mt-6 flex justify-center md:justify-start">
-                        <Link
-                          href={currentSlideContent.ctaLink}
-                          className="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-full transition-all duration-200 transform hover:scale-105"
-                        >
-                          {currentSlideContent.cta}
-                        </Link>
                       </div>
-                    </div>
-                  </div>
-      
-                  {/* Right Section: Image */}
-                  <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-                    <div className="relative w-full h-[240px] sm:h-[280px] md:h-[380px] rounded-2xl overflow-hidden">
-                      <Image
-                        src={currentSlideContent.image}
-                        alt="Hero Image"
-                        fill
-                        className="object-cover"
-                        priority={currentSlide === 0}
-                      />
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
-                {/* Dot Indicators */}
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex space-x-2 mt-8">
-                  {slides.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => goToSlide(index)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                        currentSlide === index
-                          ? "w-4 h-4 bg-red-500 scale-100"
-                          : "bg-gray-300 hover:bg-red-300 scale-90 hover:scale-100"
-                      }`}
-                    ></button>
-                  ))}
+                {currentSlideContent.price && (
+                  <p className="mt-2 text-lg font-semibold tracking-tight text-slate-900">
+                    {currentSlideContent.price}
+                  </p>
+                )}
+                <div className="mt-2 flex justify-center md:justify-start">
+                  <Link
+                    href={currentSlideContent.ctaLink}
+                    className="primary-btn w-full sm:w-auto"
+                  >
+                    {currentSlideContent.cta}
+                  </Link>
                 </div>
-              </div>      </div>
+              </div>
+            </div>
+
+            <div className="flex w-full justify-center md:w-1/2 md:justify-end">
+              <div className="relative h-[240px] w-full overflow-hidden rounded-3xl border border-gray-100 shadow-sm sm:h-[280px] md:h-[380px]">
+                <Image
+                  src={currentSlideContent.image}
+                  alt="Hero Image"
+                  fill
+                  className="object-cover"
+                  priority={currentSlide === 0}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 flex justify-center space-x-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`h-3 w-3 rounded-full transition-all duration-300 ${
+                  currentSlide === index
+                    ? "w-8 scale-100 bg-teal-700"
+                    : "scale-90 bg-teal-100 hover:bg-teal-200 hover:scale-100"
+                }`}
+              ></button>
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

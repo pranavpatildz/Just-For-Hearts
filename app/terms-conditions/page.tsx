@@ -27,15 +27,15 @@ const itemVariants = {
 
 export default function TermsConditionsPage() {
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen bg-slate-50">
       <Navbar />
 
-      <section className="bg-gradient-to-r from-green-100 via-emerald-100 to-green-50 py-14 md:py-20 text-center">
+      <section className="bg-[#F8FAFC] px-4 py-14 text-center md:px-8 md:py-20 lg:px-16">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-3xl md:text-5xl font-semibold text-gray-800 font-[var(--font-playfair)]"
+          className="text-3xl font-semibold tracking-tight text-slate-900 md:text-5xl"
         >
           Terms &amp; Conditions
         </motion.h1>
@@ -43,7 +43,7 @@ export default function TermsConditionsPage() {
       </section>
 
       <motion.section
-        className="max-w-4xl mx-auto px-6 py-14 text-gray-700 leading-relaxed space-y-8 font-[var(--font-inter)] text-sm md:text-base"
+        className="mx-auto max-w-4xl space-y-8 rounded-[2rem] bg-white px-6 py-10 text-sm leading-relaxed text-slate-700 shadow-md md:px-8 md:py-12 md:text-base"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -58,7 +58,7 @@ export default function TermsConditionsPage() {
         </p>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-teal-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             Introduction and Commitment to Privacy
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">
@@ -71,7 +71,7 @@ export default function TermsConditionsPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-teal-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">
             Information We Collect
           </motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">We collect different types of information from and about you, including:</p>
@@ -86,7 +86,7 @@ export default function TermsConditionsPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">How We Collect Information</motion.h2>
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-teal-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">How We Collect Information</motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">We collect your information in the following ways:</p>
           <motion.ul className="list-disc pl-6 space-y-2 mt-3 text-gray-700" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={listVariants} transition={{ duration: 0.6 }}>
             <motion.li variants={itemVariants}><strong className="font-semibold text-gray-900 tracking-tight">Directly from You:</strong> When you register for an account, book a consultation, communicate with our medical professionals or customer support, or otherwise interact with our Service.</motion.li>
@@ -96,7 +96,7 @@ export default function TermsConditionsPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">How We Use Your Information</motion.h2>
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-teal-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">How We Use Your Information</motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">We use your information for various purposes, including:</p>
           <motion.ul className="list-disc pl-6 space-y-2 mt-3 text-gray-700" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={listVariants} transition={{ duration: 0.6 }}>
             <motion.li variants={itemVariants}><strong className="font-semibold text-gray-900 tracking-tight">Providing the Service:</strong> To facilitate your consultations with medical professionals, provide you with health advice, and personalize your experience.</motion.li>
@@ -113,7 +113,7 @@ export default function TermsConditionsPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">Sharing Your Information</motion.h2>
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">Sharing Your Information</motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">We may share your information with the following categories of recipients:</p>
           <motion.ul className="list-disc pl-6 space-y-2 mt-3 text-gray-700" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={listVariants} transition={{ duration: 0.6 }}>
             <motion.li variants={itemVariants}><strong className="font-semibold text-gray-900 tracking-tight">Medical Professionals:</strong> We will share your relevant personal and health information with the medical professional you consult with through our Service to enable them to provide you with advice.</motion.li>
@@ -127,7 +127,7 @@ export default function TermsConditionsPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">Data Security</motion.h2>
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">Data Security</motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">We take reasonable measures to protect your personal information from unauthorized access, use, disclosure, alteration, or destruction. These measures include:</p>
           <motion.ul className="list-disc pl-6 space-y-2 mt-3 text-gray-700" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={listVariants} transition={{ duration: 0.6 }}>
             <motion.li variants={itemVariants}><strong className="font-semibold text-gray-900 tracking-tight">Encryption:</strong> Using industry-standard encryption technologies to protect your data during transmission.</motion.li>
@@ -139,12 +139,12 @@ export default function TermsConditionsPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">Data Retention</motion.h2>
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">Data Retention</motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">We will retain your personal information for as long as necessary to fulfill the purposes outlined in this Privacy Policy, unless a longer retention period is required or permitted by law. This includes retaining your health information for a period necessary to comply with medical record-keeping requirements.</p>
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">Your Rights and Choices</motion.h2>
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">Your Rights and Choices</motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">You have certain rights regarding your personal information, including:</p>
           <motion.ul className="list-disc pl-6 space-y-2 mt-3 text-gray-700" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={listVariants} transition={{ duration: 0.6 }}>
             <motion.li variants={itemVariants}><strong className="font-semibold text-gray-900 tracking-tight">Access:</strong> You may have the right to access the personal information we hold about you.</motion.li>
@@ -158,22 +158,22 @@ export default function TermsConditionsPage() {
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">Children&apos;s Privacy</motion.h2>
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">Children&apos;s Privacy</motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">Our Service is not intended for children under the age of [Insert Minimum Age, e.g., 18]. We do not knowingly collect personal information from children. If you are a parent or guardian and believe that your child has provided us with personal information, please contact us immediately, and we will take steps to delete such information.</p>
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">Links to Other Websites</motion.h2>
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">Links to Other Websites</motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">Our Service may contain links to other websites that are not operated by us. We are not responsible for the privacy practices of these websites. We encourage you to review the privacy policies of any third-party websites you visit.</p>
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">Changes to this Privacy Policy</motion.h2>
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">Changes to this Privacy Policy</motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the new Privacy Policy on the Website or through other reasonable means. Your continued use of the Service after the effective date of any changes constitutes your acceptance of the revised Privacy Policy.</p>
         </div>
 
         <div>
-          <motion.h2 {...headingTransition} className="text-xl md:text-2xl font-semibold text-gray-800 mt-10 font-[var(--font-playfair)] border-l-4 border-green-500 pl-3">Contact Us</motion.h2>
+          <motion.h2 {...headingTransition} className="mt-10 border-l-4 border-cyan-600 pl-3 text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">Contact Us</motion.h2>
           <p className="mt-3 text-gray-700 leading-relaxed">If you have any questions or concerns about this Privacy Policy or our privacy practices, please contact us at: +91 94229 91576</p>
         </div>
       </motion.section>
