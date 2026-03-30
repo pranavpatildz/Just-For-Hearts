@@ -85,12 +85,16 @@ export default function PatientFeedbackSection() {
 
     setIsSubmitting(true)
 
-    const { error: insertError } = await supabase.from("feedback").insert({
-      name: fullName.trim(),
-      program: program.trim(),
-      rating,
-      message: feedbackMessage.trim()
-    })
+    const { error: insertError } = await supabase
+      .from("feedback")
+      .insert([
+        {
+          name: fullName.trim(),
+          program: program.trim(),
+          rating: Number(rating),
+          message: feedbackMessage.trim()
+        }
+      ] as any)
 
     if (insertError) {
       setError(insertError.message)

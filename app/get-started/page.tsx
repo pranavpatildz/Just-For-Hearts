@@ -25,6 +25,15 @@ type ChatMessage = {
   sender: "user" | "staff";
 };
 
+const healthyLifeExperts = [
+  { name: "Dr. Divya Sanglikar", price: 750 },
+  { name: "Dr. Tejas Limaye", price: 900 },
+  { name: "Dr. Neha Katekar", price: 750 },
+  { name: "Dr. Tejashree Bhate", price: 750 },
+  { name: "Dr. Kirti Kakade", price: 750 },
+  { name: "Dr. Snehal Vankudre", price: 750 },
+] as const;
+
 function getServicePrice(service: string) {
   if (service === "General Inquiry (FREE)") return "FREE";
   if (service === "Personalized Plans - Inquiry") return "As per program";
@@ -36,15 +45,29 @@ export default function GetStartedPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
+  const [otpUiVisible, setOtpUiVisible] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpStatusMessage, setOtpStatusMessage] = useState("");
   const [otpError, setOtpError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [sendingOtp, setSendingOtp] = useState(false);
   const [verifyingOtp, setVerifyingOtp] = useState(false);
   const [otpCooldown, setOtpCooldown] = useState(0);
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [selectedService, setSelectedService] = useState("");
-  const [consent, setConsent] = useState(false);
+  const [generalInquiryOptions, setGeneralInquiryOptions] = useState<string[]>([]);
+  const [chronicCareOptions, setChronicCareOptions] = useState<string[]>([]);
+  const [healthyLifeSelection, setHealthyLifeSelection] = useState("");
+  const [healthyLifeExpertSelection, setHealthyLifeExpertSelection] = useState("");
+  const [personalizedPlanSelection, setPersonalizedPlanSelection] = useState("");
+  const [isConsentGiven, setIsConsentGiven] = useState(false);
+  const [serviceConsentError, setServiceConsentError] = useState("");
+  const [serviceActionError, setServiceActionError] = useState("");
+  const [serviceSuccessMessage, setServiceSuccessMessage] = useState("");
+  const [orderContactConsent, setOrderContactConsent] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [refundAccepted, setRefundAccepted] = useState(false);
+  const [orderSummaryError, setOrderSummaryError] = useState("");
   const [messageInput, setMessageInput] = useState("");
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     { id: 1, text: "Hello! Share your health concern and our team will help you.", sender: "staff" },
@@ -61,19 +84,139 @@ export default function GetStartedPage() {
   });
 
   const isFreeInquiry = selectedService === "General Inquiry (FREE)";
+  const patientName = [formData.firstName, formData.lastName].filter(Boolean).join(" ").trim();
 
   const servicePrice = useMemo(() => getServicePrice(selectedService), [selectedService]);
+  const selectedHealthyLifeExpert = healthyLifeExperts.find(
+    (expert) => expert.name === healthyLifeExpertSelection
+  );
+
+  const orderSummary = useMemo(() => {
+    if (selectedService === "Healthy Life (online consultation)") {
+      const visitLabel =
+        healthyLifeSelection.startsWith("New Patient")
+          ? "First Visit"
+          : healthyLifeSelection.startsWith("Returning Patient")
+            ? "Follow-up"
+            : "";
+
+      const serviceLabel = selectedHealthyLifeExpert
+        ? `${selectedHealthyLifeExpert.name}${visitLabel ? ` (${visitLabel})` : ""}`
+        : visitLabel
+          ? `Healthy Life (${visitLabel})`
+          : "Healthy Life";
+
+      const total = selectedHealthyLifeExpert ? `₹${selectedHealthyLifeExpert.price}` : "₹0";
+
+      return {
+        service: serviceLabel,
+        total,
+        finalButtonLabel: "Pay & Book Now",
+      };
+    }
+
+    if (selectedService === "Expert Second Opinion (Online or In-Person)") {
+      return {
+        service: "Expert Second Opinion",
+        total: "₹1500",
+        finalButtonLabel: "Pay & Book Now",
+      };
+    }
+
+    if (selectedService === "Chronic Care") {
+      return {
+        service: "Chronic Care",
+        total: "₹2500",
+        finalButtonLabel: "Pay & Book Now",
+      };
+    }
+
+    if (selectedService === "Personalized Plans - Inquiry") {
+      return {
+        service: personalizedPlanSelection || "Personalized Plans - Inquiry",
+        total: "Inquiry Only",
+        finalButtonLabel: "Submit Inquiry",
+      };
+    }
+
+    return {
+      service: selectedService || "Not selected",
+      total: servicePrice,
+      finalButtonLabel: "Proceed",
+    };
+  }, [
+    healthyLifeSelection,
+    personalizedPlanSelection,
+    selectedHealthyLifeExpert,
+    selectedService,
+    servicePrice,
+  ]);
+
+  const refundPolicy = useMemo(() => {
+    if (
+      selectedService === "Healthy Life (online consultation)" ||
+      selectedService === "Expert Second Opinion (Online or In-Person)"
+    ) {
+      return {
+        english: [
+          "Full refund for cancellations made 4+ hours before the slot",
+          "No refund for late cancellations or no-shows",
+        ],
+        marathi:
+          "अपॉइंटमेंटच्या 4 तास आधी रद्द केल्यास पूर्ण परतावा मिळेल;\nनंतर किंवा न आल्यास परतावा मिळणार नाही.",
+        consent: "मी परतावा धोरण वाचले आहे आणि मला ते मान्य आहे.",
+      };
+    }
+
+    if (selectedService === "Chronic Care") {
+      return {
+        english: [
+          "No Refund (Commitment-based)",
+          "12-month commitment; cannot refund after enrollment",
+          "Can pause or transfer",
+        ],
+        marathi:
+          "हा आरोग्यासाठी 12 महिन्यांचा वचनबद्ध कार्यक्रम आहे;\nएकदा नोंदणी केल्यानंतर परतावा मिळणार नाही, परंतु प्लॅन थांबवता किंवा बदलता येईल.",
+        consent: "मी परतावा धोरण वाचले आहे आणि मला ते मान्य आहे.",
+      };
+    }
+
+    if (selectedService === "Personalized Plans - Inquiry") {
+      return {
+        english: [
+          "Maximum 50% refund after initial onboarding",
+          "No refund after 3-month aggressive phase begins",
+        ],
+        marathi:
+          "सुरुवातीच्या सविस्तर तपासणीनंतर 50% पर्यंत परतावा मिळेल;\n3 महिन्यांचा मुख्य रिव्हर्सल प्रोग्राम सुरू झाल्यावर परतावा मिळणार नाही.",
+        consent: "मी परतावा धोरण वाचले आहे आणि मला ते मान्य आहे.",
+      };
+    }
+
+    return null;
+  }, [selectedService]);
 
   const handleFormChange = (field: keyof FormData, value: string) => {
     if (field === "phone") {
+      const sanitizedPhone = value.replace(/\D/g, "").slice(0, 10);
+
+      setOtpUiVisible(false);
       setOtpSent(false);
       setOtpVerified(false);
       setOtp("");
       setOtpStatusMessage("");
       setOtpError("");
+      setPhoneError(
+        sanitizedPhone.length === 0 || sanitizedPhone.length === 10
+          ? ""
+          : "Enter a valid 10-digit mobile number"
+      );
       setOtpCooldown(0);
       setOtpAttempts(0);
+      setFormData((prev) => ({ ...prev, phone: sanitizedPhone }));
+      return;
     }
+
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -89,11 +232,14 @@ export default function GetStartedPage() {
 
     const phone = normalizePhone(formData.phone);
     if (phone.length !== 10) {
+      setPhoneError("Enter a valid 10-digit mobile number");
       setOtpError("Enter a valid 10-digit phone number");
       setOtpStatusMessage("");
       return;
     }
 
+    setPhoneError("");
+    setOtpUiVisible(true);
     setSendingOtp(true);
     setOtpError("");
     setOtpStatusMessage("");
@@ -135,10 +281,12 @@ export default function GetStartedPage() {
 
     const phone = normalizePhone(formData.phone);
     if (phone.length !== 10) {
+      setPhoneError("Enter a valid 10-digit mobile number");
       setOtpError("Enter a valid 10-digit phone number");
       return;
     }
 
+    setPhoneError("");
     setVerifyingOtp(true);
     setOtpError("");
 
@@ -185,13 +333,100 @@ export default function GetStartedPage() {
 
   const handleNextFromPersonal = () => {
     if (!formData.firstName || !formData.lastName || !formData.city || !formData.phone) return;
+    if (formData.phone.length !== 10) {
+      setPhoneError("Enter a valid 10-digit mobile number");
+      return;
+    }
     if (!otpVerified) return;
     setCurrentStep(2);
   };
 
   const handleNextFromServices = () => {
     if (!selectedService) return;
+    setServiceActionError("");
+    setServiceSuccessMessage("");
+
+    if (selectedService === "General Inquiry (FREE)") {
+      if (generalInquiryOptions.length === 0) {
+        setServiceActionError("Please select at least one option to continue");
+        return;
+      }
+      if (!isConsentGiven) {
+        setServiceConsentError("Please provide consent to continue");
+        return;
+      }
+
+      setServiceConsentError("");
+      setServiceSuccessMessage("Thank you for reaching out. Our team will contact you shortly.");
+      return;
+    }
+
+    if (selectedService === "Healthy Life (online consultation)") {
+      if (!healthyLifeSelection) {
+        setServiceActionError("Please select a visit type to continue");
+        return;
+      }
+      if (healthyLifeSelection.startsWith("New Patient") && !healthyLifeExpertSelection) {
+        setServiceActionError("Please select an expert to continue");
+        return;
+      }
+    }
+
+    if (selectedService === "Chronic Care" && chronicCareOptions.length === 0) {
+      setServiceActionError("Please select at least one area of concern");
+      return;
+    }
+
+    if (
+      selectedService === "Personalized Plans - Inquiry" &&
+      !personalizedPlanSelection
+    ) {
+      setServiceActionError("Please select a program to continue");
+      return;
+    }
+
+    if (
+      (selectedService === "General Inquiry (FREE)" ||
+        selectedService === "Personalized Plans - Inquiry") &&
+      !isConsentGiven
+    ) {
+      setServiceConsentError("Please provide consent to continue");
+      return;
+    }
+
+    setServiceConsentError("");
+    setOrderContactConsent(false);
+    setTermsAccepted(false);
+    setRefundAccepted(false);
+    setOrderSummaryError("");
     setCurrentStep(3);
+  };
+
+  const handleFinalizeOrder = () => {
+    setOrderSummaryError("");
+    setServiceSuccessMessage("");
+
+    if (!orderContactConsent) {
+      setOrderSummaryError("Please provide consent to continue");
+      return;
+    }
+
+    if (!termsAccepted) {
+      setOrderSummaryError("Please accept the terms to continue");
+      return;
+    }
+
+    if (refundPolicy && !refundAccepted) {
+      setOrderSummaryError("Please accept the refund policy to continue");
+      return;
+    }
+
+    if (selectedService === "Personalized Plans - Inquiry") {
+      setServiceSuccessMessage("Thank you for reaching out. Our team will contact you shortly.");
+      return;
+    }
+
+    setServiceSuccessMessage("Order summary is ready for Razorpay integration.");
   };
 
   const handleSendMessage = () => {
@@ -204,11 +439,12 @@ export default function GetStartedPage() {
 
   useEffect(() => {
     if (otpCooldown <= 0) return;
-    const timer = setInterval(() => {
+
+    const timer = window.setTimeout(() => {
       setOtpCooldown((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () => window.clearTimeout(timer);
   }, [otpCooldown]);
 
   useEffect(() => {
@@ -253,6 +489,7 @@ export default function GetStartedPage() {
                 onChange={(field, value) => handleFormChange(field, value)}
                 onSendOtp={handleSendOtp}
                 sendingOtp={sendingOtp}
+                phoneError={phoneError}
                 otpCooldown={otpCooldown}
                 otpStatusMessage={otpStatusMessage}
                 otpError={otpError}
@@ -260,6 +497,7 @@ export default function GetStartedPage() {
                 onOtpChange={setOtp}
                 onVerifyOtp={handleVerifyOtp}
                 verifyingOtp={verifyingOtp}
+                showOtpField={otpUiVisible || otpSent || otpVerified}
                 otpSent={otpSent}
                 otpVerified={otpVerified}
                 onNext={handleNextFromPersonal}
@@ -270,7 +508,45 @@ export default function GetStartedPage() {
               <ServiceSelection
                 selectedService={selectedService}
                 requirements={formData.requirements}
-                onServiceChange={setSelectedService}
+                onServiceChange={(value) => {
+                  setSelectedService(value);
+                  setHealthyLifeExpertSelection("");
+                  setIsConsentGiven(false);
+                  setServiceConsentError("");
+                  setServiceActionError("");
+                  setServiceSuccessMessage("");
+                }}
+                generalInquiryOptions={generalInquiryOptions}
+                onGeneralInquiryOptionsChange={setGeneralInquiryOptions}
+                chronicCareOptions={chronicCareOptions}
+                onChronicCareOptionsChange={setChronicCareOptions}
+                healthyLifeSelection={healthyLifeSelection}
+                onHealthyLifeSelectionChange={(value) => {
+                  setHealthyLifeSelection(value);
+                  setHealthyLifeExpertSelection("");
+                  setServiceActionError("");
+                }}
+                healthyLifeExpertSelection={healthyLifeExpertSelection}
+                onHealthyLifeExpertSelectionChange={(value) => {
+                  setHealthyLifeExpertSelection(value);
+                  setServiceActionError("");
+                }}
+                healthyLifeExperts={healthyLifeExperts}
+                personalizedPlanSelection={personalizedPlanSelection}
+                onPersonalizedPlanSelectionChange={(value) => {
+                  setPersonalizedPlanSelection(value);
+                  setServiceActionError("");
+                }}
+                isConsentGiven={isConsentGiven}
+                onConsentChange={(value) => {
+                  setIsConsentGiven(value);
+                  if (value) {
+                    setServiceConsentError("");
+                  }
+                }}
+                serviceConsentError={serviceConsentError}
+                serviceActionError={serviceActionError}
+                serviceSuccessMessage={serviceSuccessMessage}
                 onRequirementsChange={(value) => handleFormChange("requirements", value)}
                 onBack={() => setCurrentStep(1)}
                 onNext={handleNextFromServices}
@@ -279,28 +555,94 @@ export default function GetStartedPage() {
 
             {currentStep === 3 && (
               <div className="space-y-6">
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-gray-800">Payment Summary</h3>
+                {serviceSuccessMessage && (
+                  <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+                    {serviceSuccessMessage}
+                  </div>
+                )}
+
+                <div className="rounded-xl border border-[#ffd6d6] bg-[#fff5f5] p-6">
+                  <h3 className="text-lg font-semibold text-gray-800">Order Summary</h3>
                   <div className="mt-4 space-y-2 text-gray-700">
                     <p>
-                      <span className="font-medium">Selected service:</span>{" "}
-                      {selectedService || "Not selected"}
+                      <span className="font-medium">Service:</span> {orderSummary.service}
                     </p>
                     <p>
-                      <span className="font-medium">Price:</span> {servicePrice}
+                      <span className="font-medium">Patient:</span> {patientName || "Not provided"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Total Payable:</span> {orderSummary.total}
                     </p>
                   </div>
                 </div>
 
-                <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+                <label className="inline-flex items-center gap-3 rounded-xl border border-[#ffd6d6] bg-white px-4 py-3 text-sm text-gray-700">
                   <input
                     type="checkbox"
-                    checked={consent}
-                    onChange={(e) => setConsent(e.target.checked)}
+                    checked={orderContactConsent}
+                    onChange={(e) => setOrderContactConsent(e.target.checked)}
                     className="rounded border-gray-300 text-red-500 focus:ring-red-400"
                   />
-                  I consent to proceed and be contacted for this service.
+                  Consent to contact by Phone / Text / WhatsApp / Email
                 </label>
+
+                <div className="space-y-4 rounded-xl border border-[#ffd6d6] bg-[#fff5f5] p-5">
+                  <h4 className="text-base font-semibold text-gray-800">Terms and Conditions</h4>
+                  <ul className="space-y-2 text-sm leading-6 text-gray-700">
+                    <li>
+                      Our services provide expert guidance for health management and are not for
+                      medical emergencies. Success requires following clinical advice. We reserve
+                      our team's time exclusively for committed patients to ensure the best outcomes.
+                    </li>
+                    <li>
+                      आमच्या सेवा तज्ञ मार्गदर्शनासाठी आहेत, मेडिकल इमर्जन्सीसाठी नाहीत.
+                      उपचारांच्या यशासाठी डॉक्टरांच्या सल्ल्याचे पालन आवश्यक आहे. सर्वोत्तम
+                      परिणामांसाठी, आमची टीम आपला वेळ फक्त गंभीरपणे उपचार घेणाऱ्या रुग्णांसाठी
+                      समर्पित करते.
+                    </li>
+                  </ul>
+                  <label className="inline-flex items-start gap-3 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={termsAccepted}
+                      onChange={(e) => setTermsAccepted(e.target.checked)}
+                      className="mt-0.5 rounded border-gray-300 text-red-500 focus:ring-red-400"
+                    />
+                    <span>
+                      I agree to the terms and will follow the medical advice provided.
+                      <br />
+                      मी या अटींशी सहमत आहे आणि दिलेल्या वैद्यकीय सल्ल्याचे पालन करण्याचे मान्य
+                      करतो/करते.
+                    </span>
+                  </label>
+                </div>
+
+                {refundPolicy && (
+                  <div className="space-y-4 rounded-xl border border-[#ffd6d6] bg-[#fff5f5] p-5">
+                    <h4 className="text-base font-semibold text-gray-800">Refund Policy</h4>
+                    <ul className="space-y-2 text-sm leading-6 text-gray-700">
+                      {refundPolicy.english.map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
+                    <p className="whitespace-pre-line text-sm leading-6 text-gray-700">
+                      {refundPolicy.marathi}
+                    </p>
+                    <label className="inline-flex items-start gap-3 text-sm text-gray-700">
+                      <input
+                        type="checkbox"
+                        checked={refundAccepted}
+                        onChange={(e) => setRefundAccepted(e.target.checked)}
+                        className="mt-0.5 rounded border-gray-300 text-red-500 focus:ring-red-400"
+                      />
+                      <span>{refundPolicy.consent}</span>
+                    </label>
+                  </div>
+                )}
+
+                {orderSummaryError && (
+                  <p className="text-sm font-medium text-red-600">{orderSummaryError}</p>
+                )}
 
                 <div className="flex items-center justify-between">
                   <button
@@ -312,10 +654,10 @@ export default function GetStartedPage() {
                   </button>
                   <button
                     type="button"
-                    disabled={!consent || !selectedService}
-                    className="bg-red-500 text-white rounded-lg px-6 py-3 hover:bg-red-600 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
+                    onClick={handleFinalizeOrder}
+                    className="bg-red-500 text-white rounded-lg px-6 py-3 hover:bg-red-600 transition-all duration-300 hover:-translate-y-0.5"
                   >
-                    Proceed to Payment
+                    {orderSummary.finalButtonLabel}
                   </button>
                 </div>
 
