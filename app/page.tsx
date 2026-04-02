@@ -1,7 +1,6 @@
 import Navbar from "@/components/public/Navbar";
 import Hero from "@/components/public/Hero";
 import Reveal from "@/components/ui/Reveal";
-import ComparisonSection from "@/components/public/ComparisonSection";
 import Programs from "@/components/public/Programs";
 import JFHProBenefits from "@/components/public/JFHProBenefits";
 import MeetExperts from "@/components/public/MeetExperts";
@@ -18,7 +17,6 @@ export default function Home() {
         <Reveal>
           <Hero />
         </Reveal>
-        <ComparisonSection />
         <Reveal delay={0.1}>
           <Programs />
         </Reveal>
