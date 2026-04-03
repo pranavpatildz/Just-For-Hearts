@@ -3,6 +3,7 @@
 import Link from "next/link"; // For CTA buttons
 import { Check } from "lucide-react"; // For bullet points
 import { useEffect, useRef } from "react";
+
 const getColorClass = (color: string, type: "text" | "bg" | "border") => {
   const colorMap: Record<string, { text: string; bg: string; border: string }> = {
     red: {
@@ -25,7 +26,11 @@ const getColorClass = (color: string, type: "text" | "bg" | "border") => {
   return colorMap[color]?.[type] || "";
 };
 
-export default function Programs() {
+type ProgramsProps = {
+  showHeading?: boolean;
+};
+
+export default function Programs({ showHeading = true }: ProgramsProps) {
   const programsData = [
     // Column 1
     {
@@ -180,16 +185,13 @@ export default function Programs() {
 
         return (
             <section className="mx-auto max-w-[1280px] overflow-visible px-4 py-12 md:px-8 md:py-16 lg:px-16">
-    
-              <div className="text-center mb-6 md:mb-8">
-    
-                <h2 className="text-2xl font-semibold tracking-tight text-slate-900 md:text-4xl">
-
-                  <span className="text-teal-600">JFH</span> Programs
-    
-                </h2>
-    
-              </div>
+              {showHeading && (
+                <div className="text-center mb-6 md:mb-8">
+                  <h2 className="text-2xl font-semibold tracking-tight text-slate-900 md:text-4xl">
+                    <span className="text-teal-600">JFH</span> Programs
+                  </h2>
+                </div>
+              )}
     
               {/* Mobile Slider container */}
               <div

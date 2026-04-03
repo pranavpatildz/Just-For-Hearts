@@ -36,6 +36,7 @@ export default function Navbar() {
         <div className="hidden items-center gap-8 md:flex">
           <NavLink href="/why-jfh">Why JFH</NavLink>
           <NavLink href="/why-year-round">Why Year Round</NavLink>
+          <NavLink href="/programs">Programs</NavLink>
           <NavLink href="/get-started">Get Started</NavLink>
           <Link
             href="/admin/login"
@@ -83,6 +84,7 @@ export default function Navbar() {
           <div className="flex flex-col gap-2 overflow-hidden rounded-2xl border border-gray-100 bg-slate-50 p-3 shadow-sm">
             <MobileNavLink href="/why-jfh">Why JFH</MobileNavLink>
             <MobileNavLink href="/why-year-round">Why Year Round</MobileNavLink>
+            <MobileNavLink href="/programs">Programs</MobileNavLink>
             <MobileNavLink href="/get-started">Get Started</MobileNavLink>
             <Link
               href="/admin/login"
