@@ -106,6 +106,14 @@ textarea {
   border-radius: 10px;
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 img,
 svg,
 video,
