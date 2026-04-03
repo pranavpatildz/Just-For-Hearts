@@ -12,10 +12,10 @@ export default function Footer() {
   return (
     <footer className="w-full bg-gray-900 text-white">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-10 px-4 py-12 md:grid-cols-[1fr_auto_1fr] md:px-8 md:py-16 lg:px-16">
-          <div className="text-left md:justify-self-start">
+          <div className="flex flex-col items-center text-center md:items-start md:text-left md:justify-self-start">
             <h3 className="mb-4 text-xl font-semibold tracking-tight text-white">About the Founder</h3>
             <div className="space-y-2 text-sm leading-relaxed text-slate-300 md:text-base">
-              <div className="flex items-center justify-start gap-2 font-semibold">
+              <div className="flex items-center justify-center gap-2 font-semibold md:justify-start">
                 <span>Dr. Ravindra L. Kulkarni</span>
                 <a
                   href="https://www.linkedin.com/in/drravindrakulkarni/?originalSubdomain=in"
