@@ -87,24 +87,27 @@ export default function Hero() {
           heart, and obesity care - all from the comfort of home.
         </p>
 
-        <div className="group relative mt-6 w-full max-w-2xl">
+        <div className="group relative mt-6 w-full max-w-2xl px-2 md:px-0">
           <div
             id="ai-bar"
-            className="flex cursor-pointer items-center rounded-full border border-gray-200 bg-white px-5 py-3 shadow-md transition-all duration-300 hover:shadow-lg"
+            className="flex w-full items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 shadow-md transition-all duration-300 hover:shadow-lg md:px-5 md:py-3"
           >
-            <span className="mr-3 text-lg text-blue-500" aria-hidden="true">
+            <span
+              className="shrink-0 text-base text-blue-500 md:text-lg"
+              aria-hidden="true"
+            >
               🤖
             </span>
 
             <input
               type="text"
-              placeholder="Ask our Assistant: How can Just For Hearts help you today?"
-              className="flex-1 cursor-pointer bg-transparent text-sm outline-none"
+              placeholder="Ask our Assistant..."
+              className="min-w-0 flex-1 cursor-pointer truncate bg-transparent text-xs outline-none md:text-sm"
               disabled
             />
 
             <button
-              className="ml-2 rounded-full bg-[#0B1B2B] px-5 py-2 text-sm text-white"
+              className="shrink-0 rounded-full bg-[#0B1B2B] px-3 py-1.5 text-xs text-white md:px-5 md:py-2 md:text-sm"
               disabled
               type="button"
             >
@@ -114,7 +117,7 @@ export default function Hero() {
 
           <div
             id="ai-tooltip"
-            className="pointer-events-none absolute left-1/2 mt-3 -translate-x-1/2 scale-95 rounded-lg bg-[#0B1B2B] px-4 py-2 text-xs text-white opacity-0 shadow-lg transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"
+            className="pointer-events-none absolute left-1/2 mt-3 w-[90%] -translate-x-1/2 scale-95 rounded-lg bg-[#0B1B2B] px-3 py-2 text-center text-xs text-white opacity-0 shadow-lg transition-all duration-300 group-hover:opacity-100 group-hover:scale-100 md:w-auto"
           >
             🤖 Our AI Assistant is training! This feature will be live soon.
           </div>
