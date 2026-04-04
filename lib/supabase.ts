@@ -1,7 +1,5 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js"
 
-type Database = Record<string, never>
-
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
@@ -11,4 +9,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
   )
 }
 
-export const supabase: SupabaseClient<Database> = createClient<Database>(supabaseUrl, supabaseAnonKey)
+if (process.env.NODE_ENV !== "production") {
+  console.log("SUPABASE URL:", supabaseUrl)
+}
+
+export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey)

@@ -3,10 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+
+import { getUser } from "@/src/lib/client-auth";
 
 export default function Navbar() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [user, setUserState] = useState<any>(null);
+  const pathname = usePathname();
+  const isPublicAuthPage = pathname === "/login" || pathname === "/create-account";
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 8);
@@ -14,6 +21,10 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    setUserState(getUser());
+  }, [pathname]);
 
   return (
     <nav
@@ -38,12 +49,25 @@ export default function Navbar() {
           <NavLink href="/why-year-round">Why Year Round</NavLink>
           <NavLink href="/programs">Programs</NavLink>
           <NavLink href="/get-started">Get Started</NavLink>
-          <Link
-            href="/admin/login"
-            className="primary-btn text-sm font-medium md:text-base"
-          >
-            Login
-          </Link>
+          {user ? (
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="inline-flex items-center justify-center rounded-xl bg-red-500 px-4 py-2 text-white"
+            >
+              My Profile
+            </button>
+          ) : (
+            <button
+              onClick={() => router.push("/login")}
+              className={
+                isPublicAuthPage
+                  ? "inline-flex items-center justify-center rounded-xl bg-red-500 px-4 py-2 text-white"
+                  : "inline-flex items-center justify-center rounded-xl bg-red-500 px-4 py-2 text-white"
+              }
+            >
+              Login
+            </button>
+          )}
         </div>
 
         <div className="md:hidden">
@@ -86,12 +110,21 @@ export default function Navbar() {
             <MobileNavLink href="/why-year-round">Why Year Round</MobileNavLink>
             <MobileNavLink href="/programs">Programs</MobileNavLink>
             <MobileNavLink href="/get-started">Get Started</MobileNavLink>
-            <Link
-              href="/admin/login"
-              className="primary-btn mt-2 w-full text-sm font-medium"
-            >
-              Login
-            </Link>
+            {user ? (
+              <button
+                onClick={() => router.push("/dashboard")}
+                className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-red-500 px-4 py-2 text-white"
+              >
+                My Profile
+              </button>
+            ) : (
+              <button
+                onClick={() => router.push("/login")}
+                className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-red-500 px-4 py-2 text-white"
+              >
+                Login
+              </button>
+            )}
           </div>
         </div>
       )}
