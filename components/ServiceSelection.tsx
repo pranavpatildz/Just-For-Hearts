@@ -1,5 +1,6 @@
 "use client";
 
+import ExpertDropdown from "@/components/ExpertDropdown";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -106,6 +107,7 @@ type ServiceSelectionProps = {
   onRequirementsChange: (value: string) => void;
   onBack: () => void;
   onNext: () => void;
+  hideBackButton?: boolean;
 };
 
 export default function ServiceSelection({
@@ -131,6 +133,7 @@ export default function ServiceSelection({
   onRequirementsChange,
   onBack,
   onNext,
+  hideBackButton = false,
 }: ServiceSelectionProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -334,28 +337,12 @@ export default function ServiceSelection({
           )}
 
           {selectedService === "Healthy Life (online consultation)" && healthyLifeSelection && (
-              <div className="space-y-2 rounded-xl border border-slate-200 bg-white p-4">
-                <label
-                  htmlFor="healthy-life-expert"
-                  className="text-sm font-semibold text-teal-600"
-                >
-                  Select Expert
-                </label>
-                <select
-                  id="healthy-life-expert"
-                  value={healthyLifeExpertSelection}
-                  onChange={(e) => onHealthyLifeExpertSelectionChange(e.target.value)}
-                  className="field-base rounded-xl py-3 text-sm font-medium"
-                >
-                  <option value="">Select Expert</option>
-                  {healthyLifeExperts.map((expert) => (
-                    <option key={expert.name} value={expert.name}>
-                      {`${expert.name} (\u20b9${expert.price})`}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+            <ExpertDropdown
+              experts={healthyLifeExperts}
+              selectedExpert={healthyLifeExpertSelection}
+              onChange={onHealthyLifeExpertSelectionChange}
+            />
+          )}
 
           {"footerNote" in selectedServiceDetails && selectedServiceDetails.footerNote && (
             <div className="whitespace-pre-line rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm leading-6 text-slate-600">
@@ -409,13 +396,17 @@ export default function ServiceSelection({
       )}
 
       <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
-        <button
-          type="button"
-          onClick={onBack}
-          className="secondary-btn w-full px-6 py-3 sm:w-auto"
-        >
-          Back
-        </button>
+        {!hideBackButton ? (
+          <button
+            type="button"
+            onClick={onBack}
+            className="secondary-btn w-full px-6 py-3 sm:w-auto"
+          >
+            Back
+          </button>
+        ) : (
+          <div />
+        )}
         <button
           type="button"
           onClick={onNext}

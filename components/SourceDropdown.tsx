@@ -1,27 +1,41 @@
 "use client";
 
 import { type ComponentType, useEffect, useRef, useState } from "react";
-import { ChevronDown, MoreHorizontal, User } from "lucide-react";
-import { FaFacebook, FaGoogle, FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
+import { ChevronDown, Globe, Megaphone, MessageCircle, MoreHorizontal, Stethoscope, Users } from "lucide-react";
+import { FaFacebook, FaGoogle, FaInstagram, FaYoutube } from "react-icons/fa";
+import { SOURCE_OPTIONS } from "@/constants/sourceOptions";
 
 type SourceOption =
-  | "Existing Patient"
-  | "YouTube"
-  | "WhatsApp"
   | "Instagram"
   | "Facebook"
   | "Google"
+  | "YouTube"
+  | "Friend/Family"
+  | "Doctor Referral"
+  | "WhatsApp"
+  | "Advertisement"
+  | "Website"
   | "Other";
 
-const options: Array<{ value: SourceOption; label: SourceOption; icon: ComponentType<{ className?: string }> }> = [
-  { value: "Existing Patient", label: "Existing Patient", icon: User },
-  { value: "YouTube", label: "YouTube", icon: FaYoutube },
-  { value: "WhatsApp", label: "WhatsApp", icon: FaWhatsapp },
-  { value: "Instagram", label: "Instagram", icon: FaInstagram },
-  { value: "Facebook", label: "Facebook", icon: FaFacebook },
-  { value: "Google", label: "Google", icon: FaGoogle },
-  { value: "Other", label: "Other", icon: MoreHorizontal },
-];
+const optionIcons: Record<SourceOption, ComponentType<{ className?: string }>> = {
+  Instagram: FaInstagram,
+  Facebook: FaFacebook,
+  Google: FaGoogle,
+  YouTube: FaYoutube,
+  "Friend/Family": Users,
+  "Doctor Referral": Stethoscope,
+  WhatsApp: MessageCircle,
+  Advertisement: Megaphone,
+  Website: Globe,
+  Other: MoreHorizontal,
+};
+
+const options: Array<{ value: SourceOption; label: SourceOption; icon: ComponentType<{ className?: string }> }> =
+  SOURCE_OPTIONS.map((option) => ({
+    value: option as SourceOption,
+    label: option as SourceOption,
+    icon: optionIcons[option as SourceOption],
+  }));
 
 type SourceDropdownProps = {
   value: string;
@@ -46,7 +60,7 @@ export default function SourceDropdown({ value, onChange }: SourceDropdownProps)
   const selected = options.find((option) => option.value === value);
 
   return (
-    <div ref={rootRef} className="relative">
+    <div ref={rootRef} className="relative z-[1000] overflow-visible">
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
@@ -68,7 +82,7 @@ export default function SourceDropdown({ value, onChange }: SourceDropdownProps)
       </button>
 
       {open && (
-        <div className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
+        <div className="dropdown-menu absolute left-0 top-full mt-2 w-full border border-gray-200">
           {options.map((option) => {
             const Icon = option.icon;
             return (

@@ -19,6 +19,7 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
         {steps.map((step, index) => {
           const isCompleted = currentStep > step.id;
           const isActive = currentStep === step.id;
+          const isUpcoming = currentStep < step.id;
           const isLast = index === steps.length - 1;
 
           return (
@@ -31,12 +32,20 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
                       ? "bg-teal-600 text-white"
                       : isActive
                         ? "bg-teal-700 text-white"
-                        : "border border-slate-200 bg-white text-slate-500",
+                        : isUpcoming
+                          ? "border border-slate-200 bg-slate-50 text-slate-400"
+                          : "border border-slate-200 bg-white text-slate-500",
                   ].join(" ")}
                 >
                   {isCompleted ? <Check className="w-4 h-4" /> : step.id}
                 </div>
-                <span className="text-sm md:text-base font-medium text-slate-700">{step.label}</span>
+                <span
+                  className={`text-sm font-medium md:text-base ${
+                    isUpcoming ? "text-slate-400" : "text-slate-700"
+                  }`}
+                >
+                  {step.label}
+                </span>
               </div>
               {!isLast && <div className="mx-3 h-[2px] flex-1 bg-slate-200" aria-hidden="true" />}
             </div>

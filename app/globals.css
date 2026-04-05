@@ -128,6 +128,44 @@ canvas {
 }
 
 @layer utilities {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.2s ease;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    max-height: 220px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    background: white;
+    z-index: 1000;
+  }
+
+  .dropdown-menu::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .dropdown-menu::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
+
   .primary-btn {
     @apply inline-flex items-center justify-center rounded-xl px-6 py-3 font-medium text-white shadow-sm transition-all duration-200 ease-in-out hover:shadow-md active:scale-95;
     background-color: var(--primary);

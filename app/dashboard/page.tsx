@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
 import Navbar from "@/components/public/Navbar";
+import { SOURCE_OPTIONS } from "@/constants/sourceOptions";
 import { supabase } from "@/lib/supabase";
 import { getUser, logout, setUser } from "@/src/lib/client-auth";
 
@@ -14,6 +15,7 @@ type User = {
   email: string;
   city?: string;
   language?: string;
+  source?: string;
   created_at?: string;
 };
 
@@ -22,6 +24,7 @@ type EditForm = {
   email: string;
   city: string;
   language: string;
+  source: string;
 };
 
 type DropdownProps = {
@@ -176,6 +179,7 @@ export default function DashboardPage() {
     email: "",
     city: "",
     language: "",
+    source: "",
   });
 
   useEffect(() => {
@@ -193,12 +197,13 @@ export default function DashboardPage() {
       email: normalizedUser.email ?? "",
       city: normalizedUser.city ?? "",
       language: normalizedUser.language ?? "",
+      source: normalizedUser.source ?? "",
     });
 
     const loadProfile = async () => {
       const { data } = await supabase
         .from("users")
-        .select("mobile, full_name, email, city, language, created_at")
+        .select("mobile, full_name, email, city, language, source, created_at")
         .eq("mobile", normalizedUser.mobile)
         .maybeSingle();
 
@@ -211,6 +216,7 @@ export default function DashboardPage() {
         email: data.email ?? normalizedUser.email,
         city: data.city ?? normalizedUser.city ?? "",
         language: data.language ?? normalizedUser.language ?? "",
+        source: data.source ?? normalizedUser.source ?? "",
         created_at: data.created_at ?? normalizedUser.created_at,
       };
 
@@ -220,6 +226,7 @@ export default function DashboardPage() {
         email: mergedUser.email ?? "",
         city: mergedUser.city ?? "",
         language: mergedUser.language ?? "",
+        source: mergedUser.source ?? "",
       });
       setUser(mergedUser);
     };
@@ -243,6 +250,7 @@ export default function DashboardPage() {
     { label: "Email Address", value: formatValue(user?.email) },
     { label: "City", value: formatValue(user?.city) },
     { label: "Preferred Language", value: formatValue(user?.language) },
+    { label: "Source", value: formatValue(user?.source) },
     { label: "Joined On", value: formatJoinedOn(user?.created_at) },
   ];
 
@@ -259,6 +267,7 @@ export default function DashboardPage() {
       email: form.email.trim(),
       city: form.city.trim(),
       language: form.language.trim(),
+      source: form.source.trim(),
     };
 
     const { error } = await supabase.from("users").upsert(
@@ -269,6 +278,7 @@ export default function DashboardPage() {
           email: updatedUser.email || null,
           city: updatedUser.city || null,
           language: updatedUser.language || null,
+          source: updatedUser.source || null,
         },
       ],
       { onConflict: "mobile" }
@@ -299,7 +309,7 @@ export default function DashboardPage() {
                   Edit
                 </button>
                 <button
-                  onClick={() => router.push("/services")}
+                  onClick={() => router.push("/get-started?from=dashboard")}
                   className="rounded-full bg-white px-3 py-1 text-xs font-medium text-red-500"
                 >
                   Book
@@ -326,7 +336,7 @@ export default function DashboardPage() {
                 <span className="sm:hidden">{editMode ? "Cancel" : "Edit"}</span>
               </button>
               <button
-                onClick={() => router.push("/services")}
+                onClick={() => router.push("/get-started?from=dashboard")}
                 className="max-w-full whitespace-nowrap rounded-lg bg-white px-3 py-1.5 text-xs text-red-600 transition hover:scale-105 sm:text-sm md:px-4"
               >
                 <span className="hidden sm:inline">Book Service</span>
@@ -415,6 +425,13 @@ export default function DashboardPage() {
                       value={form.language}
                       options={languages}
                       onChange={(value) => handleFormChange("language", value)}
+                    />
+                    <CustomDropdown
+                      label="Source"
+                      placeholder="Select Source"
+                      value={form.source}
+                      options={SOURCE_OPTIONS}
+                      onChange={(value) => handleFormChange("source", value)}
                     />
                   </div>
 

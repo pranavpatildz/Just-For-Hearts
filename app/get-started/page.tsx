@@ -1,12 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useSearchParams } from "next/navigation";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import StepIndicator from "@/components/StepIndicator";
 import PersonalDetailsForm from "@/components/PersonalDetailsForm";
 import ServiceSelection from "@/components/ServiceSelection";
 import InquiryChat from "@/components/InquiryChat";
+import { SOURCE_OPTIONS } from "@/constants/sourceOptions";
+import { supabase } from "@/lib/supabase";
+import { getUser, setUser } from "@/src/lib/client-auth";
 
 type FormData = {
   firstName: string;
@@ -14,7 +19,7 @@ type FormData = {
   email: string;
   city: string;
   preferredLanguage: string;
-  sourceReference: string;
+  source: string;
   phone: string;
   requirements: string;
 };
@@ -23,6 +28,16 @@ type ChatMessage = {
   id: number;
   text: string;
   sender: "user" | "staff";
+};
+
+type StoredUser = {
+  mobile?: string;
+  name?: string;
+  full_name?: string;
+  email?: string;
+  city?: string;
+  language?: string;
+  source?: string;
 };
 
 const healthyLifeExperts = [
@@ -42,6 +57,8 @@ function getServicePrice(service: string) {
 
 export default function GetStartedPage() {
   const MAX_OTP_ATTEMPTS = 5;
+  const searchParams = useSearchParams();
+  const fromDashboard = searchParams.get("from") === "dashboard";
   const [currentStep, setCurrentStep] = useState(1);
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
@@ -78,7 +95,7 @@ export default function GetStartedPage() {
     email: "",
     city: "",
     preferredLanguage: "",
-    sourceReference: "",
+    source: "",
     phone: "",
     requirements: "",
   });
@@ -331,18 +348,57 @@ export default function GetStartedPage() {
     }
   };
 
-  const handleNextFromPersonal = () => {
+  const handleNextFromPersonal = async () => {
     if (!formData.firstName || !formData.lastName || !formData.city || !formData.phone) return;
     if (formData.phone.length !== 10) {
       setPhoneError("Enter a valid 10-digit mobile number");
       return;
     }
+    if (!formData.source) return;
     if (!otpVerified) return;
+
+    try {
+      const normalizedPhone = normalizePhone(formData.phone);
+      await supabase.from("users").upsert(
+        [
+          {
+            mobile: normalizedPhone,
+            full_name: `${formData.firstName} ${formData.lastName}`.trim() || null,
+            email: formData.email.trim() || null,
+            city: formData.city.trim() || null,
+            language: formData.preferredLanguage.trim() || null,
+            source: SOURCE_OPTIONS.includes(formData.source) ? formData.source : null,
+          },
+        ],
+        { onConflict: "mobile" }
+      );
+
+      const existingUser = getUser() as StoredUser | null;
+      if (existingUser && normalizePhone(existingUser.mobile ?? "") === normalizedPhone) {
+        setUser({
+          ...existingUser,
+          name: existingUser.name ?? `${formData.firstName} ${formData.lastName}`.trim(),
+          full_name: existingUser.full_name ?? `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email.trim() || existingUser.email,
+          city: formData.city.trim(),
+          language: formData.preferredLanguage.trim(),
+          source: formData.source,
+          mobile: normalizedPhone,
+        });
+      }
+    } catch (error) {
+      console.error("Unable to save personal details:", error);
+    }
+
     setCurrentStep(2);
   };
 
   const handleNextFromServices = () => {
-    if (!selectedService) return;
+    if (!selectedService) {
+      setServiceActionError("Please select a service to continue");
+      return;
+    }
+
     setServiceActionError("");
     setServiceSuccessMessage("");
 
@@ -453,6 +509,91 @@ export default function GetStartedPage() {
     setOtpStatusMessage("");
   }, [otpAttempts, otpVerified]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentStep]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const hydrateDashboardFlow = async () => {
+      if (!fromDashboard) return;
+
+      setCurrentStep(2);
+
+      const storedUser = getUser() as StoredUser | null;
+      if (!storedUser?.mobile) return;
+
+      let mergedUser: StoredUser = storedUser;
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("mobile, full_name, email, city, language, source")
+        .eq("mobile", storedUser.mobile)
+        .maybeSingle();
+
+      if (!isMounted) return;
+
+      if (!error && data) {
+        mergedUser = {
+          ...storedUser,
+          mobile: data.mobile ?? storedUser.mobile,
+          full_name: data.full_name ?? storedUser.full_name ?? storedUser.name,
+          email: data.email ?? storedUser.email,
+          city: data.city ?? storedUser.city,
+          language: data.language ?? storedUser.language,
+          source:
+            data.source && SOURCE_OPTIONS.includes(data.source)
+              ? data.source
+              : storedUser.source,
+        };
+      }
+
+      const normalizedPhone = normalizePhone(mergedUser.mobile ?? "");
+      const fullName = (mergedUser.full_name ?? mergedUser.name ?? "").trim();
+      const [firstName = "", ...lastNameParts] = fullName.split(/\s+/).filter(Boolean);
+
+      if (normalizedPhone.length !== 10) {
+        setFormData((prev) => ({
+          ...prev,
+          firstName,
+          lastName: lastNameParts.join(" "),
+          email: mergedUser.email ?? "",
+          city: mergedUser.city ?? "",
+          preferredLanguage: mergedUser.language ?? "",
+          source:
+            mergedUser.source && SOURCE_OPTIONS.includes(mergedUser.source)
+              ? mergedUser.source
+              : "",
+          phone: normalizedPhone,
+        }));
+        setPhoneError("Enter a valid 10-digit mobile number");
+        return;
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        firstName,
+        lastName: lastNameParts.join(" "),
+        email: mergedUser.email ?? "",
+        city: mergedUser.city ?? "",
+        preferredLanguage: mergedUser.language ?? "",
+        source:
+          mergedUser.source && SOURCE_OPTIONS.includes(mergedUser.source)
+            ? mergedUser.source
+            : "",
+        phone: normalizedPhone,
+      }));
+      setPhoneError("");
+    };
+
+    void hydrateDashboardFlow();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [fromDashboard]);
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Navbar />
@@ -474,87 +615,117 @@ export default function GetStartedPage() {
         <div className="mx-auto max-w-4xl">
           <StepIndicator currentStep={currentStep} />
 
-          <div className="mx-auto mt-8 max-w-xl rounded-2xl bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl md:mt-10 md:max-w-4xl md:p-8">
-            {currentStep === 1 && (
-              <PersonalDetailsForm
-                formData={{
-                  firstName: formData.firstName,
-                  lastName: formData.lastName,
-                  email: formData.email,
-                  city: formData.city,
-                  preferredLanguage: formData.preferredLanguage,
-                  sourceReference: formData.sourceReference,
-                  phone: formData.phone,
-                }}
-                onChange={(field, value) => handleFormChange(field, value)}
-                onSendOtp={handleSendOtp}
-                sendingOtp={sendingOtp}
-                phoneError={phoneError}
-                otpCooldown={otpCooldown}
-                otpStatusMessage={otpStatusMessage}
-                otpError={otpError}
-                otp={otp}
-                onOtpChange={setOtp}
-                onVerifyOtp={handleVerifyOtp}
-                verifyingOtp={verifyingOtp}
-                showOtpField={otpUiVisible || otpSent || otpVerified}
-                otpSent={otpSent}
-                otpVerified={otpVerified}
-                onNext={handleNextFromPersonal}
-              />
-            )}
+          <div className="step-container mx-auto mt-8 max-w-xl md:mt-10 md:max-w-4xl">
+            <AnimatePresence mode="wait" initial={false}>
+              {!fromDashboard && currentStep === 1 && (
+                <motion.div
+                  key="step-1"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="relative overflow-visible rounded-2xl bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl md:p-8"
+                >
+                  <PersonalDetailsForm
+                    formData={{
+                      firstName: formData.firstName,
+                      lastName: formData.lastName,
+                      email: formData.email,
+                      city: formData.city,
+                      preferredLanguage: formData.preferredLanguage,
+                      source: formData.source,
+                      phone: formData.phone,
+                    }}
+                    onChange={handleFormChange}
+                    onSendOtp={handleSendOtp}
+                    sendingOtp={sendingOtp}
+                    phoneError={phoneError}
+                    otpCooldown={otpCooldown}
+                    otpStatusMessage={otpStatusMessage}
+                    otpError={otpError}
+                    otp={otp}
+                    onOtpChange={setOtp}
+                    onVerifyOtp={handleVerifyOtp}
+                    verifyingOtp={verifyingOtp}
+                    showOtpField={otpUiVisible || otpSent || otpVerified}
+                    otpSent={otpSent}
+                    otpVerified={otpVerified}
+                    onNext={handleNextFromPersonal}
+                  />
+                </motion.div>
+              )}
 
-            {currentStep === 2 && (
-              <ServiceSelection
-                selectedService={selectedService}
-                requirements={formData.requirements}
-                onServiceChange={(value) => {
-                  setSelectedService(value);
-                  setHealthyLifeExpertSelection("");
-                  setIsConsentGiven(false);
-                  setServiceConsentError("");
-                  setServiceActionError("");
-                  setServiceSuccessMessage("");
-                }}
-                generalInquiryOptions={generalInquiryOptions}
-                onGeneralInquiryOptionsChange={setGeneralInquiryOptions}
-                chronicCareOptions={chronicCareOptions}
-                onChronicCareOptionsChange={setChronicCareOptions}
-                healthyLifeSelection={healthyLifeSelection}
-                onHealthyLifeSelectionChange={(value) => {
-                  setHealthyLifeSelection(value);
-                  setHealthyLifeExpertSelection("");
-                  setServiceActionError("");
-                }}
-                healthyLifeExpertSelection={healthyLifeExpertSelection}
-                onHealthyLifeExpertSelectionChange={(value) => {
-                  setHealthyLifeExpertSelection(value);
-                  setServiceActionError("");
-                }}
-                healthyLifeExperts={healthyLifeExperts}
-                personalizedPlanSelection={personalizedPlanSelection}
-                onPersonalizedPlanSelectionChange={(value) => {
-                  setPersonalizedPlanSelection(value);
-                  setServiceActionError("");
-                }}
-                isConsentGiven={isConsentGiven}
-                onConsentChange={(value) => {
-                  setIsConsentGiven(value);
-                  if (value) {
-                    setServiceConsentError("");
-                  }
-                }}
-                serviceConsentError={serviceConsentError}
-                serviceActionError={serviceActionError}
-                serviceSuccessMessage={serviceSuccessMessage}
-                onRequirementsChange={(value) => handleFormChange("requirements", value)}
-                onBack={() => setCurrentStep(1)}
-                onNext={handleNextFromServices}
-              />
-            )}
+              {currentStep === 2 && (
+                <motion.div
+                  key="step-2"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="rounded-2xl bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl md:p-8"
+                >
+                  <div id="services-section">
+                    <ServiceSelection
+                      selectedService={selectedService}
+                      requirements={formData.requirements}
+                      onServiceChange={(value) => {
+                        setSelectedService(value);
+                        setHealthyLifeExpertSelection("");
+                        setIsConsentGiven(false);
+                        setServiceConsentError("");
+                        setServiceActionError("");
+                        setServiceSuccessMessage("");
+                      }}
+                      generalInquiryOptions={generalInquiryOptions}
+                      onGeneralInquiryOptionsChange={setGeneralInquiryOptions}
+                      chronicCareOptions={chronicCareOptions}
+                      onChronicCareOptionsChange={setChronicCareOptions}
+                      healthyLifeSelection={healthyLifeSelection}
+                      onHealthyLifeSelectionChange={(value) => {
+                        setHealthyLifeSelection(value);
+                        setHealthyLifeExpertSelection("");
+                        setServiceActionError("");
+                      }}
+                      healthyLifeExpertSelection={healthyLifeExpertSelection}
+                      onHealthyLifeExpertSelectionChange={(value) => {
+                        setHealthyLifeExpertSelection(value);
+                        setServiceActionError("");
+                      }}
+                      healthyLifeExperts={healthyLifeExperts}
+                      personalizedPlanSelection={personalizedPlanSelection}
+                      onPersonalizedPlanSelectionChange={(value) => {
+                        setPersonalizedPlanSelection(value);
+                        setServiceActionError("");
+                      }}
+                      isConsentGiven={isConsentGiven}
+                      onConsentChange={(value) => {
+                        setIsConsentGiven(value);
+                        if (value) {
+                          setServiceConsentError("");
+                        }
+                      }}
+                      serviceConsentError={serviceConsentError}
+                      serviceActionError={serviceActionError}
+                      serviceSuccessMessage={serviceSuccessMessage}
+                      onRequirementsChange={(value) => handleFormChange("requirements", value)}
+                      onBack={() => setCurrentStep(1)}
+                      onNext={handleNextFromServices}
+                      hideBackButton={fromDashboard}
+                    />
+                  </div>
+                </motion.div>
+              )}
 
-            {currentStep === 3 && (
-              <div className="space-y-6">
+              {currentStep === 3 && (
+                <motion.div
+                  key="step-3"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="rounded-2xl bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl md:p-8"
+                >
+                  <div className="space-y-6">
                 {serviceSuccessMessage && (
                   <div className="rounded-xl border border-teal-100 bg-teal-50 px-4 py-3 text-sm font-medium text-teal-600">
                     {serviceSuccessMessage}
@@ -669,8 +840,10 @@ export default function GetStartedPage() {
                     onSendMessage={handleSendMessage}
                   />
                 )}
-              </div>
-            )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </section>

@@ -12,6 +12,7 @@
     "create:admin": "npm run build:scripts && node dist-scripts/scripts/create-admin.js"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "@prisma/client": "^6.19.2",
     "@supabase/supabase-js": "^2.98.0",
     "@upstash/ratelimit": "^2.0.8",

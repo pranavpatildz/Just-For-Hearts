@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import SourceDropdown from "@/components/SourceDropdown";
 import { CheckCircle2 } from "lucide-react";
+import SourceDropdown from "@/components/SourceDropdown";
 
 type PersonalDetails = {
   firstName: string;
@@ -10,7 +10,7 @@ type PersonalDetails = {
   email: string;
   city: string;
   preferredLanguage: string;
-  sourceReference: string;
+  source: string;
   phone: string;
 };
 
@@ -31,6 +31,9 @@ type PersonalDetailsFormProps = {
   otpSent: boolean;
   otpVerified: boolean;
   onNext: () => void;
+  disabledFields?: Partial<Record<keyof PersonalDetails, boolean>>;
+  showNextButton?: boolean;
+  nextButtonLabel?: string;
 };
 
 const inputClass =
@@ -53,8 +56,15 @@ export default function PersonalDetailsForm({
   otpSent,
   otpVerified,
   onNext,
+  disabledFields = {},
+  showNextButton = true,
+  nextButtonLabel = "Next Step",
 }: PersonalDetailsFormProps) {
   const otpSectionRef = useRef<HTMLDivElement | null>(null);
+  const getInputClassName = (field: keyof PersonalDetails) =>
+    `${inputClass} ${
+      disabledFields[field] ? "cursor-not-allowed bg-slate-100 text-slate-500" : ""
+    }`;
 
   useEffect(() => {
     if (!showOtpField) return;
@@ -67,40 +77,45 @@ export default function PersonalDetailsForm({
   }, [showOtpField]);
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+    <div className="space-y-6 overflow-visible">
+      <div className="grid grid-cols-1 gap-4 overflow-visible md:grid-cols-2 md:gap-6">
         <input
           type="text"
           placeholder="First Name"
           value={formData.firstName}
+          disabled={disabledFields.firstName}
           onChange={(e) => onChange("firstName", e.target.value)}
-          className={inputClass}
+          className={getInputClassName("firstName")}
         />
         <input
           type="text"
           placeholder="Last Name"
           value={formData.lastName}
+          disabled={disabledFields.lastName}
           onChange={(e) => onChange("lastName", e.target.value)}
-          className={inputClass}
+          className={getInputClassName("lastName")}
         />
         <input
           type="email"
           placeholder="Email Address (Optional)"
           value={formData.email}
+          disabled={disabledFields.email}
           onChange={(e) => onChange("email", e.target.value)}
-          className={inputClass}
+          className={getInputClassName("email")}
         />
         <input
           type="text"
           placeholder="City"
           value={formData.city}
+          disabled={disabledFields.city}
           onChange={(e) => onChange("city", e.target.value)}
-          className={inputClass}
+          className={getInputClassName("city")}
         />
         <select
           value={formData.preferredLanguage}
+          disabled={disabledFields.preferredLanguage}
           onChange={(e) => onChange("preferredLanguage", e.target.value)}
-          className={inputClass}
+          className={getInputClassName("preferredLanguage")}
         >
           <option value="">Preferred Language</option>
           <option value="English">English</option>
@@ -108,8 +123,8 @@ export default function PersonalDetailsForm({
           <option value="Marathi">Marathi</option>
         </select>
         <SourceDropdown
-          value={formData.sourceReference}
-          onChange={(value) => onChange("sourceReference", value)}
+          value={formData.source}
+          onChange={(value) => onChange("source", value)}
         />
       </div>
 
@@ -118,6 +133,7 @@ export default function PersonalDetailsForm({
           type="tel"
           placeholder="Enter 10-digit mobile number"
           value={formData.phone}
+          disabled={disabledFields.phone}
           onChange={(e) => onChange("phone", e.target.value)}
           onPaste={(e) => {
             e.preventDefault();
@@ -127,7 +143,7 @@ export default function PersonalDetailsForm({
           inputMode="numeric"
           pattern="[0-9]*"
           maxLength={10}
-          className={`${inputClass} flex-1 min-w-0 ${
+          className={`${getInputClassName("phone")} flex-1 min-w-0 ${
             phoneError ? "border-red-500 focus:ring-red-200 focus:border-red-500" : ""
           }`}
         />
@@ -190,16 +206,18 @@ export default function PersonalDetailsForm({
         </div>
       )}
 
-      <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={onNext}
-          disabled={!otpVerified}
-          className="primary-btn w-full px-6 py-3 sm:w-auto"
-        >
-          Next Step
-        </button>
-      </div>
+      {showNextButton && (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={onNext}
+            disabled={!otpVerified}
+            className="primary-btn w-full px-6 py-3 sm:w-auto"
+          >
+            {nextButtonLabel}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
