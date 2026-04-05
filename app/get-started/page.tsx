@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import Script from "next/script";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import StepIndicator from "@/components/StepIndicator";
@@ -12,6 +13,12 @@ import InquiryChat from "@/components/InquiryChat";
 import { SOURCE_OPTIONS } from "@/constants/sourceOptions";
 import { supabase } from "@/lib/supabase";
 import { getUser, setUser } from "@/src/lib/client-auth";
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: Record<string, unknown>) => { open: () => void };
+  }
+}
 
 type FormData = {
   firstName: string;
@@ -57,6 +64,7 @@ function getServicePrice(service: string) {
 
 export default function GetStartedPage() {
   const MAX_OTP_ATTEMPTS = 5;
+  const router = useRouter();
   const searchParams = useSearchParams();
   const fromDashboard = searchParams.get("from") === "dashboard";
   const [currentStep, setCurrentStep] = useState(1);
@@ -84,7 +92,9 @@ export default function GetStartedPage() {
   const [orderContactConsent, setOrderContactConsent] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [refundAccepted, setRefundAccepted] = useState(false);
+  const [showPolicyError, setShowPolicyError] = useState(false);
   const [orderSummaryError, setOrderSummaryError] = useState("");
+  const [paymentLoading, setPaymentLoading] = useState(false);
   const [messageInput, setMessageInput] = useState("");
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     { id: 1, text: "Hello! Share your health concern and our team will help you.", sender: "staff" },
@@ -212,6 +222,25 @@ export default function GetStartedPage() {
 
     return null;
   }, [selectedService]);
+
+  const payableAmount = useMemo(() => {
+    if (selectedService === "Healthy Life (online consultation)") {
+      return selectedHealthyLifeExpert?.price ?? 0;
+    }
+
+    if (selectedService === "Expert Second Opinion (Online or In-Person)") {
+      return 1500;
+    }
+
+    if (selectedService === "Chronic Care") {
+      return 2500;
+    }
+
+    return 0;
+  }, [selectedHealthyLifeExpert, selectedService]);
+
+  const allRequiredPoliciesAccepted =
+    orderContactConsent && termsAccepted && (!refundPolicy || refundAccepted);
 
   const handleFormChange = (field: keyof FormData, value: string) => {
     if (field === "phone") {
@@ -454,26 +483,109 @@ export default function GetStartedPage() {
     setOrderContactConsent(false);
     setTermsAccepted(false);
     setRefundAccepted(false);
+    setShowPolicyError(false);
     setOrderSummaryError("");
     setCurrentStep(3);
   };
 
-  const handleFinalizeOrder = () => {
+  const handlePayment = async () => {
+    if (!allRequiredPoliciesAccepted) {
+      setShowPolicyError(true);
+      return;
+    }
+
+    setShowPolicyError(false);
+    setOrderSummaryError("");
+
+    if (!payableAmount) {
+      window.location.href = "/payment-success";
+      return;
+    }
+
+    setPaymentLoading(true);
+
+    try {
+      const res = await fetch("/api/payment/create-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: payableAmount }),
+      });
+
+      const order = (await res.json()) as {
+        id?: string;
+        amount?: number;
+        currency?: string;
+        isDemo?: boolean;
+      };
+
+      if (!order || !order.id) {
+        alert("Payment initialization failed");
+        return;
+      }
+
+      if (order.isDemo) {
+        console.log("Demo payment flow");
+        router.push("/fake-payment");
+        return;
+      }
+
+      if (!window.Razorpay) {
+        alert("Payment system not loaded");
+        return;
+      }
+
+      if (!order.amount || !order.currency || !process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+        alert("Payment initialization failed");
+        return;
+      }
+
+      const rzp = new window.Razorpay({
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: order.currency,
+        order_id: order.id,
+        name: "JustForHearts",
+        description: "Healthcare Plan",
+        handler: async (response: Record<string, string>) => {
+          const verifyRes = await fetch("/api/payment/verify-payment", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(response),
+          });
+
+          const data = (await verifyRes.json()) as { success?: boolean };
+
+          if (data.success) {
+            window.location.href = "/payment-success";
+            return;
+          }
+
+          alert("Payment verification failed");
+        },
+        theme: {
+          color: "#e11d48",
+        },
+      });
+
+      rzp.open();
+    } catch (error) {
+      console.error(error);
+      alert("Payment failed");
+    } finally {
+      setPaymentLoading(false);
+    }
+  };
+
+  const handleFinalizeOrder = async () => {
     setOrderSummaryError("");
     setServiceSuccessMessage("");
 
-    if (!orderContactConsent) {
-      setOrderSummaryError("Please provide consent to continue");
-      return;
-    }
-
-    if (!termsAccepted) {
-      setOrderSummaryError("Please accept the terms to continue");
-      return;
-    }
-
-    if (refundPolicy && !refundAccepted) {
-      setOrderSummaryError("Please accept the refund policy to continue");
+    if (!allRequiredPoliciesAccepted) {
+      setShowPolicyError(true);
       return;
     }
 
@@ -482,7 +594,7 @@ export default function GetStartedPage() {
       return;
     }
 
-    setServiceSuccessMessage("Order summary is ready for Razorpay integration.");
+    await handlePayment();
   };
 
   const handleSendMessage = () => {
@@ -596,6 +708,7 @@ export default function GetStartedPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
       <Navbar />
 
       <section className="bg-[#F8FAFC]">
@@ -751,7 +864,10 @@ export default function GetStartedPage() {
                   <input
                     type="checkbox"
                     checked={orderContactConsent}
-                    onChange={(e) => setOrderContactConsent(e.target.checked)}
+                    onChange={(e) => {
+                      setOrderContactConsent(e.target.checked);
+                      setShowPolicyError(false);
+                    }}
                     className="rounded border-slate-300 text-teal-600 focus:ring-teal-100"
                   />
                   Consent to contact by Phone / Text / WhatsApp / Email
@@ -776,7 +892,10 @@ export default function GetStartedPage() {
                     <input
                       type="checkbox"
                       checked={termsAccepted}
-                      onChange={(e) => setTermsAccepted(e.target.checked)}
+                      onChange={(e) => {
+                        setTermsAccepted(e.target.checked);
+                        setShowPolicyError(false);
+                      }}
                       className="mt-0.5 rounded border-slate-300 text-teal-600 focus:ring-teal-100"
                     />
                     <span>
@@ -803,12 +922,19 @@ export default function GetStartedPage() {
                       <input
                         type="checkbox"
                         checked={refundAccepted}
-                        onChange={(e) => setRefundAccepted(e.target.checked)}
+                        onChange={(e) => {
+                          setRefundAccepted(e.target.checked);
+                          setShowPolicyError(false);
+                        }}
                         className="mt-0.5 rounded border-slate-300 text-teal-600 focus:ring-teal-100"
                       />
                       <span>{refundPolicy.consent}</span>
                     </label>
                   </div>
+                )}
+
+                {showPolicyError && (
+                  <p className="text-xs text-red-600">Please accept all policies to continue</p>
                 )}
 
                 {orderSummaryError && (
@@ -826,6 +952,7 @@ export default function GetStartedPage() {
                   <button
                     type="button"
                     onClick={handleFinalizeOrder}
+                    disabled={paymentLoading}
                     className="primary-btn w-full px-6 py-3 sm:w-auto"
                   >
                     {orderSummary.finalButtonLabel}
