@@ -20,7 +20,7 @@ import {
   sendFirebaseOtp,
   verifyFirebaseOtp,
 } from "@/lib/firebase-phone-auth";
-import { formatPhone, getPhoneDigits } from "@/lib/phone";
+import { getPhoneDigits } from "@/lib/phone";
 import { supabase } from "@/lib/supabase";
 import { getUser, setUser } from "@/src/lib/client-auth";
 
@@ -372,12 +372,11 @@ export default function GetStartedClient() {
     if (!otpVerified) return;
 
     try {
-      const formattedPhone = formatPhone(formData.phone);
+      const formattedPhone = getPhoneDigits(formData.phone);
       console.log("Formatted phone:", formattedPhone);
       await supabase.from("users").upsert(
         [
-          {
-            phone: formattedPhone,
+        {
             mobile: formattedPhone,
             full_name: `${formData.firstName} ${formData.lastName}`.trim() || null,
             email: formData.email.trim() || null,
@@ -386,11 +385,11 @@ export default function GetStartedClient() {
             source: SOURCE_OPTIONS.includes(formData.source) ? formData.source : null,
           },
         ],
-        { onConflict: "phone" }
+        { onConflict: "mobile" }
       );
 
       const existingUser = getUser() as StoredUser | null;
-      if (existingUser && formatPhone(existingUser.mobile ?? "") === formattedPhone) {
+      if (existingUser && getPhoneDigits(existingUser.mobile ?? "") === formattedPhone) {
         setUser({
           ...existingUser,
           name: existingUser.name ?? `${formData.firstName} ${formData.lastName}`.trim(),
@@ -627,8 +626,8 @@ export default function GetStartedClient() {
 
       const { data, error } = await supabase
         .from("users")
-        .select("phone, mobile, full_name, email, city, language, source")
-        .eq("phone", formatPhone(storedUser.mobile ?? ""))
+        .select("mobile, full_name, email, city, language, source")
+        .eq("mobile", getPhoneDigits(storedUser.mobile ?? ""))
         .maybeSingle();
 
       if (!isMounted) return;
@@ -636,10 +635,7 @@ export default function GetStartedClient() {
       if (!error && data) {
         mergedUser = {
           ...storedUser,
-          mobile:
-            (typeof data.phone === "string" && data.phone.trim()) ||
-            data.mobile ||
-            storedUser.mobile,
+          mobile: data.mobile ?? storedUser.mobile,
           full_name: data.full_name ?? storedUser.full_name ?? storedUser.name,
           email: data.email ?? storedUser.email,
           city: data.city ?? storedUser.city,
