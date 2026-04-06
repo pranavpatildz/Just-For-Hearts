@@ -6,6 +6,7 @@ import { ChevronDown } from "lucide-react";
 
 import Navbar from "@/components/public/Navbar";
 import { SOURCE_OPTIONS } from "@/constants/sourceOptions";
+import { getOrCreateUserProfile } from "@/lib/profile";
 import { supabase } from "@/lib/supabase";
 import { getUser, logout, setUser } from "@/src/lib/client-auth";
 
@@ -201,11 +202,11 @@ export default function DashboardPage() {
     });
 
     const loadProfile = async () => {
-      const { data } = await supabase
-        .from("users")
-        .select("mobile, full_name, email, city, language, source, created_at")
-        .eq("mobile", normalizedUser.mobile)
-        .maybeSingle();
+      const data = await getOrCreateUserProfile({
+        mobile: normalizedUser.mobile,
+        email: normalizedUser.email,
+        fullName: normalizedUser.name,
+      });
 
       if (!data) return;
 

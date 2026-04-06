@@ -14,6 +14,7 @@ import {
   sendFirebaseOtp,
   verifyFirebaseOtp,
 } from "@/lib/firebase-phone-auth";
+import { getOrCreateUserProfile, upsertUserProfile } from "@/lib/profile";
 import { supabase } from "@/lib/supabase";
 import { setUser } from "@/src/lib/client-auth";
 
@@ -76,30 +77,32 @@ export default function VerifyOtpClient() {
 
       await verifyFirebaseOtp(otp);
 
-      const { data, error } = await supabase
-        .from("users")
-        .upsert(
-          [
-            {
-              mobile,
-              full_name: fullName.trim() || null,
-              email: email.trim() || null,
-            },
-          ],
-          { onConflict: "mobile" }
-        )
-        .select("mobile, full_name, email")
-        .single();
+      await upsertUserProfile({
+        mobile,
+        email,
+        fullName,
+      });
 
-      if (error) {
-        setError(error.message);
+      const profile = await getOrCreateUserProfile({
+        mobile,
+        email,
+        fullName,
+      });
+
+      if (!profile) {
+        setError("Unable to load your profile.");
         return;
       }
 
       setUser({
-        mobile,
-        name: data?.full_name ?? fullName.trim() ?? "User",
-        email: data?.email ?? email.trim() ?? "",
+        mobile: profile.mobile,
+        name: profile.full_name ?? fullName.trim() ?? "User",
+        full_name: profile.full_name ?? fullName.trim() ?? "User",
+        email: profile.email ?? email.trim() ?? "",
+        city: profile.city ?? "",
+        language: profile.language ?? "",
+        source: profile.source ?? "",
+        created_at: profile.created_at ?? undefined,
       });
       clearFirebaseOtpSession();
 
