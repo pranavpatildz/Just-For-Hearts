@@ -11,6 +11,15 @@ import PersonalDetailsForm from "@/components/PersonalDetailsForm";
 import ServiceSelection from "@/components/ServiceSelection";
 import InquiryChat from "@/components/InquiryChat";
 import { SOURCE_OPTIONS } from "@/constants/sourceOptions";
+import {
+  clearFirebaseOtpSession,
+  getFirebaseOtpErrorMessage,
+  hasFirebaseConfirmationResult,
+  logFirebaseOtpError,
+  RECAPTCHA_CONTAINER_ID,
+  sendFirebaseOtp,
+  verifyFirebaseOtp,
+} from "@/lib/firebase-phone-auth";
 import { supabase } from "@/lib/supabase";
 import { getUser, setUser } from "@/src/lib/client-auth";
 
@@ -246,6 +255,7 @@ export default function GetStartedClient() {
     if (field === "phone") {
       const sanitizedPhone = value.replace(/\D/g, "").slice(0, 10);
 
+      clearFirebaseOtpSession();
       setOtpUiVisible(false);
       setOtpSent(false);
       setOtpVerified(false);
@@ -274,7 +284,7 @@ export default function GetStartedClient() {
   };
 
   const handleSendOtp = async () => {
-    if (!formData.phone || otpCooldown > 0) return;
+    if (!formData.phone || otpCooldown > 0 || sendingOtp) return;
 
     const phone = normalizePhone(formData.phone);
     if (phone.length !== 10) {
@@ -291,29 +301,17 @@ export default function GetStartedClient() {
     setOtpStatusMessage("");
 
     try {
-      const response = await fetch("/api/send-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ phone }),
-      });
-
-      const data = (await response.json()) as { message?: string; type?: string };
-
-      if (!response.ok) {
-        throw new Error(data.message ?? "Unable to send OTP");
-      }
-
+      await sendFirebaseOtp(phone, RECAPTCHA_CONTAINER_ID);
       setOtpSent(true);
       setOtpVerified(false);
       setOtp("");
       setOtpAttempts(0);
-      setOtpStatusMessage(data.message ?? "OTP sent successfully");
+      setOtpStatusMessage("OTP sent successfully");
       setOtpCooldown(30);
       setOtpError("");
     } catch (error) {
-      setOtpError(error instanceof Error ? error.message : "Unable to send OTP");
+      logFirebaseOtpError(error);
+      setOtpError(getFirebaseOtpErrorMessage(error));
       setOtpVerified(false);
       setOtpSent(false);
       setOtpStatusMessage("");
@@ -337,33 +335,26 @@ export default function GetStartedClient() {
     setOtpError("");
 
     try {
-      const response = await fetch("/api/verify-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ phone, otp }),
-      });
+      console.log("ENV:", process.env.NODE_ENV);
+      console.log("ConfirmationResult exists:", !!window.confirmationResult);
 
-      const data = (await response.json()) as { message?: string; type?: string };
-
-      if (!response.ok) {
-        throw new Error(data.message ?? "Invalid OTP");
+      if (!hasFirebaseConfirmationResult()) {
+        console.warn("ConfirmationResult missing on get-started verify, checking stored verification session.");
       }
 
+      await verifyFirebaseOtp(otp);
       setOtpVerified(true);
-      setOtpStatusMessage(data.message ?? "OTP verified successfully");
+      setOtpStatusMessage("OTP verified successfully");
       setOtpError("");
     } catch (error) {
+      logFirebaseOtpError(error);
       const nextAttempts = otpAttempts + 1;
       setOtpAttempts(nextAttempts);
       setOtpVerified(false);
       setOtpError(
         nextAttempts >= MAX_OTP_ATTEMPTS
           ? "Maximum OTP verification attempts reached. Please resend OTP."
-          : error instanceof Error
-            ? error.message
-            : "Invalid OTP"
+          : getFirebaseOtpErrorMessage(error)
       );
       setOtpStatusMessage("");
 
@@ -765,6 +756,7 @@ export default function GetStartedClient() {
                     otpVerified={otpVerified}
                     onNext={handleNextFromPersonal}
                   />
+                  <div id={RECAPTCHA_CONTAINER_ID} className="mt-3 min-h-[1px]" />
                 </motion.div>
               )}
 

@@ -5,6 +5,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import Navbar from "@/components/public/Navbar";
 import AuthSplitLayout from "@/components/public/AuthSplitLayout";
+import {
+  clearFirebaseOtpSession,
+  getFirebaseOtpErrorMessage,
+  hasFirebaseConfirmationResult,
+  logFirebaseOtpError,
+  RECAPTCHA_CONTAINER_ID,
+  sendFirebaseOtp,
+  verifyFirebaseOtp,
+} from "@/lib/firebase-phone-auth";
+import { supabase } from "@/lib/supabase";
 import { setUser } from "@/src/lib/client-auth";
 
 type VerifiedUser = {
@@ -57,65 +67,66 @@ export default function VerifyOtpClient() {
     setError("");
 
     try {
-      const res = await fetch("/api/auth/verify-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          mobile,
-          otp,
-          fullName,
-          email,
-        }),
-      });
+      console.log("ENV:", process.env.NODE_ENV);
+      console.log("ConfirmationResult exists:", !!window.confirmationResult);
 
-      const data = (await res.json()) as {
-        error?: string;
-        user?: VerifiedUser;
-      };
+      if (!hasFirebaseConfirmationResult()) {
+        console.warn("ConfirmationResult missing on verify screen, checking stored verification session.");
+      }
 
-      if (!res.ok || !data.user) {
-        setError(data.error ?? "Verification failed");
+      await verifyFirebaseOtp(otp);
+
+      const { data, error } = await supabase
+        .from("users")
+        .upsert(
+          [
+            {
+              mobile,
+              full_name: fullName.trim() || null,
+              email: email.trim() || null,
+            },
+          ],
+          { onConflict: "mobile" }
+        )
+        .select("mobile, full_name, email")
+        .single();
+
+      if (error) {
+        setError(error.message);
         return;
       }
 
       setUser({
         mobile,
-        name: data.user.name,
-        email: data.user.email,
+        name: data?.full_name ?? fullName.trim() ?? "User",
+        email: data?.email ?? email.trim() ?? "",
       });
+      clearFirebaseOtpSession();
 
       window.location.href = "/dashboard";
-    } catch {
-      setError("Verification failed");
+    } catch (error) {
+      console.error("OTP Verify Error:", error);
+      logFirebaseOtpError(error);
+      setError(getFirebaseOtpErrorMessage(error));
     } finally {
       setLoading(false);
     }
   };
 
   const handleResendOtp = async () => {
-    if (!canResend || !mobile) return;
+    if (!canResend || !mobile || loading) return;
 
     setError("");
 
-    const res = await fetch("/api/auth/send-otp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ mobile }),
-    });
-
-    const data = (await res.json()) as { error?: string };
-
-    if (!res.ok) {
-      setError(data.error ?? "Failed to resend OTP");
+    try {
+      await sendFirebaseOtp(mobile, RECAPTCHA_CONTAINER_ID);
+      setTimer(60);
+      setCanResend(false);
+    } catch (error) {
+      logFirebaseOtpError(error);
+      setError(getFirebaseOtpErrorMessage(error));
       return;
     }
-
-    setTimer(60);
-    setCanResend(false);
   };
 
   useEffect(() => {
@@ -176,6 +187,7 @@ export default function VerifyOtpClient() {
         >
           {loading ? "Verifying..." : "Verify OTP"}
         </button>
+        <div id={RECAPTCHA_CONTAINER_ID} className="mt-3 min-h-[1px]" />
       </AuthSplitLayout>
     </div>
   );

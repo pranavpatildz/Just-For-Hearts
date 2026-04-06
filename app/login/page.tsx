@@ -5,15 +5,22 @@ import { useRouter } from "next/navigation";
 
 import Navbar from "@/components/public/Navbar";
 import AuthSplitLayout from "@/components/public/AuthSplitLayout";
+import {
+  getFirebaseOtpErrorMessage,
+  logFirebaseOtpError,
+  RECAPTCHA_CONTAINER_ID,
+  sendFirebaseOtp,
+} from "@/lib/firebase-phone-auth";
 
 export default function LoginPage() {
   const router = useRouter();
   const [mobile, setMobile] = useState("");
-  const [devOtp, setDevOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleGetOtp = async () => {
+    if (loading) return;
+
     if (!mobile || mobile.length !== 10) {
       setError("Enter valid mobile number");
       return;
@@ -21,32 +28,13 @@ export default function LoginPage() {
 
     setLoading(true);
     setError("");
-    setDevOtp("");
 
     try {
-      const res = await fetch("/api/auth/send-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ mobile }),
-      });
-
-      const data = (await res.json()) as { error?: string; success?: boolean; otp?: string };
-
-      if (!res.ok) {
-        setError(data.error ?? "Failed to send OTP");
-        return;
-      }
-
-      if (process.env.NODE_ENV === "development" && data.otp) {
-        setDevOtp(data.otp);
-        localStorage.setItem("dev_otp", data.otp);
-      }
-
+      await sendFirebaseOtp(mobile, RECAPTCHA_CONTAINER_ID);
       router.push(`/verify-otp?mobile=${mobile}&name=&email=`);
-    } catch {
-      setError("Something went wrong");
+    } catch (error) {
+      logFirebaseOtpError(error);
+      setError(getFirebaseOtpErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -80,12 +68,6 @@ export default function LoginPage() {
         </div>
 
         {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
-        {devOtp && (
-          <p className="mt-2 font-semibold text-green-600">
-            Dev OTP: {devOtp}
-          </p>
-        )}
-
         <button
           type="button"
           onClick={handleGetOtp}
@@ -94,6 +76,7 @@ export default function LoginPage() {
         >
           {loading ? "Sending..." : "Get OTP"}
         </button>
+        <div id={RECAPTCHA_CONTAINER_ID} className="mt-3 min-h-[1px]" />
       </AuthSplitLayout>
     </div>
   );
