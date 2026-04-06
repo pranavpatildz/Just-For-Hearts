@@ -8,8 +8,8 @@ import {
 } from "firebase/auth";
 
 import { auth } from "@/lib/firebase";
+import { formatPhone } from "@/lib/phone";
 
-const DEFAULT_COUNTRY_CODE = "+91";
 const OTP_VERIFICATION_ID_KEY = "firebase_otp_verification_id";
 
 function isBrowser() {
@@ -17,24 +17,6 @@ function isBrowser() {
 }
 
 export const RECAPTCHA_CONTAINER_ID = "recaptcha-container";
-
-export function formatIndianPhoneNumber(phone: string) {
-  const digits = phone.replace(/\D/g, "");
-
-  if (digits.length === 10) {
-    return `${DEFAULT_COUNTRY_CODE}${digits}`;
-  }
-
-  if (digits.length === 12 && digits.startsWith("91")) {
-    return `+${digits}`;
-  }
-
-  if (phone.startsWith("+") && digits.length >= 10) {
-    return `+${digits}`;
-  }
-
-  return `${DEFAULT_COUNTRY_CODE}${digits}`;
-}
 
 export function getFirebaseOtpErrorMessage(error: unknown) {
   const code =
@@ -141,7 +123,8 @@ export async function sendFirebaseOtp(phone: string, containerId: string) {
     );
   }
 
-  const formattedPhone = formatIndianPhoneNumber(phone);
+  const formattedPhone = formatPhone(phone);
+  console.log("Formatted phone:", formattedPhone);
   const verifier = await ensureRecaptchaVerifier(containerId);
 
   console.log("ENV:", process.env.NODE_ENV);

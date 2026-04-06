@@ -20,6 +20,7 @@ import {
   sendFirebaseOtp,
   verifyFirebaseOtp,
 } from "@/lib/firebase-phone-auth";
+import { formatPhone, getPhoneDigits } from "@/lib/phone";
 import { supabase } from "@/lib/supabase";
 import { getUser, setUser } from "@/src/lib/client-auth";
 
@@ -276,17 +277,10 @@ export default function GetStartedClient() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const normalizePhone = (rawPhone: string) => {
-    const digits = rawPhone.replace(/\D/g, "");
-    if (digits.startsWith("91") && digits.length === 12) return digits.slice(2);
-    if (digits.length === 10) return digits;
-    return digits;
-  };
-
   const handleSendOtp = async () => {
     if (!formData.phone || otpCooldown > 0 || sendingOtp) return;
 
-    const phone = normalizePhone(formData.phone);
+    const phone = getPhoneDigits(formData.phone);
     if (phone.length !== 10) {
       setPhoneError("Enter a valid 10-digit mobile number");
       setOtpError("Enter a valid 10-digit phone number");
@@ -323,7 +317,7 @@ export default function GetStartedClient() {
   const handleVerifyOtp = async () => {
     if (!formData.phone || otp.length !== 6 || otpAttempts >= MAX_OTP_ATTEMPTS) return;
 
-    const phone = normalizePhone(formData.phone);
+    const phone = getPhoneDigits(formData.phone);
     if (phone.length !== 10) {
       setPhoneError("Enter a valid 10-digit mobile number");
       setOtpError("Enter a valid 10-digit phone number");
@@ -378,11 +372,13 @@ export default function GetStartedClient() {
     if (!otpVerified) return;
 
     try {
-      const normalizedPhone = normalizePhone(formData.phone);
+      const formattedPhone = formatPhone(formData.phone);
+      console.log("Formatted phone:", formattedPhone);
       await supabase.from("users").upsert(
         [
           {
-            mobile: normalizedPhone,
+            phone: formattedPhone,
+            mobile: formattedPhone,
             full_name: `${formData.firstName} ${formData.lastName}`.trim() || null,
             email: formData.email.trim() || null,
             city: formData.city.trim() || null,
@@ -390,11 +386,11 @@ export default function GetStartedClient() {
             source: SOURCE_OPTIONS.includes(formData.source) ? formData.source : null,
           },
         ],
-        { onConflict: "mobile" }
+        { onConflict: "phone" }
       );
 
       const existingUser = getUser() as StoredUser | null;
-      if (existingUser && normalizePhone(existingUser.mobile ?? "") === normalizedPhone) {
+      if (existingUser && formatPhone(existingUser.mobile ?? "") === formattedPhone) {
         setUser({
           ...existingUser,
           name: existingUser.name ?? `${formData.firstName} ${formData.lastName}`.trim(),
@@ -403,7 +399,7 @@ export default function GetStartedClient() {
           city: formData.city.trim(),
           language: formData.preferredLanguage.trim(),
           source: formData.source,
-          mobile: normalizedPhone,
+          mobile: formattedPhone,
         });
       }
     } catch (error) {
@@ -631,8 +627,8 @@ export default function GetStartedClient() {
 
       const { data, error } = await supabase
         .from("users")
-        .select("mobile, full_name, email, city, language, source")
-        .eq("mobile", storedUser.mobile)
+        .select("phone, mobile, full_name, email, city, language, source")
+        .eq("phone", formatPhone(storedUser.mobile ?? ""))
         .maybeSingle();
 
       if (!isMounted) return;
@@ -640,7 +636,10 @@ export default function GetStartedClient() {
       if (!error && data) {
         mergedUser = {
           ...storedUser,
-          mobile: data.mobile ?? storedUser.mobile,
+          mobile:
+            (typeof data.phone === "string" && data.phone.trim()) ||
+            data.mobile ||
+            storedUser.mobile,
           full_name: data.full_name ?? storedUser.full_name ?? storedUser.name,
           email: data.email ?? storedUser.email,
           city: data.city ?? storedUser.city,
@@ -652,7 +651,7 @@ export default function GetStartedClient() {
         };
       }
 
-      const normalizedPhone = normalizePhone(mergedUser.mobile ?? "");
+      const normalizedPhone = getPhoneDigits(mergedUser.mobile ?? "");
       const fullName = (mergedUser.full_name ?? mergedUser.name ?? "").trim();
       const [firstName = "", ...lastNameParts] = fullName.split(/\s+/).filter(Boolean);
 

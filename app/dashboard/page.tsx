@@ -6,6 +6,7 @@ import { ChevronDown } from "lucide-react";
 
 import Navbar from "@/components/public/Navbar";
 import { SOURCE_OPTIONS } from "@/constants/sourceOptions";
+import { formatPhone } from "@/lib/phone";
 import { getOrCreateUserProfile } from "@/lib/profile";
 import { supabase } from "@/lib/supabase";
 import { getUser, logout, setUser } from "@/src/lib/client-auth";
@@ -247,7 +248,7 @@ export default function DashboardPage() {
 
   const detailItems = [
     { label: "Full Name", value: formatValue(user?.name) },
-    { label: "Mobile Number", value: formatValue(user?.mobile) },
+    { label: "Mobile Number", value: formatValue(user?.mobile ? formatPhone(user.mobile) : "") },
     { label: "Email Address", value: formatValue(user?.email) },
     { label: "City", value: formatValue(user?.city) },
     { label: "Preferred Language", value: formatValue(user?.language) },
@@ -264,6 +265,7 @@ export default function DashboardPage() {
 
     const updatedUser: User = {
       ...user,
+      mobile: formatPhone(user.mobile),
       name: form.name.trim() || "User",
       email: form.email.trim(),
       city: form.city.trim(),
@@ -271,10 +273,13 @@ export default function DashboardPage() {
       source: form.source.trim(),
     };
 
+    console.log("Formatted phone:", updatedUser.mobile);
+
     const { error } = await supabase.from("users").upsert(
       [
         {
-          mobile: user.mobile,
+          phone: updatedUser.mobile,
+          mobile: updatedUser.mobile,
           full_name: updatedUser.name,
           email: updatedUser.email || null,
           city: updatedUser.city || null,
@@ -282,7 +287,7 @@ export default function DashboardPage() {
           source: updatedUser.source || null,
         },
       ],
-      { onConflict: "mobile" }
+      { onConflict: "phone" }
     );
 
     if (error) {

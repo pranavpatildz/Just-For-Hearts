@@ -14,15 +14,9 @@ import {
   sendFirebaseOtp,
   verifyFirebaseOtp,
 } from "@/lib/firebase-phone-auth";
+import { formatPhone } from "@/lib/phone";
 import { getOrCreateUserProfile, upsertUserProfile } from "@/lib/profile";
-import { supabase } from "@/lib/supabase";
 import { setUser } from "@/src/lib/client-auth";
-
-type VerifiedUser = {
-  mobile: string;
-  name: string;
-  email: string;
-};
 
 export default function VerifyOtpClient() {
   const router = useRouter();
@@ -145,7 +139,7 @@ export default function VerifyOtpClient() {
         title="Verify OTP"
         description={
           mobile
-            ? `Enter the 6-digit OTP sent to ${mobile}.`
+            ? `Enter the 6-digit OTP sent to ${formatPhone(mobile)}.`
             : "Enter the 6-digit OTP sent to your mobile number."
         }
         footerPrompt={fullName ? "Need to change your details?" : "Need to use another number?"}
