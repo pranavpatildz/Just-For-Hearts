@@ -123,7 +123,7 @@ export default function WhyYearRoundPage() {
           </p>
           <Link
             href="/get-started"
-            className="primary-btn mt-8"
+            className="btn-primary mt-8"
           >
             Contact Us
           </Link>

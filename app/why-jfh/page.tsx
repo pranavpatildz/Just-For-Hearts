@@ -148,7 +148,7 @@ export default function WhyJFHPage() {
       >
         <Link
           href="/get-started"
-          className="primary-btn px-10 py-4 text-lg"
+          className="btn-primary px-10 py-4 text-lg"
         >
           Get Started
         </Link>

@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import Reveal from "@/components/ui/Reveal"
 import {
   ShieldCheck,
@@ -16,6 +17,8 @@ import { motion } from "framer-motion"
 import Counter from "@/components/ui/Counter"
 
 export default function MeetExperts() {
+  const router = useRouter()
+
   return (
     <section className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen bg-[#F8FAFC] py-12 md:py-16">
       <div className="mx-auto max-w-6xl px-4 md:px-8 lg:px-16">
@@ -198,7 +201,10 @@ export default function MeetExperts() {
 
         <Reveal delay={0.3}>
           <div className="mt-10 text-center md:mt-16">
-            <button className="primary-btn px-6 py-3 text-sm font-medium md:px-10 md:py-4 md:text-lg">
+            <button
+              className="primary-btn px-6 py-3 text-sm font-medium md:px-10 md:py-4 md:text-lg"
+              onClick={() => router.push("/programs")}
+            >
               Explore JFH Programs
             </button>
           </div>

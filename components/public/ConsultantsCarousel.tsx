@@ -240,24 +240,24 @@ export default function ConsultantsCarousel() {
                           {doc.experience}
                         </p>
 
-                        <div className="mt-4 flex justify-center gap-4">
+                        <div className="mt-4 flex justify-center gap-[10px]">
 
                           <a
                             href={doc.instagram}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="rounded-full bg-gradient-to-tr from-teal-700 via-teal-600 to-teal-500 p-3 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-md"
+                            className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-[#0f766e] text-white shadow-[0_4px_10px_rgba(0,0,0,0.15)] transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[#115e59]"
                           >
-                            <Instagram className="h-5 w-5 text-white" />
+                            <Instagram className="h-[18px] w-[18px] text-white" />
                           </a>
 
                           <a
                             href={doc.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="rounded-full bg-teal-700 p-3 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:bg-teal-800 hover:shadow-md"
+                            className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-[#0f766e] text-white shadow-[0_4px_10px_rgba(0,0,0,0.15)] transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-[#115e59]"
                           >
-                            <Linkedin className="h-5 w-5 text-white" />
+                            <Linkedin className="h-[18px] w-[18px] text-white" />
                           </a>
 
                         </div>

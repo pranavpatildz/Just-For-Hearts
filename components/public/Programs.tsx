@@ -45,7 +45,7 @@ export default function Programs({ showHeading = true }: ProgramsProps) {
           "Included in Pro Plan",
         ],
         buttonText: "Join Cardiac Rehab",
-        buttonLink: "/programs/cardiac",
+        buttonLink: "/get-started",
         hasButton: true,
         headerColor: "bg-teal-700",
         cardColor: "red",
@@ -74,7 +74,7 @@ export default function Programs({ showHeading = true }: ProgramsProps) {
           "Included in Pro Plan",
         ],
         buttonText: "Join Diabetes Program",
-        buttonLink: "/programs/diabetes",
+        buttonLink: "/get-started",
         hasButton: true,
         headerColor: "bg-teal-600",
         cardColor: "blue",
@@ -103,7 +103,7 @@ export default function Programs({ showHeading = true }: ProgramsProps) {
           "Included in Pro Plan",
         ],
         buttonText: "Join Obesity Program",
-        buttonLink: "/programs/obesity",
+        buttonLink: "/get-started",
         hasButton: true,
         headerColor: "bg-teal-500",
         cardColor: "green",
@@ -222,7 +222,7 @@ export default function Programs({ showHeading = true }: ProgramsProps) {
                         </ul>
                         {column.top.hasButton && (
                           <div className="mt-4 md:mt-6 text-center">
-                            <Link href={column.top.buttonLink} className="inline-block rounded-lg bg-teal-700 px-3 py-2 text-xs font-semibold text-white shadow-md transition-all duration-300 hover:scale-[1.02] hover:bg-teal-800 md:px-6 md:py-3">
+                            <Link href={column.top.buttonLink} className="btn-primary px-[18px] py-[10px] text-sm md:px-6 md:py-3">
                               {column.top.buttonText}
                             </Link>
                           </div>
@@ -279,7 +279,7 @@ export default function Programs({ showHeading = true }: ProgramsProps) {
                     </ul>
                     {column.top.hasButton && (
                       <div className="mt-4 md:mt-6 text-center">
-                        <Link href={column.top.buttonLink} className="inline-block rounded-lg bg-teal-700 px-3 py-2 text-xs font-semibold text-white shadow-md transition-all duration-300 hover:scale-[1.02] hover:bg-teal-800 md:px-6 md:py-3">
+                        <Link href={column.top.buttonLink} className="btn-primary px-[18px] py-[10px] text-sm md:px-6 md:py-3">
                           {column.top.buttonText}
                         </Link>
                       </div>

@@ -6,13 +6,18 @@ html {
 }
 
 :root {
-  --background: #f8fafc;
+  --background: #f9fafb;
   --foreground: #0f172a;
-  --primary: #0d9488;
+  --primary: #14b8a6;
   --primary-hover: #115e59;
-  --secondary: #14b8a6;
-  --muted: #334155;
+  --secondary: #0f766e;
+  --secondary-hover: #115e59;
+  --light: #5eead4;
+  --surface-highlight: #ecfdf5;
+  --muted: #64748b;
   --muted-secondary: #64748b;
+  --card: #ffffff;
+  --border: #e2e8f0;
 }
 
 @theme inline {
@@ -39,6 +44,7 @@ h5,
 h6 {
   color: var(--foreground);
   letter-spacing: -0.025em;
+  font-weight: 600;
 }
 
 h1 {
@@ -56,7 +62,7 @@ h2 {
 h3 {
   font-size: 1.25rem;
   line-height: 1.3;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 @media (min-width: 768px) {
@@ -78,12 +84,56 @@ p {
   color: var(--muted);
 }
 
+a {
+  color: var(--primary);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.nav-link {
+  color: #000000 !important;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  color: #14b8a6 !important;
+}
+
+.nav-link-active {
+  color: #14b8a6 !important;
+  font-weight: 500;
+}
+
+.logo-text {
+  color: #000000 !important;
+}
+
 button,
 a,
 input,
 select,
 textarea {
   transition: all 0.3s ease-in-out;
+}
+
+input,
+select,
+textarea {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  background: var(--card);
+  color: var(--foreground);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.15);
 }
 
 .scroll-container {
@@ -153,7 +203,8 @@ canvas {
     touch-action: pan-y;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    background: white;
+    background: var(--card);
+    border: 1px solid var(--border);
     z-index: 1000;
   }
 
@@ -166,37 +217,276 @@ canvas {
     border-radius: 10px;
   }
 
-  .primary-btn {
-    @apply inline-flex items-center justify-center rounded-xl px-6 py-3 font-medium text-white shadow-sm transition-all duration-200 ease-in-out hover:shadow-md active:scale-95;
-    background-color: var(--primary);
+  .primary-btn,
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl font-medium text-white active:scale-95;
+    background-color: var(--secondary);
+    border-radius: 10px;
+    color: #ffffff !important;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    padding: 12px 28px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    transition: all 0.2s ease;
   }
 
-  .primary-btn:hover {
-    background-color: var(--primary-hover);
+  .primary-btn:hover,
+  .btn-primary:hover {
+    background-color: var(--secondary-hover);
+    transform: translateY(-2px);
+    color: #ffffff !important;
+    text-decoration: none;
   }
 
   .secondary-btn {
-    @apply inline-flex items-center justify-center rounded-xl px-6 py-3 font-medium shadow-sm transition-all duration-200 ease-in-out hover:shadow-md active:scale-95;
-    border: 1px solid var(--primary);
-    color: var(--primary);
+    @apply inline-flex items-center justify-center rounded-xl px-6 py-3 font-medium text-white shadow-sm transition-all duration-200 ease-in-out hover:shadow-md active:scale-95;
+    background-color: var(--secondary);
+    border: 1px solid var(--secondary);
+    border-radius: 10px;
   }
 
   .secondary-btn:hover {
-    background-color: rgba(13, 148, 136, 0.08);
+    background-color: var(--secondary-hover);
+    transform: translateY(-1px);
   }
 
   .field-base {
-    @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition-all duration-300 ease-in-out;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    @apply w-full rounded-xl bg-white px-4 py-3 text-slate-900 outline-none transition-all duration-300 ease-in-out;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
   }
 
   .field-base:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.14);
+    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.15);
   }
 
   .surface-card {
-    @apply rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md;
+    @apply rounded-2xl bg-white p-6 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md;
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .bg-slate-50 {
+    background-color: var(--surface-highlight) !important;
+  }
+
+  .text-red-500,
+  .text-red-600,
+  .text-red-700,
+  .text-blue-500,
+  .text-blue-600,
+  .text-blue-700,
+  .text-purple-500,
+  .text-purple-600,
+  .text-purple-700,
+  .text-pink-500,
+  .text-pink-600,
+  .text-pink-700,
+  .text-cyan-500,
+  .text-cyan-600,
+  .text-cyan-700,
+  .text-green-500,
+  .text-green-600,
+  .text-green-700,
+  .text-emerald-500,
+  .text-emerald-600,
+  .text-emerald-700 {
+    color: var(--primary) !important;
+  }
+
+  .bg-red-50,
+  .bg-red-100,
+  .bg-blue-50,
+  .bg-blue-100,
+  .bg-purple-50,
+  .bg-purple-100,
+  .bg-pink-50,
+  .bg-pink-100,
+  .bg-cyan-50,
+  .bg-cyan-100,
+  .bg-green-50,
+  .bg-green-100,
+  .bg-emerald-50,
+  .bg-emerald-100 {
+    background-color: var(--card) !important;
+  }
+
+  .bg-red-400,
+  .bg-red-500,
+  .bg-red-600,
+  .bg-blue-400,
+  .bg-blue-500,
+  .bg-blue-600,
+  .bg-purple-400,
+  .bg-purple-500,
+  .bg-purple-600,
+  .bg-pink-400,
+  .bg-pink-500,
+  .bg-pink-600,
+  .bg-cyan-400,
+  .bg-cyan-500,
+  .bg-cyan-600,
+  .bg-green-500,
+  .bg-green-600,
+  .bg-emerald-500,
+  .bg-emerald-600 {
+    background-color: var(--primary) !important;
+  }
+
+  .border-red-400,
+  .border-red-500,
+  .border-red-600,
+  .border-blue-200,
+  .border-blue-400,
+  .border-blue-500,
+  .border-blue-600,
+  .border-purple-200,
+  .border-purple-400,
+  .border-purple-500,
+  .border-purple-600,
+  .border-pink-200,
+  .border-pink-400,
+  .border-pink-500,
+  .border-pink-600,
+  .border-cyan-200,
+  .border-cyan-400,
+  .border-cyan-500,
+  .border-cyan-600,
+  .border-green-400,
+  .border-green-500,
+  .border-green-600,
+  .border-emerald-400,
+  .border-emerald-500,
+  .border-emerald-600 {
+    border-color: var(--border) !important;
+  }
+
+  .hover\:bg-red-50:hover,
+  .hover\:bg-red-600:hover,
+  .hover\:bg-blue-50:hover,
+  .hover\:bg-blue-600:hover,
+  .hover\:bg-purple-50:hover,
+  .hover\:bg-purple-600:hover,
+  .hover\:bg-pink-50:hover,
+  .hover\:bg-pink-600:hover,
+  .hover\:bg-cyan-50:hover,
+  .hover\:bg-cyan-600:hover,
+  .hover\:bg-green-50:hover,
+  .hover\:bg-green-600:hover,
+  .hover\:bg-emerald-50:hover,
+  .hover\:bg-emerald-600:hover {
+    background-color: rgba(20, 184, 166, 0.08) !important;
+    color: inherit !important;
+  }
+
+  .hover\:text-red-500:hover,
+  .hover\:text-red-600:hover,
+  .hover\:text-blue-500:hover,
+  .hover\:text-blue-600:hover,
+  .hover\:text-purple-500:hover,
+  .hover\:text-purple-600:hover,
+  .hover\:text-pink-500:hover,
+  .hover\:text-pink-600:hover,
+  .hover\:text-cyan-500:hover,
+  .hover\:text-cyan-600:hover,
+  .hover\:text-green-500:hover,
+  .hover\:text-green-600:hover,
+  .hover\:text-emerald-500:hover,
+  .hover\:text-emerald-600:hover {
+    color: var(--primary-hover) !important;
+  }
+
+  .hover\:border-red-400:hover,
+  .hover\:border-red-500:hover,
+  .hover\:border-blue-400:hover,
+  .hover\:border-blue-500:hover,
+  .hover\:border-purple-400:hover,
+  .hover\:border-purple-500:hover,
+  .hover\:border-pink-400:hover,
+  .hover\:border-pink-500:hover,
+  .hover\:border-cyan-400:hover,
+  .hover\:border-cyan-500:hover,
+  .hover\:border-green-400:hover,
+  .hover\:border-green-500:hover,
+  .hover\:border-emerald-400:hover,
+  .hover\:border-emerald-500:hover {
+    border-color: var(--primary-hover) !important;
+  }
+
+  .focus\:ring-red-200:focus,
+  .focus\:ring-red-400:focus,
+  .focus\:ring-blue-200:focus,
+  .focus\:ring-blue-400:focus,
+  .focus\:ring-purple-200:focus,
+  .focus\:ring-purple-400:focus,
+  .focus\:ring-pink-200:focus,
+  .focus\:ring-pink-400:focus,
+  .focus\:ring-cyan-200:focus,
+  .focus\:ring-cyan-400:focus,
+  .focus\:ring-green-200:focus,
+  .focus\:ring-green-400:focus,
+  .focus\:ring-emerald-200:focus,
+  .focus\:ring-emerald-400:focus {
+    --tw-ring-color: rgba(20, 184, 166, 0.15) !important;
+  }
+
+  .focus\:border-red-500:focus,
+  .focus\:border-blue-500:focus,
+  .focus\:border-purple-500:focus,
+  .focus\:border-pink-500:focus,
+  .focus\:border-cyan-500:focus,
+  .focus\:border-green-500:focus,
+  .focus\:border-emerald-500:focus {
+    border-color: var(--primary) !important;
+  }
+
+  .bg-gradient-to-r,
+  .bg-gradient-to-l,
+  .bg-gradient-to-t,
+  .bg-gradient-to-b,
+  .bg-gradient-to-tr,
+  .bg-gradient-to-tl,
+  .bg-gradient-to-br,
+  .bg-gradient-to-bl {
+    background-image: none !important;
+    background-color: var(--card) !important;
+  }
+
+  .from-rose-600,
+  .from-red-600,
+  .from-blue-50,
+  .from-blue-600,
+  .from-green-50,
+  .from-green-600,
+  .from-purple-50,
+  .from-purple-600,
+  .from-pink-50,
+  .from-pink-600,
+  .from-cyan-50,
+  .from-cyan-600,
+  .to-red-600,
+  .to-blue-50,
+  .to-blue-600,
+  .to-green-50,
+  .to-green-600,
+  .to-purple-50,
+  .to-purple-600,
+  .to-pink-50,
+  .to-pink-600,
+  .to-cyan-50,
+  .to-cyan-600,
+  .via-white\/85,
+  .via-slate-100,
+  .via-teal-600 {
+    --tw-gradient-from: transparent !important;
+    --tw-gradient-to: transparent !important;
+    --tw-gradient-stops: transparent !important;
   }
 
   .section-shell {
