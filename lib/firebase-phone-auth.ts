@@ -1,9 +1,7 @@
 "use client";
 
 import {
-  PhoneAuthProvider,
   RecaptchaVerifier,
-  signInWithCredential,
   signInWithPhoneNumber,
 } from "firebase/auth";
 
@@ -139,30 +137,15 @@ export async function sendFirebaseOtp(phone: string, containerId: string) {
 }
 
 export async function verifyFirebaseOtp(code: string) {
-  const firebaseAuth = auth;
-
-  if (!firebaseAuth) {
-    throw new Error(
-      "Firebase Auth is not initialized on the client. Please restart the app and verify your NEXT_PUBLIC_FIREBASE_* env values."
-    );
-  }
-
   console.log("ENV:", process.env.NODE_ENV);
   console.log("ConfirmationResult exists:", !!window.confirmationResult);
 
   const trimmedCode = code.trim();
+  const confirmationResult = window.confirmationResult;
 
-  if ((window as typeof window & { confirmationResult?: { confirm: (otp: string) => Promise<unknown> } }).confirmationResult) {
-    return (window as typeof window & {
-      confirmationResult: { confirm: (otp: string) => Promise<unknown> };
-    }).confirmationResult.confirm(trimmedCode);
-  }
-
-  const verificationId = getStoredVerificationId();
-  if (!verificationId) {
+  if (!confirmationResult) {
     throw new Error("OTP session expired. Please resend OTP.");
   }
 
-  const credential = PhoneAuthProvider.credential(verificationId, trimmedCode);
-  return signInWithCredential(firebaseAuth, credential);
+  return confirmationResult.confirm(trimmedCode);
 }

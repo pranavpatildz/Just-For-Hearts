@@ -6,9 +6,18 @@ export function getUser() {
 
 export function setUser(user: unknown) {
   localStorage.setItem("jfh_user", JSON.stringify(user));
+  if (
+    typeof user === "object" &&
+    user !== null &&
+    "mobile" in user &&
+    typeof (user as { mobile?: unknown }).mobile === "string"
+  ) {
+    localStorage.setItem("user_phone", (user as { mobile: string }).mobile);
+  }
 }
 
 export function logout(redirectTo = "/login") {
   localStorage.removeItem("jfh_user");
+  localStorage.removeItem("user_phone");
   window.location.href = redirectTo;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { auth } from "@/lib/firebase";
-import { getPhoneDigits } from "@/lib/phone";
+import { normalizePhoneNumber } from "@/lib/phone";
 import { supabase } from "@/lib/supabase";
 
 type ProfileSeed = {
@@ -26,9 +26,9 @@ export type AppProfile = {
 function mapRowToProfile(row: Record<string, unknown>): AppProfile {
   const mobile =
     typeof row.mobile === "string" && row.mobile.trim()
-      ? getPhoneDigits(row.mobile)
-      : typeof row.phone === "string"
-        ? getPhoneDigits(row.phone)
+        ? normalizePhoneNumber(row.mobile)
+      : typeof row.phone === "string" && row.phone.trim()
+        ? normalizePhoneNumber(row.phone)
         : "";
 
   return {
@@ -43,9 +43,9 @@ function mapRowToProfile(row: Record<string, unknown>): AppProfile {
 }
 
 function buildDefaultProfile(seed: ProfileSeed): AppProfile | null {
-  const formattedPhone = getPhoneDigits(seed.mobile ?? "");
+  const formattedPhone = normalizePhoneNumber(seed.mobile ?? "");
 
-  if (formattedPhone.length !== 10) {
+  if (!formattedPhone.startsWith("+91")) {
     return null;
   }
 
@@ -79,19 +79,16 @@ export async function upsertUserProfile(seed: ProfileSeed) {
 
   const { data, error } = await supabase
     .from("users")
-    .upsert(
-      [
-        {
-          mobile: profile.mobile,
-          full_name: profile.full_name,
-          email: profile.email,
-          city: profile.city,
-          language: profile.language,
-          source: profile.source,
-        },
-      ],
-      { onConflict: "mobile" }
-    )
+    .upsert([
+      {
+        mobile: profile.mobile,
+        full_name: profile.full_name,
+        email: profile.email,
+        city: profile.city,
+        language: profile.language,
+        source: profile.source,
+      },
+    ], { onConflict: "mobile" })
     .select("*")
     .single();
 
@@ -105,12 +102,12 @@ export async function upsertUserProfile(seed: ProfileSeed) {
 export async function getOrCreateUserProfile(seed: ProfileSeed) {
   const authUser = await getAuthenticatedSupabaseUser();
   const rawPhone = auth?.currentUser?.phoneNumber || seed.mobile || "";
-  const formattedPhone = getPhoneDigits(rawPhone);
+  const formattedPhone = normalizePhoneNumber(rawPhone);
 
   console.log("Firebase phone:", rawPhone);
   console.log("Formatted phone:", formattedPhone);
 
-  if (formattedPhone.length === 10) {
+  if (formattedPhone.startsWith("+91")) {
     const { data, error } = await supabase
       .from("users")
       .select("*")
@@ -131,7 +128,7 @@ export async function getOrCreateUserProfile(seed: ProfileSeed) {
   console.log("DB result:", null);
 
   return upsertUserProfile({
-    mobile: formattedPhone || getPhoneDigits(authUser?.phone || ""),
+    mobile: formattedPhone || normalizePhoneNumber(authUser?.phone || ""),
     email: seed.email?.trim() || authUser?.email?.trim() || null,
     fullName: seed.fullName ?? authUser?.user_metadata?.full_name ?? null,
     city: seed.city ?? null,

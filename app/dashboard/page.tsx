@@ -6,8 +6,7 @@ import { ChevronDown } from "lucide-react";
 
 import Navbar from "@/components/public/Navbar";
 import { SOURCE_OPTIONS } from "@/constants/sourceOptions";
-import { getPhoneDigits } from "@/lib/phone";
-import { getOrCreateUserProfile } from "@/lib/profile";
+import { normalizePhoneNumber } from "@/lib/phone";
 import { supabase } from "@/lib/supabase";
 import { getUser, logout, setUser } from "@/src/lib/client-auth";
 
@@ -186,13 +185,18 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const storedUser = getUser();
+    const storedPhone = typeof window !== "undefined" ? localStorage.getItem("user_phone") : null;
 
-    if (!storedUser) {
+    if (!storedUser && !storedPhone) {
       router.push("/login");
       return;
     }
 
-    const normalizedUser = storedUser as User;
+    const normalizedUser = ((storedUser as User | null) ?? {
+      mobile: storedPhone ?? "",
+      name: "",
+      email: "",
+    }) as User;
     setUserState(normalizedUser);
     setForm({
       name: normalizedUser.name ?? "",
@@ -203,34 +207,73 @@ export default function DashboardPage() {
     });
 
     const loadProfile = async () => {
-      const data = await getOrCreateUserProfile({
-        mobile: normalizedUser.mobile,
-        email: normalizedUser.email,
-        fullName: normalizedUser.name,
-      });
+      try {
+        const phone = localStorage.getItem("user_phone");
 
-      if (!data) return;
+        if (!phone) {
+          throw new Error("No phone found");
+        }
 
-      const mergedUser: User = {
-        ...normalizedUser,
-        mobile: data.mobile ?? normalizedUser.mobile,
-        name: data.full_name ?? normalizedUser.name,
-        email: data.email ?? normalizedUser.email,
-        city: data.city ?? normalizedUser.city ?? "",
-        language: data.language ?? normalizedUser.language ?? "",
-        source: data.source ?? normalizedUser.source ?? "",
-        created_at: data.created_at ?? normalizedUser.created_at,
-      };
+        const normalizedPhone = normalizePhoneNumber(phone);
 
-      setUserState(mergedUser);
-      setForm({
-        name: mergedUser.name ?? "",
-        email: mergedUser.email ?? "",
-        city: mergedUser.city ?? "",
-        language: mergedUser.language ?? "",
-        source: mergedUser.source ?? "",
-      });
-      setUser(mergedUser);
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("mobile", normalizedPhone)
+          .single();
+
+        if (error) {
+          console.error("FETCH ERROR:", error.message);
+          return;
+        }
+
+        if (!data) {
+          console.log("No profile found");
+          setUserState((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  mobile: normalizedPhone,
+                }
+              : {
+                  mobile: normalizedPhone,
+                  name: "",
+                  email: "",
+                  city: "",
+                  language: "",
+                  source: "",
+                }
+          );
+          return;
+        }
+
+        const mergedUser: User = {
+          ...normalizedUser,
+          mobile: normalizePhoneNumber(String(data.mobile || normalizedPhone)),
+          name: typeof data.full_name === "string" ? data.full_name : normalizedUser.name,
+          email: typeof data.email === "string" ? data.email : normalizedUser.email,
+          city: typeof data.city === "string" ? data.city : normalizedUser.city ?? "",
+          language:
+            typeof data.language === "string"
+              ? data.language
+              : normalizedUser.language ?? "",
+          source: typeof data.source === "string" ? data.source : normalizedUser.source ?? "",
+          created_at:
+            typeof data.created_at === "string" ? data.created_at : normalizedUser.created_at,
+        };
+
+        setUserState(mergedUser);
+        setForm({
+          name: mergedUser.name ?? "",
+          email: mergedUser.email ?? "",
+          city: mergedUser.city ?? "",
+          language: mergedUser.language ?? "",
+          source: mergedUser.source ?? "",
+        });
+        setUser(mergedUser);
+      } catch (err) {
+        console.error("DASHBOARD ERROR:", err);
+      }
     };
 
     void loadProfile();
@@ -248,7 +291,7 @@ export default function DashboardPage() {
 
   const detailItems = [
     { label: "Full Name", value: formatValue(user?.name) },
-    { label: "Mobile Number", value: formatValue(user?.mobile) },
+    { label: "Mobile Number", value: formatValue(user?.mobile ? normalizePhoneNumber(user.mobile) : "") },
     { label: "Email Address", value: formatValue(user?.email) },
     { label: "City", value: formatValue(user?.city) },
     { label: "Preferred Language", value: formatValue(user?.language) },
@@ -265,7 +308,7 @@ export default function DashboardPage() {
 
     const updatedUser: User = {
       ...user,
-      mobile: getPhoneDigits(user.mobile),
+      mobile: normalizePhoneNumber(user.mobile),
       name: form.name.trim() || "User",
       email: form.email.trim(),
       city: form.city.trim(),
@@ -309,7 +352,7 @@ export default function DashboardPage() {
               <div className="flex justify-end gap-2">
                 <button
                   onClick={() => setEditMode((prev) => !prev)}
-                  className="rounded-full border border-white px-3 py-1 text-xs text-white"
+                  className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-medium text-white transition hover:bg-blue-700"
                 >
                   Edit
                 </button>
@@ -333,7 +376,7 @@ export default function DashboardPage() {
               <div className="flex max-w-full flex-wrap items-center justify-end gap-2 sm:gap-3 md:flex-nowrap">
               <button
                 onClick={() => setEditMode((prev) => !prev)}
-                className="max-w-full whitespace-nowrap rounded-lg border border-white bg-transparent px-3 py-1.5 text-xs text-white transition hover:scale-105 sm:text-sm md:px-4"
+                className="max-w-full whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-xs font-medium text-white transition hover:bg-blue-700 sm:text-sm"
               >
                 <span className="hidden sm:inline">
                   {editMode ? "Cancel Edit" : "Edit Profile"}

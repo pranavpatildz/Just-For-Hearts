@@ -7,15 +7,11 @@ import Navbar from "@/components/public/Navbar";
 import AuthSplitLayout from "@/components/public/AuthSplitLayout";
 import {
   clearFirebaseOtpSession,
-  getFirebaseOtpErrorMessage,
-  hasFirebaseConfirmationResult,
-  logFirebaseOtpError,
   RECAPTCHA_CONTAINER_ID,
   sendFirebaseOtp,
-  verifyFirebaseOtp,
 } from "@/lib/firebase-phone-auth";
-import { formatPhone } from "@/lib/phone";
-import { getOrCreateUserProfile, upsertUserProfile } from "@/lib/profile";
+import { supabase } from "@/lib/supabase";
+import { normalizePhone, normalizePhoneNumber } from "@/lib/phone";
 import { setUser } from "@/src/lib/client-auth";
 
 export default function VerifyOtpClient() {
@@ -62,49 +58,78 @@ export default function VerifyOtpClient() {
     setError("");
 
     try {
-      console.log("ENV:", process.env.NODE_ENV);
-      console.log("ConfirmationResult exists:", !!window.confirmationResult);
+      const confirmationResult = window.confirmationResult;
 
-      if (!hasFirebaseConfirmationResult()) {
-        console.warn("ConfirmationResult missing on verify screen, checking stored verification session.");
+      if (!confirmationResult) {
+        throw new Error("Session expired. Please resend OTP.");
       }
 
-      await verifyFirebaseOtp(otp);
+      const result = await confirmationResult.confirm(otp);
+      const user = result.user;
+      const phone = normalizePhone(user.phoneNumber || mobile);
 
-      await upsertUserProfile({
-        mobile,
-        email,
-        fullName,
-      });
+      console.log("LOGIN PHONE:", phone);
+      localStorage.setItem("user_phone", phone);
 
-      const profile = await getOrCreateUserProfile({
-        mobile,
-        email,
-        fullName,
-      });
+      let profile: Record<string, unknown> | null = null;
 
-      if (!profile) {
-        setError("Unable to load your profile.");
-        return;
+      try {
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("mobile", phone)
+          .maybeSingle();
+
+        if (error) {
+          console.error("SUPABASE FETCH ERROR:", error);
+        }
+
+        if (!data) {
+          const { data: newProfile, error: insertError } = await supabase
+            .from("users")
+            .insert([
+              {
+                mobile: phone,
+                full_name: fullName.trim() || null,
+                email: email.trim() || null,
+              },
+            ])
+            .select()
+            .single();
+
+          if (insertError) {
+            console.error("SUPABASE INSERT ERROR:", insertError);
+          } else {
+            profile = newProfile as Record<string, unknown>;
+          }
+        } else {
+          profile = data as Record<string, unknown>;
+        }
+      } catch (dbError) {
+        console.error("DB ERROR:", dbError);
       }
 
       setUser({
-        mobile: profile.mobile,
-        name: profile.full_name ?? fullName.trim() ?? "User",
-        full_name: profile.full_name ?? fullName.trim() ?? "User",
-        email: profile.email ?? email.trim() ?? "",
-        city: profile.city ?? "",
-        language: profile.language ?? "",
-        source: profile.source ?? "",
-        created_at: profile.created_at ?? undefined,
+        mobile: normalizePhoneNumber(String(profile?.mobile || phone)),
+        name: String(profile?.full_name || fullName.trim() || "User"),
+        full_name: String(profile?.full_name || fullName.trim() || "User"),
+        email: String(profile?.email || email.trim() || ""),
+        city: String(profile?.city || ""),
+        language: String(profile?.language || ""),
+        source: String(profile?.source || ""),
+        created_at: typeof profile?.created_at === "string" ? profile.created_at : undefined,
       });
       clearFirebaseOtpSession();
 
       window.location.href = "/dashboard";
     } catch (error) {
-      console.error("OTP Verify Error:", error);
-      logFirebaseOtpError(error);
-      setError(getFirebaseOtpErrorMessage(error));
+      console.error("FULL OTP ERROR:", error);
+      console.error("STRING ERROR:", JSON.stringify(error, null, 2));
+      setError(
+        typeof error === "object" && error !== null && "message" in error
+          ? String((error as { message?: string }).message)
+          : "OTP failed"
+      );
     } finally {
       setLoading(false);
     }
@@ -120,8 +145,13 @@ export default function VerifyOtpClient() {
       setTimer(60);
       setCanResend(false);
     } catch (error) {
-      logFirebaseOtpError(error);
-      setError(getFirebaseOtpErrorMessage(error));
+      console.error("FULL OTP ERROR:", error);
+      console.error("STRING ERROR:", JSON.stringify(error, null, 2));
+      setError(
+        typeof error === "object" && error !== null && "message" in error
+          ? String((error as { message?: string }).message)
+          : "OTP verification failed"
+      );
       return;
     }
   };
@@ -139,7 +169,7 @@ export default function VerifyOtpClient() {
         title="Verify OTP"
         description={
           mobile
-            ? `Enter the 6-digit OTP sent to ${formatPhone(mobile)}.`
+            ? `Enter the 6-digit OTP sent to ${normalizePhoneNumber(mobile)}.`
             : "Enter the 6-digit OTP sent to your mobile number."
         }
         footerPrompt={fullName ? "Need to change your details?" : "Need to use another number?"}

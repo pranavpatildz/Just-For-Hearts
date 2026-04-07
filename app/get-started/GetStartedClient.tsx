@@ -13,16 +13,16 @@ import InquiryChat from "@/components/InquiryChat";
 import { SOURCE_OPTIONS } from "@/constants/sourceOptions";
 import {
   clearFirebaseOtpSession,
+  ensureRecaptchaVerifier,
   getFirebaseOtpErrorMessage,
-  hasFirebaseConfirmationResult,
   logFirebaseOtpError,
   RECAPTCHA_CONTAINER_ID,
-  sendFirebaseOtp,
-  verifyFirebaseOtp,
 } from "@/lib/firebase-phone-auth";
-import { getPhoneDigits } from "@/lib/phone";
+import { auth } from "@/lib/firebase";
+import { getPhoneDigits, normalizePhoneNumber } from "@/lib/phone";
 import { supabase } from "@/lib/supabase";
 import { getUser, setUser } from "@/src/lib/client-auth";
+import { signInWithPhoneNumber } from "firebase/auth";
 
 declare global {
   interface Window {
@@ -295,7 +295,15 @@ export default function GetStartedClient() {
     setOtpStatusMessage("");
 
     try {
-      await sendFirebaseOtp(phone, RECAPTCHA_CONTAINER_ID);
+      if (!auth) {
+        throw new Error("Firebase Auth is not initialized on the client.");
+      }
+
+      clearFirebaseOtpSession();
+      const recaptchaVerifier = await ensureRecaptchaVerifier(RECAPTCHA_CONTAINER_ID);
+      const confirmationResult = await signInWithPhoneNumber(auth, `+91${phone}`, recaptchaVerifier);
+      window.confirmationResult = confirmationResult;
+      console.log("confirmationResult:", window.confirmationResult);
       setOtpSent(true);
       setOtpVerified(false);
       setOtp("");
@@ -330,13 +338,15 @@ export default function GetStartedClient() {
 
     try {
       console.log("ENV:", process.env.NODE_ENV);
-      console.log("ConfirmationResult exists:", !!window.confirmationResult);
+      console.log("confirmationResult:", window.confirmationResult);
 
-      if (!hasFirebaseConfirmationResult()) {
-        console.warn("ConfirmationResult missing on get-started verify, checking stored verification session.");
+      const confirmationResult = window.confirmationResult;
+
+      if (!confirmationResult) {
+        throw new Error("OTP session expired. Please resend OTP.");
       }
 
-      await verifyFirebaseOtp(otp);
+      await confirmationResult.confirm(otp);
       setOtpVerified(true);
       setOtpStatusMessage("OTP verified successfully");
       setOtpError("");
@@ -372,11 +382,11 @@ export default function GetStartedClient() {
     if (!otpVerified) return;
 
     try {
-      const formattedPhone = getPhoneDigits(formData.phone);
+      const formattedPhone = normalizePhoneNumber(formData.phone);
       console.log("Formatted phone:", formattedPhone);
       await supabase.from("users").upsert(
         [
-        {
+          {
             mobile: formattedPhone,
             full_name: `${formData.firstName} ${formData.lastName}`.trim() || null,
             email: formData.email.trim() || null,
@@ -389,7 +399,7 @@ export default function GetStartedClient() {
       );
 
       const existingUser = getUser() as StoredUser | null;
-      if (existingUser && getPhoneDigits(existingUser.mobile ?? "") === formattedPhone) {
+      if (existingUser && normalizePhoneNumber(existingUser.mobile ?? "") === formattedPhone) {
         setUser({
           ...existingUser,
           name: existingUser.name ?? `${formData.firstName} ${formData.lastName}`.trim(),
@@ -626,8 +636,8 @@ export default function GetStartedClient() {
 
       const { data, error } = await supabase
         .from("users")
-        .select("mobile, full_name, email, city, language, source")
-        .eq("mobile", getPhoneDigits(storedUser.mobile ?? ""))
+        .select("mobile, full_name, email, city, language, source, created_at")
+        .eq("mobile", normalizePhoneNumber(storedUser.mobile ?? ""))
         .maybeSingle();
 
       if (!isMounted) return;
@@ -635,7 +645,7 @@ export default function GetStartedClient() {
       if (!error && data) {
         mergedUser = {
           ...storedUser,
-          mobile: data.mobile ?? storedUser.mobile,
+          mobile: (typeof data.mobile === "string" && data.mobile.trim()) || storedUser.mobile,
           full_name: data.full_name ?? storedUser.full_name ?? storedUser.name,
           email: data.email ?? storedUser.email,
           city: data.city ?? storedUser.city,

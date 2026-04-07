@@ -16,6 +16,14 @@ export function formatPhone(phone: string) {
   return phone;
 }
 
+export function normalizePhoneNumber(mobile: string) {
+  return formatPhone(mobile);
+}
+
+export function normalizePhone(phone: string) {
+  return formatPhone(phone);
+}
+
 export function getPhoneDigits(phone: string) {
   const formattedPhone = formatPhone(phone);
   const digits = formattedPhone.replace(/\D/g, "");

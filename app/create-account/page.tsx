@@ -11,6 +11,7 @@ import {
   RECAPTCHA_CONTAINER_ID,
   sendFirebaseOtp,
 } from "@/lib/firebase-phone-auth";
+import { normalizePhone } from "@/lib/phone";
 
 export default function CreateAccountPage() {
   const router = useRouter();
@@ -37,7 +38,8 @@ export default function CreateAccountPage() {
     setError("");
 
     try {
-      await sendFirebaseOtp(mobile, RECAPTCHA_CONTAINER_ID);
+      const phone = normalizePhone(mobile);
+      await sendFirebaseOtp(phone, RECAPTCHA_CONTAINER_ID);
       router.push(
         `/verify-otp?mobile=${mobile}&name=${encodeURIComponent(
           fullName || ""
@@ -87,15 +89,19 @@ export default function CreateAccountPage() {
 
         <div className="mb-4">
           <label className="text-xs text-gray-500">MOBILE NUMBER</label>
-          <input
-            type="text"
-            placeholder="Enter 10-digit number"
-            className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none"
-            value={mobile}
-            onChange={(e) =>
-              setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))
-            }
-          />
+          <div className="mt-1 flex items-center rounded-lg border border-gray-200 px-3 py-2">
+            <span className="mr-2 text-gray-500">+91</span>
+            <input
+              type="tel"
+              maxLength={10}
+              placeholder="Enter 10-digit number"
+              className="w-full text-sm outline-none"
+              value={mobile}
+              onChange={(e) =>
+                setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))
+              }
+            />
+          </div>
         </div>
 
         {error && <p className="mb-4 text-sm text-red-500">{error}</p>}

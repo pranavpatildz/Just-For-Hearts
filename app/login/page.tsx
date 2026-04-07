@@ -11,6 +11,7 @@ import {
   RECAPTCHA_CONTAINER_ID,
   sendFirebaseOtp,
 } from "@/lib/firebase-phone-auth";
+import { normalizePhone } from "@/lib/phone";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -30,7 +31,8 @@ export default function LoginPage() {
     setError("");
 
     try {
-      await sendFirebaseOtp(mobile, RECAPTCHA_CONTAINER_ID);
+      const phone = normalizePhone(mobile);
+      await sendFirebaseOtp(phone, RECAPTCHA_CONTAINER_ID);
       router.push(`/verify-otp?mobile=${mobile}&name=&email=`);
     } catch (error) {
       logFirebaseOtpError(error);
@@ -56,7 +58,8 @@ export default function LoginPage() {
           <div className="mt-1 flex items-center rounded-lg border border-gray-200 px-3 py-2">
             <span className="mr-2 text-gray-500">+91</span>
             <input
-              type="text"
+              type="tel"
+              maxLength={10}
               placeholder="Enter 10-digit number"
               className="w-full text-sm outline-none"
               value={mobile}
