@@ -156,7 +156,7 @@ export default function ConsultantsCarousel() {
 
   const prev = () => {
     pauseAuto()
-    setCurrent(prev => prev + 1)
+    setCurrent(prev => (prev === 0 ? doctors.length - 1 : prev - 1))
   }
 
   useEffect(() => {

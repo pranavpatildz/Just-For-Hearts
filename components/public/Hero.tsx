@@ -1,39 +1,40 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { ClipboardList, HeartPulse, ShieldCheck, Stethoscope } from "lucide-react";
 
 import ComparisonSection from "@/components/public/ComparisonSection";
 
 const heroCards = [
   {
-    icon: "🎥",
+    icon: Stethoscope,
     title: "Healthy Life",
     description: "Expert 20-min online video consultation.",
-    cardClassName: "bg-[#EEF4FF]",
-    iconClassName: "text-blue-500",
+    cardClassName: "bg-[#F2FBF7]",
+    iconWrapperClassName: "bg-green-100 text-green-600",
   },
   {
-    icon: "📅",
+    icon: ClipboardList,
     title: "Second Opinion",
     description: "Get certainty on your diagnosis & treatment.",
-    cardClassName: "bg-[#F3F0FF]",
-    iconClassName: "text-purple-500",
+    cardClassName: "bg-[#EEF4FF]",
+    iconWrapperClassName: "bg-blue-100 text-blue-600",
   },
   {
-    icon: "❤️",
+    icon: HeartPulse,
     title: "Chronic Care",
-    description: "360° support for Diabetes & Heart Health.",
+    description: "360 support for Diabetes & Heart Health.",
     cardClassName: "bg-[#FFF1F1]",
-    iconClassName: "text-red-500",
+    iconWrapperClassName: "bg-red-100 text-red-500",
   },
   {
-    icon: "✅",
+    icon: ShieldCheck,
     title: "Personalized Plans",
     description: "3 months of aggressive reversal programs.",
     cardClassName: "bg-[#ECFFF5]",
-    iconClassName: "text-green-500",
+    iconWrapperClassName: "bg-emerald-100 text-emerald-600",
   },
-];
+] as const;
 
 export default function Hero() {
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -78,13 +79,12 @@ export default function Hero() {
     <div className="w-full">
       <section className="flex w-full flex-col items-center px-4 pb-10 pt-16 text-center">
         <h1 className="text-3xl font-bold leading-tight text-[#0B1B2B] md:text-5xl">
-          Ready to Take Charge of your{" "}
-          <span className="text-red-500">Health?</span>
+          Ready to Take Charge of your <span className="text-red-500">Health?</span>
         </h1>
 
         <p className="mt-4 max-w-2xl text-sm text-gray-500 md:text-base">
-          Join 40,000+ people already using Just For Hearts for diabetes,
-          heart, and obesity care - all from the comfort of home.
+          Join 40,000+ people already using Just For Hearts for diabetes, heart, and obesity care
+          - all from the comfort of home.
         </p>
 
         <div className="group relative mt-6 w-full max-w-2xl px-2 md:px-0">
@@ -92,10 +92,7 @@ export default function Hero() {
             id="ai-bar"
             className="flex w-full items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 shadow-md transition-all duration-300 hover:shadow-lg md:px-5 md:py-3"
           >
-            <span
-              className="shrink-0 text-base text-blue-500 md:text-lg"
-              aria-hidden="true"
-            >
+            <span className="shrink-0 text-base text-blue-500 md:text-lg" aria-hidden="true">
               🤖
             </span>
 
@@ -131,11 +128,8 @@ export default function Hero() {
               key={card.title}
               className={`min-w-[250px] rounded-xl p-5 shadow-sm transition-all hover:shadow-md ${card.cardClassName}`}
             >
-              <div
-                className={`mb-3 text-2xl ${card.iconClassName}`}
-                aria-hidden="true"
-              >
-                {card.icon}
+              <div className={`mb-3 w-fit rounded-full p-3 ${card.iconWrapperClassName}`}>
+                <card.icon className="h-6 w-6" aria-hidden="true" />
               </div>
               <h3 className="font-semibold text-[#0B1B2B]">{card.title}</h3>
               <p className="text-sm text-gray-500">{card.description}</p>
