@@ -34,6 +34,7 @@ type PersonalDetailsFormProps = {
   disabledFields?: Partial<Record<keyof PersonalDetails, boolean>>;
   showNextButton?: boolean;
   nextButtonLabel?: string;
+  showOtpControls?: boolean;
 };
 
 const inputClass =
@@ -59,6 +60,7 @@ export default function PersonalDetailsForm({
   disabledFields = {},
   showNextButton = true,
   nextButtonLabel = "Next Step",
+  showOtpControls = true,
 }: PersonalDetailsFormProps) {
   const otpSectionRef = useRef<HTMLDivElement | null>(null);
   const getInputClassName = (field: keyof PersonalDetails) =>
@@ -147,24 +149,26 @@ export default function PersonalDetailsForm({
             phoneError ? "border-red-500 focus:ring-red-200 focus:border-red-500" : ""
           }`}
         />
-        <button
-          type="button"
-          onClick={onSendOtp}
-          disabled={sendingOtp || otpCooldown > 0}
-          className="primary-btn w-full shrink-0 px-6 py-3 disabled:opacity-60 disabled:hover:translate-y-0 sm:w-auto"
-        >
-          {sendingOtp
-            ? "Sending..."
-            : otpCooldown > 0
-              ? `Resend OTP in ${otpCooldown}s`
-              : otpSent
-                ? "Resend OTP"
-                : "Send OTP"}
-        </button>
+        {showOtpControls && (
+          <button
+            type="button"
+            onClick={onSendOtp}
+            disabled={sendingOtp || otpCooldown > 0}
+            className="primary-btn w-full shrink-0 px-6 py-3 disabled:opacity-60 disabled:hover:translate-y-0 sm:w-auto"
+          >
+            {sendingOtp
+              ? "Sending..."
+              : otpCooldown > 0
+                ? `Resend OTP in ${otpCooldown}s`
+                : otpSent
+                  ? "Resend OTP"
+                  : "Send OTP"}
+          </button>
+        )}
       </div>
       {phoneError && <p className="text-sm text-red-600">{phoneError}</p>}
 
-      {showOtpField && (
+      {showOtpControls && showOtpField && (
         <div
           ref={otpSectionRef}
           className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5"

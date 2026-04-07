@@ -13,11 +13,13 @@ export function setUser(user: unknown) {
     typeof (user as { mobile?: unknown }).mobile === "string"
   ) {
     localStorage.setItem("user_phone", (user as { mobile: string }).mobile);
+    localStorage.setItem("mobile", (user as { mobile: string }).mobile);
   }
 }
 
 export function logout(redirectTo = "/login") {
   localStorage.removeItem("jfh_user");
   localStorage.removeItem("user_phone");
+  localStorage.removeItem("mobile");
   window.location.href = redirectTo;
 }

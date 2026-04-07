@@ -28,6 +28,8 @@ export default function VerifyOtpClient() {
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [redirectPhone, setRedirectPhone] = useState("");
 
   useEffect(() => {
     if (!mobile) {
@@ -66,58 +68,50 @@ export default function VerifyOtpClient() {
 
       const result = await confirmationResult.confirm(otp);
       const user = result.user;
-      const phone = normalizePhone(user.phoneNumber || mobile);
+      const formattedPhone = normalizePhone(user.phoneNumber || mobile);
 
-      console.log("LOGIN PHONE:", phone);
-      localStorage.setItem("user_phone", phone);
+      console.log("Checking user with phone:", formattedPhone);
+      console.log("LOGIN PHONE:", formattedPhone);
+      localStorage.setItem("user_phone", formattedPhone);
+      localStorage.setItem("mobile", formattedPhone);
 
-      let profile: Record<string, unknown> | null = null;
+      const { data: existingUser, error: fetchError } = await supabase
+        .from("users")
+        .select("*")
+        .eq("mobile", formattedPhone)
+        .maybeSingle();
 
-      try {
-        const { data, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("mobile", phone)
-          .maybeSingle();
+      if (!existingUser) {
+        console.log("User NOT found in DB");
+        console.error("FETCH ERROR:", fetchError);
+        clearFirebaseOtpSession();
+        setError("No account found with this number");
+        setRedirectPhone(formattedPhone);
+        setShowModal(true);
 
-        if (error) {
-          console.error("SUPABASE FETCH ERROR:", error);
-        }
+        window.setTimeout(() => {
+          window.location.href = `/create-account?mobile=${encodeURIComponent(formattedPhone)}`;
+        }, 2000);
 
-        if (!data) {
-          const { data: newProfile, error: insertError } = await supabase
-            .from("users")
-            .insert([
-              {
-                mobile: phone,
-                full_name: fullName.trim() || null,
-                email: email.trim() || null,
-              },
-            ])
-            .select()
-            .single();
-
-          if (insertError) {
-            console.error("SUPABASE INSERT ERROR:", insertError);
-          } else {
-            profile = newProfile as Record<string, unknown>;
-          }
-        } else {
-          profile = data as Record<string, unknown>;
-        }
-      } catch (dbError) {
-        console.error("DB ERROR:", dbError);
+        return;
       }
 
+      if (fetchError) {
+        throw fetchError;
+      }
+
+      console.log("User found:", existingUser);
+
       setUser({
-        mobile: normalizePhoneNumber(String(profile?.mobile || phone)),
-        name: String(profile?.full_name || fullName.trim() || "User"),
-        full_name: String(profile?.full_name || fullName.trim() || "User"),
-        email: String(profile?.email || email.trim() || ""),
-        city: String(profile?.city || ""),
-        language: String(profile?.language || ""),
-        source: String(profile?.source || ""),
-        created_at: typeof profile?.created_at === "string" ? profile.created_at : undefined,
+        mobile: normalizePhoneNumber(String(existingUser.mobile || formattedPhone)),
+        name: String(existingUser.full_name || fullName.trim() || "User"),
+        full_name: String(existingUser.full_name || fullName.trim() || "User"),
+        email: String(existingUser.email || email.trim() || ""),
+        city: String(existingUser.city || ""),
+        language: String(existingUser.language || ""),
+        source: String(existingUser.source || ""),
+        created_at:
+          typeof existingUser.created_at === "string" ? existingUser.created_at : undefined,
       });
       clearFirebaseOtpSession();
 
@@ -216,6 +210,27 @@ export default function VerifyOtpClient() {
         </button>
         <div id={RECAPTCHA_CONTAINER_ID} className="mt-3 min-h-[1px]" />
       </AuthSplitLayout>
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="animate-fadeIn w-[90%] max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
+            <div className="mb-2 text-3xl text-red-500">⚠️</div>
+            <h2 className="text-lg font-semibold text-gray-800">No Account Found</h2>
+            <p className="mt-2 text-sm text-gray-500">
+              Please create an account first to continue.
+            </p>
+
+            <button
+              onClick={() => {
+                window.location.href = `/create-account?mobile=${encodeURIComponent(redirectPhone)}`;
+              }}
+              className="mt-4 w-full rounded-lg bg-teal-500 py-2 text-white transition hover:bg-teal-600"
+            >
+              Create Account
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import Navbar from "@/components/public/Navbar";
 import AuthSplitLayout from "@/components/public/AuthSplitLayout";
@@ -15,11 +15,20 @@ import { normalizePhone } from "@/lib/phone";
 
 export default function CreateAccountPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const prefilledMobile = searchParams.get("mobile");
+
+    if (!prefilledMobile) return;
+
+    setMobile(prefilledMobile.replace(/\D/g, "").slice(-10));
+  }, [searchParams]);
 
   const handleGetOtp = async () => {
     if (loading) return;

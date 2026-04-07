@@ -184,6 +184,14 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
+    const mobile = localStorage.getItem("mobile");
+
+    if (!mobile) {
+      window.location.href = "/login";
+    }
+  }, []);
+
+  useEffect(() => {
     const storedUser = getUser();
     const storedPhone = typeof window !== "undefined" ? localStorage.getItem("user_phone") : null;
 

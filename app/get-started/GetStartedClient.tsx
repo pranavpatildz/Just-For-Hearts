@@ -77,6 +77,7 @@ export default function GetStartedClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const fromDashboard = searchParams.get("from") === "dashboard";
+  const [authenticatedMobile, setAuthenticatedMobile] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
@@ -119,6 +120,7 @@ export default function GetStartedClient() {
     phone: "",
     requirements: "",
   });
+  const isLoggedIn = !!authenticatedMobile;
 
   const isFreeInquiry = selectedService === "General Inquiry (FREE)";
   const patientName = [formData.firstName, formData.lastName].filter(Boolean).join(" ").trim();
@@ -252,8 +254,30 @@ export default function GetStartedClient() {
   const allRequiredPoliciesAccepted =
     orderContactConsent && termsAccepted && (!refundPolicy || refundAccepted);
 
+  const checkIfComplete = (data: {
+    full_name?: string | null;
+    email?: string | null;
+    city?: string | null;
+    language?: string | null;
+    source?: string | null;
+  }) => {
+    const isComplete =
+      !!data.full_name &&
+      !!data.email &&
+      !!data.city &&
+      !!data.language &&
+      !!data.source;
+
+    setCurrentStep(isComplete ? 2 : 1);
+  };
+
   const handleFormChange = (field: keyof FormData, value: string) => {
     if (field === "phone") {
+      if (isLoggedIn) {
+        setFormData((prev) => ({ ...prev, phone: value.replace(/\D/g, "").slice(0, 10) }));
+        return;
+      }
+
       const sanitizedPhone = value.replace(/\D/g, "").slice(0, 10);
 
       clearFirebaseOtpSession();
@@ -278,6 +302,11 @@ export default function GetStartedClient() {
   };
 
   const handleSendOtp = async () => {
+    if (isLoggedIn) {
+      setOtpVerified(true);
+      return;
+    }
+
     if (!formData.phone || otpCooldown > 0 || sendingOtp) return;
 
     const phone = getPhoneDigits(formData.phone);
@@ -323,6 +352,12 @@ export default function GetStartedClient() {
   };
 
   const handleVerifyOtp = async () => {
+    if (isLoggedIn) {
+      setOtpVerified(true);
+      setOtpStatusMessage("OTP verified successfully");
+      return;
+    }
+
     if (!formData.phone || otp.length !== 6 || otpAttempts >= MAX_OTP_ATTEMPTS) return;
 
     const phone = getPhoneDigits(formData.phone);
@@ -373,7 +408,12 @@ export default function GetStartedClient() {
   };
 
   const handleNextFromPersonal = async () => {
-    if (!formData.firstName || !formData.lastName || !formData.city || !formData.phone) return;
+    if (!formData.firstName || !formData.city || !formData.preferredLanguage) {
+      alert("Please complete your personal details");
+      return;
+    }
+
+    if (!formData.lastName || !formData.phone) return;
     if (formData.phone.length !== 10) {
       setPhoneError("Enter a valid 10-digit mobile number");
       return;
@@ -382,21 +422,32 @@ export default function GetStartedClient() {
     if (!otpVerified) return;
 
     try {
-      const formattedPhone = normalizePhoneNumber(formData.phone);
+      const formattedPhone = normalizePhoneNumber(authenticatedMobile || formData.phone);
       console.log("Formatted phone:", formattedPhone);
-      await supabase.from("users").upsert(
-        [
-          {
-            mobile: formattedPhone,
-            full_name: `${formData.firstName} ${formData.lastName}`.trim() || null,
-            email: formData.email.trim() || null,
-            city: formData.city.trim() || null,
-            language: formData.preferredLanguage.trim() || null,
-            source: SOURCE_OPTIONS.includes(formData.source) ? formData.source : null,
-          },
-        ],
-        { onConflict: "mobile" }
-      );
+      const payload = {
+        full_name: `${formData.firstName} ${formData.lastName}`.trim() || null,
+        email: formData.email.trim() || null,
+        city: formData.city.trim() || null,
+        language: formData.preferredLanguage.trim() || null,
+        source: SOURCE_OPTIONS.includes(formData.source) ? formData.source : null,
+      };
+
+      if (isLoggedIn) {
+        await supabase
+          .from("users")
+          .update(payload)
+          .eq("mobile", formattedPhone);
+      } else {
+        await supabase.from("users").upsert(
+          [
+            {
+              mobile: formattedPhone,
+              ...payload,
+            },
+          ],
+          { onConflict: "mobile" }
+        );
+      }
 
       const existingUser = getUser() as StoredUser | null;
       if (existingUser && normalizePhoneNumber(existingUser.mobile ?? "") === formattedPhone) {
@@ -409,6 +460,16 @@ export default function GetStartedClient() {
           language: formData.preferredLanguage.trim(),
           source: formData.source,
           mobile: formattedPhone,
+        });
+      } else if (isLoggedIn) {
+        setUser({
+          mobile: formattedPhone,
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          full_name: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email.trim(),
+          city: formData.city.trim(),
+          language: formData.preferredLanguage.trim(),
+          source: formData.source,
         });
       }
     } catch (error) {
@@ -623,84 +684,69 @@ export default function GetStartedClient() {
 
   useEffect(() => {
     let isMounted = true;
+    const mobile = typeof window !== "undefined" ? localStorage.getItem("mobile") : null;
 
-    const hydrateDashboardFlow = async () => {
-      if (!fromDashboard) return;
+    if (!mobile) {
+      setCurrentStep(1);
+      return () => {
+        isMounted = false;
+      };
+    }
 
-      setCurrentStep(2);
+    const formattedPhone = normalizePhoneNumber(mobile);
+    setAuthenticatedMobile(formattedPhone);
+    setOtpVerified(true);
+    setOtpSent(true);
+    setOtpStatusMessage("Logged in. OTP skipped.");
+    setFormData((prev) => ({
+      ...prev,
+      phone: getPhoneDigits(formattedPhone),
+    }));
 
-      const storedUser = getUser() as StoredUser | null;
-      if (!storedUser?.mobile) return;
-
-      let mergedUser: StoredUser = storedUser;
-
+    const loadUser = async () => {
       const { data, error } = await supabase
         .from("users")
-        .select("mobile, full_name, email, city, language, source, created_at")
-        .eq("mobile", normalizePhoneNumber(storedUser.mobile ?? ""))
-        .maybeSingle();
+        .select("*")
+        .eq("mobile", formattedPhone)
+        .single();
 
-      if (!isMounted) return;
-
-      if (!error && data) {
-        mergedUser = {
-          ...storedUser,
-          mobile: (typeof data.mobile === "string" && data.mobile.trim()) || storedUser.mobile,
-          full_name: data.full_name ?? storedUser.full_name ?? storedUser.name,
-          email: data.email ?? storedUser.email,
-          city: data.city ?? storedUser.city,
-          language: data.language ?? storedUser.language,
-          source:
-            data.source && SOURCE_OPTIONS.includes(data.source)
-              ? data.source
-              : storedUser.source,
-        };
-      }
-
-      const normalizedPhone = getPhoneDigits(mergedUser.mobile ?? "");
-      const fullName = (mergedUser.full_name ?? mergedUser.name ?? "").trim();
-      const [firstName = "", ...lastNameParts] = fullName.split(/\s+/).filter(Boolean);
-
-      if (normalizedPhone.length !== 10) {
-        setFormData((prev) => ({
-          ...prev,
-          firstName,
-          lastName: lastNameParts.join(" "),
-          email: mergedUser.email ?? "",
-          city: mergedUser.city ?? "",
-          preferredLanguage: mergedUser.language ?? "",
-          source:
-            mergedUser.source && SOURCE_OPTIONS.includes(mergedUser.source)
-              ? mergedUser.source
-              : "",
-          phone: normalizedPhone,
-        }));
-        setPhoneError("Enter a valid 10-digit mobile number");
+      if (!isMounted || error || !data) {
+        setCurrentStep(1);
         return;
       }
 
+      const fullName = typeof data.full_name === "string" ? data.full_name.trim() : "";
+      const [firstName = "", ...lastNameParts] = fullName.split(/\s+/).filter(Boolean);
+
       setFormData((prev) => ({
         ...prev,
-        firstName,
-        lastName: lastNameParts.join(" "),
-        email: mergedUser.email ?? "",
-        city: mergedUser.city ?? "",
-        preferredLanguage: mergedUser.language ?? "",
+        firstName: firstName || prev.firstName,
+        lastName: lastNameParts.join(" ") || prev.lastName,
+        email: typeof data.email === "string" ? data.email : "",
+        city: typeof data.city === "string" ? data.city : "",
+        preferredLanguage: typeof data.language === "string" ? data.language : "",
         source:
-          mergedUser.source && SOURCE_OPTIONS.includes(mergedUser.source)
-            ? mergedUser.source
+          typeof data.source === "string" && SOURCE_OPTIONS.includes(data.source)
+            ? data.source
             : "",
-        phone: normalizedPhone,
+        phone: getPhoneDigits(formattedPhone),
       }));
-      setPhoneError("");
+
+      checkIfComplete({
+        full_name: typeof data.full_name === "string" ? data.full_name : null,
+        email: typeof data.email === "string" ? data.email : null,
+        city: typeof data.city === "string" ? data.city : null,
+        language: typeof data.language === "string" ? data.language : null,
+        source: typeof data.source === "string" ? data.source : null,
+      });
     };
 
-    void hydrateDashboardFlow();
+    void loadUser();
 
     return () => {
       isMounted = false;
     };
-  }, [fromDashboard]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -726,7 +772,7 @@ export default function GetStartedClient() {
 
           <div className="step-container mx-auto mt-8 max-w-xl md:mt-10 md:max-w-4xl">
             <AnimatePresence mode="wait" initial={false}>
-              {!fromDashboard && currentStep === 1 && (
+              {currentStep === 1 && (
                 <motion.div
                   key="step-1"
                   initial={{ opacity: 0, y: 20 }}
@@ -756,10 +802,12 @@ export default function GetStartedClient() {
                     onOtpChange={setOtp}
                     onVerifyOtp={handleVerifyOtp}
                     verifyingOtp={verifyingOtp}
-                    showOtpField={otpUiVisible || otpSent || otpVerified}
+                    showOtpField={!isLoggedIn && (otpUiVisible || otpSent || otpVerified)}
                     otpSent={otpSent}
                     otpVerified={otpVerified}
                     onNext={handleNextFromPersonal}
+                    showOtpControls={!isLoggedIn}
+                    disabledFields={isLoggedIn ? { phone: true } : {}}
                   />
                   <div id={RECAPTCHA_CONTAINER_ID} className="mt-3 min-h-[1px]" />
                 </motion.div>
